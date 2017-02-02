@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+{% block title %}
+	<title>手艺人</title>
+{% end %}
+	<meta name="description" content="Nossiac's blog.">
+	<meta name="copyright" content="Copyright (c) Hua Shao">
+	<meta name="author" content="Hua Shao, Nossiac, 佛山黄灰红">
+	<meta http-equiv="X-UA-Compatible" content="IE=9" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" type="text/css" href="{{ static_url('blog.css')}}">
+	<script src="{{ static_url('jquery/jquery-1.11.1.min.js')}}"></script>
+	<!-- shello @ baidu -->
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?67c0496c3b014a6321c0198bcba99f12";
+	  var s = document.getElementsByTagName("script")[0];
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+    <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+    </script>
+</head>
+<body>
+<div id="wrap">
+	<div id="header"><h1><a class="ainhx" href="/blog">手艺人</a></h1></div>
+	<div id="main">
+	{% block body %}
+	<h1> this is a template page, you should extend it and create your own page. </h1>
+	{% end %}
+	</div>
+	<div id="footer">
+		<div class="text-right">
+			&copy; <a href="/">Nossiac</a>. You can also find me @
+			<a href="http://nossiac.lofter.com" target="_blank">Lofter</a> |
+			<a href="https://weibo.com/nossiac" target="_blank">Weibo</a> |
+			<a href="https://github.com/nossiac" target="_blank">Github</a>
+		</div>
+	</div>
+</body>
+</html>

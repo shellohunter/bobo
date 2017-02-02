@@ -1,0 +1,27 @@
+{% extends template.html %}
+{% block body %}
+<div class="container">
+	<div class="row show-grid">
+		<div style="width:100%;">
+			<form method="post" id="upload" enctype="multipart/form-data" style="margin:10px;">
+				<input name="file" type="file" />
+				<input class="btn" type="submit" value="上传" />
+			</form>
+			<div style="clear:both;"></div>
+		</div>
+		<div>
+			{% for file in files %}
+			<a href="{{file}}">
+			{#<!--<div class="image-preview" style="background: url('{{static_url(file)}}') no-repeat center center; background-size: contain;">-->#}
+			<div class="image-preview" style="background: url('{{file}}') no-repeat center center; background-size: contain;">
+			</div>
+			</a>
+			{% end %}
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+{% end %}
+
+http://7xthf5.com1.z0.glb.clouddn.com/static/upload/upload/Screenshot003.jpg
+http://7xthf5.com1.z0.glb.clouddn.com/static/upload/Screenshot003.jpg

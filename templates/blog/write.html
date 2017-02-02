@@ -1,0 +1,46 @@
+{% extends template.html %}
+{% block body %}
+<div class="container">
+	<div class="row show-grid">
+		<div class="span12 whitepanel">
+			<form method="post" class="bs-docs-example form-horizontal" id="newform">
+				<div>
+					<table style="width: 100%;">
+						<tr>
+							<td colspan="3"><h4>标题</h4></td>
+						</tr>
+						<tr>
+							<td colspan="3"><input type="text" placeholder="标题" id="title" style="width:99%;" name="title"{% if a != None %} value="{{a[0]}}"{% end %}></td>
+						</tr>
+						<tr>
+							<td><h4>永久链接</h4></td>
+							<td><h4>发布时间</h4></td>
+							<td><h4>隐藏</h4></td>
+						</tr>
+						<tr>
+							<td ><input type="text" placeholder="永久链接" id="link" style="width:95%;" name="link"{% if a != None %} value="{{a[2]}}"{% end %}></td>
+							<td><input type="text" placeholder="yyyy-mm-dd" id="datetime" style="width:95%;" name="datetime" {% if a != None %} value="{{a[3]}}" {% end %}></td>
+							<td><input type="checkbox" id="hide" name="hide" value="1" {% if a != None and a[6] == 1 %} checked="checked"{% end %}></td>
+						</tr>
+						<tr>
+							<td><h4>标签（用逗号隔开）</h4></td>
+						</tr>
+						<tr>
+							<td colspan="3"><input type="text" placeholder="tags" id="tags" style="width:99%;" name="tags" value="{% if a != None %} {{ ",".join([x.strip("()") for x in a[5].split("(")[1:]]) }}{% end %}"></td>
+						</tr>
+					</table>
+				</div>
+				<div>
+					<h4>内容</h4>
+					<textarea style="height: 400px; width: 98%;" id="content" name="content">{% if a != None %}{{a[1]}}{% end %}</textarea>
+				</div>
+
+				<div class="text-center" style="padding: 10px;">
+					<button class="btn" type="button" onclick="document.getElementById('newform').submit();">发&nbsp;布</button>
+				</div>
+
+			</form>
+		</div>
+	</div>
+</div>
+{% end %}

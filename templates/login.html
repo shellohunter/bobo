@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta name="description" content="Nossiac's blog.">
+    <meta name="copyright" content="Copyright (c) Hua Shao">
+    <meta name="author" content="Hua Shao, Nossiac, 佛山黄灰红">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta charset="utf-8" />
+	<title>Login</title>
+	<style type="text/css">
+	body {
+		background-color: #F8F8F8;
+		color : #000;
+		margin: 0px;
+		text-align: center;
+	}
+
+	#page {
+		background-color: #F8F8F8;
+		text-align: left;
+		margin:0px auto;
+		padding: 15px;
+		width: 800px;
+		font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+		width: 800px;
+		text-align: center;
+	}
+
+	#login {
+		border: 6px solid #999;
+		width: 500px;
+		margin: auto;
+		background-color: white;
+	}
+
+	#login legend {
+		font-size: 36px;
+		font-weight: bold;
+		padding:0 10px;
+	}
+
+	#login .input {
+		font-family: Verdana,Arial,Helvetica,Geneva,sans-serif;
+		font-size:18px;
+		padding:2px;
+		color: green;
+	}
+
+	#login .label {
+		font-size: 18px;
+	}
+
+	#login .button, .button {
+		-moz-border-radius:15px;
+		-webkit-border-radius:15px;
+		border-radius:15px;
+		border:1px solid #a6afa6;
+		font-size: 22px;
+		height: 32px;
+		padding:0px 31px;
+		font-family: Arial,Helvetica,Geneva,sans-serif;
+		/*font:bold 100% "Helvetica Neue",Arial,Helvetica,Geneva,sans-serif;*/
+		-webkit-appearance:button;
+	}
+
+	.button:hover {
+		background-color:#b9bdc9;
+	}
+
+	.login_table_left {
+	}
+
+	.hint {
+		font-size: 80%;
+		color: #999;
+	}
+
+	.whitelist {
+		width: 500px;
+		margin: auto;
+		background-color: white;
+		margin-top: -50px;
+		margin-bottom: 20px;
+		padding: 10px;
+		border: 1px solid #999;
+	}
+
+	input[type="number"].no-spin-button {
+	  -moz-appearance: textfield;
+	}
+
+	input[type="number"].no-spin-button::-webkit-inner-spin-button,
+	input[type="number"].no-spin-button::-webkit-outer-spin-button {
+	  -webkit-appearance: none;
+	  margin: 0;
+	}
+	</style>
+</head>
+<body>
+<div id="page" style="width: 800px; height: 90vh; text-align: center; background-color: #F8F8F8">
+	<form action="/login" method="post" id="newform">
+		<fieldset id="login">
+			<legend>Login</legend>
+			<table width="100%" cellspacing="10">
+				<tr class="login_table_left">
+					<td width="100" align="right" class="label">Password</td>
+					<td> <input name="password" id="password"  type="password" maxlength="128"  tabindex="2"  class="input"  size="24"  border="0"/> </td>
+				</td>
+			</table>
+			<input name="next" type="hidden" value="{{next or '/'}}"/>
+			<input name="retry" type="hidden" value="{{retry or 0}}"/>
+			<input class="button" type="submit" value="Login" style="margin-top: 10px">
+		</fieldset>
+	</form>
+</div>
+</body>
+</html>

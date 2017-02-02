@@ -1,0 +1,15 @@
+<html>
+<head>
+	{% if url != None %}
+	<meta http-equiv="refresh" content="3; url={{url}}" />
+	{% end %}
+	<title>Ha</title>
+</head>
+<body>
+	{% if url != None %}
+	认证通过！ 3秒后跳转到 <a href="{{url}}">{{url}}</a> !
+	{% else %}
+	认证通过！可以上网啦！
+	{% end %}
+</body>
+</html>

@@ -1,0 +1,39 @@
+{% extends m-template.html %}
+{% block body %}
+<div>
+    <table id="postlist" style="width:95%; margin:auto;">
+      <tr style="border-bottom: solid black 1px;">
+        <th>文章</th>
+      </tr>
+      {% for a in aa %}
+      <tr class="tr2">
+        <td>
+          <a href="/blog/{{a[1]}}.html">
+            {{a[0]}}
+          </a>
+        </td>
+      </tr>
+      {% end %}
+    </table>
+    <div class="pagation">
+      <ul>
+      <li><a href="#">«</a></li>
+      {% for a in range(pages) %}
+      <li><a href="/blog?p={{a+1}}">{{a+1}}</a></li>
+      {% end %}
+      <li><a href="#">»</a></li>
+      </ul>
+    </div>
+    {#
+    <div class="pagation">
+      <ul>
+      <li><a href="#">«</a></li>
+      <li><a href="#">1</a></li>
+      <li><a href="#">»</a></li>
+      </ul>
+    </div>
+    #}
+
+</div>
+
+{% end %}

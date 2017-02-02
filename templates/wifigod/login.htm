@@ -1,0 +1,11 @@
+﻿
+<form action="/auth" method="post">
+	账号<input type="text" name="username"/><br/>
+	密码<input type="password" name="password"/><br/>
+	<input type="hidden" name="gw_id" value="{{args['gw_id']}}" /><br/>
+	<input type="hidden" name="gw_address" value="{{args['gw_address']}}" /><br/>
+	<input type="hidden" name="gw_port" value="{{args['gw_port']}}"/><br/>
+	<input type="hidden" name="mac" value="{{args['mac']}}" /><br/>
+	<input type="hidden" name="url" value="{{args['url']}}" /><br/>
+	<input type="submit" value="登录"/>
+<form/>

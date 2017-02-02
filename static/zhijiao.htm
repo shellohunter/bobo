@@ -1,0 +1,1843 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>青海支教活动总结</title>
+<style type="text/css">
+a {
+    color: green;
+    text-decoration:none;
+}
+a:hover{
+    color: red;
+    text-decoration:underline;
+}
+img {
+    border: 1px gray solid;
+}
+p{
+    text-indent:2em;
+}
+.newpage {
+    border:3px dashed gray;
+    margin-top: 30px;
+}
+h2 {
+    text-align: center;
+    color: red;
+}
+h3 {
+    text-align: left;
+    color: blue;
+    border-left: 5px green solid;
+    padding-left: 20px;
+}
+h4 {
+    text-align: left;
+    color: black;
+}
+
+#site_nav {
+    position:fixed;
+    width:200px;
+    padding:6px 10px;
+    height:100%; 
+    background:white;
+    overflow-y:auto;
+}
+
+#content {
+    padding:10px 10px 10px 250px;
+	width: 700px;
+	background-color: whitesmoke;
+}
+
+/*--------------------------------------------------|
+| dTree 2.05 | www.destroydrop.com/javascript/tree/ |
+|---------------------------------------------------|
+| Copyright (c) 2002-2003 Geir Landr?              |
+|--------------------------------------------------*/
+
+.dtree {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #666;
+	white-space: nowrap;
+}
+.dtree img {
+	border: 0px;
+	vertical-align: middle;
+}
+.dtree a {
+	color: #333;
+	text-decoration: none;
+}
+.dtree a.node, .dtree a.nodeSel {
+	white-space: nowrap;
+	padding: 1px 2px 1px 2px;
+}
+.dtree a.node:hover, .dtree a.nodeSel:hover {
+	color: #333;
+	text-decoration: underline;
+}
+.dtree a.nodeSel {
+	background-color: #c0d2ec;
+}
+.dtree .clip {
+	overflow: hidden;
+}
+</style>
+<script type="text/javascript">
+/*--------------------------------------------------|
+| dTree 2.05 | www.destroydrop.com/javascript/tree/ |
+|---------------------------------------------------|
+| Copyright (c) 2002-2003 Geir Landr?              |
+|                                                   |
+| This script can be used freely as long as all     |
+| copyright messages are intact.                    |
+|                                                   |
+| Updated: 17.04.2003                               |
+|--------------------------------------------------*/
+
+// Node object
+function Node(id, pid, name, url, title, target, icon, iconOpen, open) {
+	this.id = id;
+	this.pid = pid;
+	this.name = name;
+	this.url = url;
+	this.title = title;
+	this.target = target;
+	this.icon = icon;
+	this.iconOpen = iconOpen;
+	this._io = open || false;
+	this._is = false;
+	this._ls = false;
+	this._hc = false;
+	this._ai = 0;
+	this._p;
+};
+
+// Tree object
+function dTree(objName) {
+	this.config = {
+		target					: null,
+		folderLinks			: true,
+		useSelection		: true,
+		useCookies			: true,
+		useLines				: true,
+		useIcons				: true,
+		useStatusText		: false,
+		closeSameLevel	: false,
+		inOrder					: false
+	}
+	this.icon = {
+		root				: 'images/menu/base.gif',
+		folder			: 'images/menu/folder.gif',
+		folderOpen	: 'images/menu/folderopen.gif',
+		node				: 'images/menu/page.gif',
+		empty				: 'images/menu/empty.gif',
+		line				: 'images/menu/line.gif',
+		join				: 'images/menu/join.gif',
+		joinBottom	: 'images/menu/joinbottom.gif',
+		plus				: 'images/menu/plus.gif',
+		plusBottom	: 'images/menu/plusbottom.gif',
+		minus				: 'images/menu/minus.gif',
+		minusBottom	: 'images/menu/minusbottom.gif',
+		nlPlus			: 'images/menu/nolines_plus.gif',
+		nlMinus			: 'images/menu/nolines_minus.gif'
+	};
+	this.obj = objName;
+	this.aNodes = [];
+	this.aIndent = [];
+	this.root = new Node(-1);
+	this.selectedNode = null;
+	this.selectedFound = false;
+	this.completed = false;
+};
+
+// Adds a new node to the node array
+dTree.prototype.add = function(id, pid, name, url, title, target, icon, iconOpen, open) {
+	this.aNodes[this.aNodes.length] = new Node(id, pid, name, url, title, target, icon, iconOpen, open);
+};
+
+// Open/close all nodes
+dTree.prototype.openAll = function() {
+	this.oAll(true);
+};
+dTree.prototype.closeAll = function() {
+	this.oAll(false);
+};
+
+// Outputs the tree to the page
+dTree.prototype.toString = function() {
+	var str = '<div class="dtree">\n';
+	if (document.getElementById) {
+		if (this.config.useCookies) this.selectedNode = this.getSelected();
+		str += this.addNode(this.root);
+	} else str += 'Browser not supported.';
+	str += '</div>';
+	if (!this.selectedFound) this.selectedNode = null;
+	this.completed = true;
+	return str;
+};
+
+// Creates the tree structure
+dTree.prototype.addNode = function(pNode) {
+	var str = '';
+	var n=0;
+	if (this.config.inOrder) n = pNode._ai;
+	for (n; n<this.aNodes.length; n++) {
+		if (this.aNodes[n].pid == pNode.id) {
+			var cn = this.aNodes[n];
+			cn._p = pNode;
+			cn._ai = n;
+			this.setCS(cn);
+			if (!cn.target && this.config.target) cn.target = this.config.target;
+			if (cn._hc && !cn._io && this.config.useCookies) cn._io = this.isOpen(cn.id);
+			if (!this.config.folderLinks && cn._hc) cn.url = null;
+			if (this.config.useSelection && cn.id == this.selectedNode && !this.selectedFound) {
+					cn._is = true;
+					this.selectedNode = n;
+					this.selectedFound = true;
+			}
+			str += this.node(cn, n);
+			if (cn._ls) break;
+		}
+	}
+	return str;
+};
+
+// Creates the node icon, url and text
+dTree.prototype.node = function(node, nodeId) {
+	var str = '<div class="dTreeNode">' + this.indent(node, nodeId);
+	if (this.config.useIcons) {
+		if (!node.icon) node.icon = (this.root.id == node.pid) ? this.icon.root : ((node._hc) ? this.icon.folder : this.icon.node);
+		if (!node.iconOpen) node.iconOpen = (node._hc) ? this.icon.folderOpen : this.icon.node;
+		if (this.root.id == node.pid) {
+			node.icon = this.icon.root;
+			node.iconOpen = this.icon.root;
+		}
+		str += '<img id="i' + this.obj + nodeId + '" src="' + ((node._io) ? node.iconOpen : node.icon) + '" alt="" />';
+	}
+	if (node.url) {
+		str += '<a id="s' + this.obj + nodeId + '" class="' + ((this.config.useSelection) ? ((node._is ? 'nodeSel' : 'node')) : 'node') + '" href="' + node.url + '"';
+		if (node.title) str += ' title="' + node.title + '"';
+		if (node.target) str += ' target="' + node.target + '"';
+		if (this.config.useStatusText) str += ' onmouseover="window.status=\'' + node.name + '\';return true;" onmouseout="window.status=\'\';return true;" ';
+		if (this.config.useSelection && ((node._hc && this.config.folderLinks) || !node._hc))
+			str += ' onclick="javascript: ' + this.obj + '.s(' + nodeId + ');"';
+		str += '>';
+	}
+	else if ((!this.config.folderLinks || !node.url) && node._hc && node.pid != this.root.id)
+		str += '<a href="javascript: ' + this.obj + '.o(' + nodeId + ');" class="node">';
+	str += node.name;
+	if (node.url || ((!this.config.folderLinks || !node.url) && node._hc)) str += '</a>';
+	str += '</div>';
+	if (node._hc) {
+		str += '<div id="d' + this.obj + nodeId + '" class="clip" style="display:' + ((this.root.id == node.pid || node._io) ? 'block' : 'none') + ';">';
+		str += this.addNode(node);
+		str += '</div>';
+	}
+	this.aIndent.pop();
+	return str;
+};
+
+// Adds the empty and line icons
+dTree.prototype.indent = function(node, nodeId) {
+	var str = '';
+	if (this.root.id != node.pid) {
+		for (var n=0; n<this.aIndent.length; n++)
+			str += '<img src="' + ( (this.aIndent[n] == 1 && this.config.useLines) ? this.icon.line : this.icon.empty ) + '" alt="" />';
+		(node._ls) ? this.aIndent.push(0) : this.aIndent.push(1);
+		if (node._hc) {
+			str += '<a href="javascript: ' + this.obj + '.o(' + nodeId + ');"><img id="j' + this.obj + nodeId + '" src="';
+			if (!this.config.useLines) str += (node._io) ? this.icon.nlMinus : this.icon.nlPlus;
+			else str += ( (node._io) ? ((node._ls && this.config.useLines) ? this.icon.minusBottom : this.icon.minus) : ((node._ls && this.config.useLines) ? this.icon.plusBottom : this.icon.plus ) );
+			str += '" alt="" /></a>';
+		} else str += '<img src="' + ( (this.config.useLines) ? ((node._ls) ? this.icon.joinBottom : this.icon.join ) : this.icon.empty) + '" alt="" />';
+	}
+	return str;
+};
+
+// Checks if a node has any children and if it is the last sibling
+dTree.prototype.setCS = function(node) {
+	var lastId;
+	for (var n=0; n<this.aNodes.length; n++) {
+		if (this.aNodes[n].pid == node.id) node._hc = true;
+		if (this.aNodes[n].pid == node.pid) lastId = this.aNodes[n].id;
+	}
+	if (lastId==node.id) node._ls = true;
+};
+
+// Returns the selected node
+dTree.prototype.getSelected = function() {
+	var sn = this.getCookie('cs' + this.obj);
+	return (sn) ? sn : null;
+};
+
+// Highlights the selected node
+dTree.prototype.s = function(id) {
+	if (!this.config.useSelection) return;
+	var cn = this.aNodes[id];
+	if (cn._hc && !this.config.folderLinks) return;
+	if (this.selectedNode != id) {
+		if (this.selectedNode || this.selectedNode==0) {
+			eOld = document.getElementById("s" + this.obj + this.selectedNode);
+			eOld.className = "node";
+		}
+		eNew = document.getElementById("s" + this.obj + id);
+		eNew.className = "nodeSel";
+		this.selectedNode = id;
+		if (this.config.useCookies) this.setCookie('cs' + this.obj, cn.id);
+	}
+};
+
+// Toggle Open or close
+dTree.prototype.o = function(id) {
+	var cn = this.aNodes[id];
+	this.nodeStatus(!cn._io, id, cn._ls);
+	cn._io = !cn._io;
+	if (this.config.closeSameLevel) this.closeLevel(cn);
+	if (this.config.useCookies) this.updateCookie();
+};
+
+// Open or close all nodes
+dTree.prototype.oAll = function(status) {
+	for (var n=0; n<this.aNodes.length; n++) {
+		if (this.aNodes[n]._hc && this.aNodes[n].pid != this.root.id) {
+			this.nodeStatus(status, n, this.aNodes[n]._ls)
+			this.aNodes[n]._io = status;
+		}
+	}
+	if (this.config.useCookies) this.updateCookie();
+};
+
+// Opens the tree to a specific node
+dTree.prototype.openTo = function(nId, bSelect, bFirst) {
+	if (!bFirst) {
+		for (var n=0; n<this.aNodes.length; n++) {
+			if (this.aNodes[n].id == nId) {
+				nId=n;
+				break;
+			}
+		}
+	}
+	var cn=this.aNodes[nId];
+	if (cn.pid==this.root.id || !cn._p) return;
+	cn._io = true;
+	cn._is = bSelect;
+	if (this.completed && cn._hc) this.nodeStatus(true, cn._ai, cn._ls);
+	if (this.completed && bSelect) this.s(cn._ai);
+	else if (bSelect) this._sn=cn._ai;
+	this.openTo(cn._p._ai, false, true);
+};
+
+// Closes all nodes on the same level as certain node
+dTree.prototype.closeLevel = function(node) {
+	for (var n=0; n<this.aNodes.length; n++) {
+		if (this.aNodes[n].pid == node.pid && this.aNodes[n].id != node.id && this.aNodes[n]._hc) {
+			this.nodeStatus(false, n, this.aNodes[n]._ls);
+			this.aNodes[n]._io = false;
+			this.closeAllChildren(this.aNodes[n]);
+		}
+	}
+}
+
+// Closes all children of a node
+dTree.prototype.closeAllChildren = function(node) {
+	for (var n=0; n<this.aNodes.length; n++) {
+		if (this.aNodes[n].pid == node.id && this.aNodes[n]._hc) {
+			if (this.aNodes[n]._io) this.nodeStatus(false, n, this.aNodes[n]._ls);
+			this.aNodes[n]._io = false;
+			this.closeAllChildren(this.aNodes[n]);		
+		}
+	}
+}
+
+// Change the status of a node(open or closed)
+dTree.prototype.nodeStatus = function(status, id, bottom) {
+	eDiv	= document.getElementById('d' + this.obj + id);
+	eJoin	= document.getElementById('j' + this.obj + id);
+	if (this.config.useIcons) {
+		eIcon	= document.getElementById('i' + this.obj + id);
+		eIcon.src = (status) ? this.aNodes[id].iconOpen : this.aNodes[id].icon;
+	}
+	eJoin.src = (this.config.useLines)?
+	((status)?((bottom)?this.icon.minusBottom:this.icon.minus):((bottom)?this.icon.plusBottom:this.icon.plus)):
+	((status)?this.icon.nlMinus:this.icon.nlPlus);
+	eDiv.style.display = (status) ? 'block': 'none';
+};
+
+
+// [Cookie] Clears a cookie
+dTree.prototype.clearCookie = function() {
+	var now = new Date();
+	var yesterday = new Date(now.getTime() - 1000 * 60 * 60 * 24);
+	this.setCookie('co'+this.obj, 'cookieValue', yesterday);
+	this.setCookie('cs'+this.obj, 'cookieValue', yesterday);
+};
+
+// [Cookie] Sets value in a cookie
+dTree.prototype.setCookie = function(cookieName, cookieValue, expires, path, domain, secure) {
+	document.cookie =
+		escape(cookieName) + '=' + escape(cookieValue)
+		+ (expires ? '; expires=' + expires.toGMTString() : '')
+		+ (path ? '; path=' + path : '')
+		+ (domain ? '; domain=' + domain : '')
+		+ (secure ? '; secure' : '');
+};
+
+// [Cookie] Gets a value from a cookie
+dTree.prototype.getCookie = function(cookieName) {
+	var cookieValue = '';
+	var posName = document.cookie.indexOf(escape(cookieName) + '=');
+	if (posName != -1) {
+		var posValue = posName + (escape(cookieName) + '=').length;
+		var endPos = document.cookie.indexOf(';', posValue);
+		if (endPos != -1) cookieValue = unescape(document.cookie.substring(posValue, endPos));
+		else cookieValue = unescape(document.cookie.substring(posValue));
+	}
+	return (cookieValue);
+};
+
+// [Cookie] Returns ids of open nodes as a string
+dTree.prototype.updateCookie = function() {
+	var str = '';
+	for (var n=0; n<this.aNodes.length; n++) {
+		if (this.aNodes[n]._io && this.aNodes[n].pid != this.root.id) {
+			if (str) str += '.';
+			str += this.aNodes[n].id;
+		}
+	}
+	this.setCookie('co' + this.obj, str);
+};
+
+// [Cookie] Checks if a node id is in a cookie
+dTree.prototype.isOpen = function(id) {
+	var aOpen = this.getCookie('co' + this.obj).split('.');
+	for (var n=0; n<aOpen.length; n++)
+		if (aOpen[n] == id) return true;
+	return false;
+};
+
+// If Push and pop is not implemented by the browser
+if (!Array.prototype.push) {
+	Array.prototype.push = function array_push() {
+		for(var i=0;i<arguments.length;i++)
+			this[this.length]=arguments[i];
+		return this.length;
+	}
+};
+if (!Array.prototype.pop) {
+	Array.prototype.pop = function array_pop() {
+		lastElement = this[this.length-1];
+		this.length = Math.max(this.length-1,0);
+		return lastElement;
+	}
+};
+</script>
+
+</head>
+<body style="width:960px; padding: 0px; background: green; margin: auto; border-left: solid gray 1px; border-right: solid gray 1px;">
+
+<div id="site_nav">
+<div class="dtree">
+
+<!--	<p><a href="javascript: d.openAll();">open all</a> | <a href="javascript: d.closeAll();">close all</a></p>
+-->
+    <br/><br/>
+	<script type="text/javascript">
+		<!--
+
+		d = new dTree('d');
+
+		d.add(0,-1,'总结', "#");
+		d.add(1,0,'前言','#preface');
+		d.add(2,0,'成员列表','#members');
+		d.add(3,0,'准备工作','#preparation');
+			d.add(31,3, '资金募捐', '#preparation_money');
+			d.add(32,3, '活动策划<略>', '#preparation_plan');
+			d.add(33,3, '教学安排<略>', '#preparation_teach');
+		d.add(4,0,'团队日志','#teamlog');
+			d.add(401,4, '7月15日', '#teamlog_715');
+			d.add(402,4, '7月16日', '#teamlog_716');
+			d.add(403,4, '7月17日', '#teamlog_717');
+			d.add(404,4, '7月18日', '#teamlog_718');
+			d.add(405,4, '7月19日', '#teamlog_719');
+			d.add(406,4, '7月20日', '#teamlog_720');
+			d.add(407,4, '7月21日', '#teamlog_721');
+			d.add(408,4, '7月22日', '#teamlog_722');
+			d.add(409,4, '7月23日', '#teamlog_723');
+			d.add(410,4, '7月24日', '#teamlog_724');
+			d.add(411,4, '7月25日', '#teamlog_725');
+			d.add(412,4, '7月26日', '#teamlog_726');
+			d.add(413,4, '7月27日', '#teamlog_727');
+			d.add(414,4, '7月28日', '#teamlog_728');
+			d.add(415,4, '7月29日', '#teamlog_729');
+			d.add(416,4, '7月30日', '#teamlog_730');
+			d.add(417,4, '7月31日', '#teamlog_737');
+			d.add(418,4, '8月1日 ', '#teamlog_801');
+			d.add(419,4, '8月2日 ', '#teamlog_802');
+			d.add(420,4, '8月3日 ', '#teamlog_803');
+			d.add(421,4, '8月4日 ', '#teamlog_804');
+			d.add(422,4, '8月5日 ', '#teamlog_805');
+		d.add(5,0,'个人日志','#memberlog');
+			d.add(51,5,'唐邦国','#memberlog_tbg');
+			d.add(52,5,'申元媛','#memberlog_syy');
+			d.add(53,5,'冯可','#memberlog_fk');
+			d.add(54,5,'黄逸帆','#memberlog_hyf');
+			d.add(55,5,'刘静','#memberlog_lj');
+			d.add(56,5,'刘丽','#memberlog_ll');
+			d.add(57,5,'许岭木','#memberlog_xlm');
+		d.add(6,0,'特色活动','#activities');
+			d.add(61,6,'中国梦，祖国梦','#activities_chinadream');
+			d.add(62,6,'美化教室','#activities_classroom');
+			d.add(63,6,'学校建设','#activities_build');
+			d.add(64,6,'心愿认领','#activities_wish');
+		d.add(7,0,'感动瞬间','#touchmoment');
+			d.add(71,7,'申元媛','#touchmoment_syy');
+			d.add(72,7,'唐邦国','#touchmoment_tbg');
+			d.add(73,7,'冯可','#touchmoment_fk');
+			d.add(74,7,'黄逸帆','#touchmoment_hyf');
+			d.add(75,7,'卢佳园','#touchmoment_ljy');
+			d.add(76,7,'刘静','#touchmoment_lj');
+			d.add(77,7,'刘丽','#touchmoment_ll');
+			d.add(78,7,'许岭木','#touchmoment_xlm');
+		d.add(8,0,'友情支持','#support');
+			d.add(81,8,'热心学长','#support_rxxz');
+			d.add(82,8,'文具店阿姨','#support_wjday');
+			d.add(83,8,'康巴活佛','#support_kbhf');
+			d.add(84,8,'柔旦智华','#support_rdzh');
+			d.add(85,8,'拉老师','#support_lls');
+			d.add(86,8,'夏老师','#support_xlm');
+			d.add(87,8,'尕藏老师','#support_gzls');
+			d.add(88,8,'青浪老师','#support_qlls');
+			d.add(89,8,'南拉老师','#support_llls');
+			d.add(810,8,'厨娘与管家','#support_cnygj');
+		d.add(9,0,'孩子们','#children');
+			d.add(901,9,'李毛才忠','#children_lmcz');
+			d.add(902,9,'才让卓玛','#children_crzm');
+			d.add(903,9,'希加卓玛','#children_xjzm');
+			d.add(904,9,'班马龙周','#children_bmlz');
+			d.add(905,9,'华旦多杰','#children_hddj');
+			d.add(906,9,'文昌','#children_wc');
+			d.add(907,9,'拉毛措','#children_lmc');
+			d.add(908,9,'夏道措','#children_xdc');
+			d.add(909,9,'尕藏多杰','#children_gzdj');
+			d.add(910,9,'班马措','#children_bmc');
+			d.add(911,9,'才让加，才增多杰','#children_crj');
+		d.add(10,0,'老师我想对你说','#toteacher');
+			d.add(101,10,'班马措','#toteacher_bmc');
+			d.add(102,10,'文昌','#toteacher_wc');
+			d.add(103,10,'拉松扎西','#toteacher_lszx');
+			d.add(104,10,'才让东主','#toteacher_crdz');
+			d.add(105,10,'拉毛措','#toteacher_lmc');
+			d.add(106,10,'希加卓玛','#toteacher_xjzm');
+			d.add(107,10,'侃卓措','#toteacher_kzc');
+			d.add(108,10,'才项吉','#toteacher_cxj');
+		d.add(11,0,'教学总结','#');
+			d.add(1100,11,'唐邦国','#teachsum_tbg');
+			d.add(1101,11,'申元媛','#teachsum_syy');
+			d.add(1102,11,'冯可','#teachsum_fk');
+			d.add(1103,11,'黄逸帆','#teachsum_hyf');
+			d.add(1104,11,'卢佳园','#teachsum_ljy');
+			d.add(1105,11,'刘静','#teachsum_lj');
+			d.add(1106,11,'刘丽','#teachsum_ll');
+			d.add(1107,11,'许岭木','#teachsum_xlm');
+		d.add(12,0,'心得体会','#learned');
+			d.add(1200,12,'唐邦国','#learned_tbg');
+			d.add(1201,12,'申元媛','#learned_syy');
+			d.add(1202,12,'冯可','#learned_fk');
+			d.add(1203,12,'黄逸帆','#learned_hyf');
+			d.add(1204,12,'刘静','#learned_lj');
+			d.add(1205,12,'刘丽','#learned_ll');
+			d.add(1206,12,'许岭木','#learned_xlm');
+		d.add(13,0,'后序','#end');
+		document.write(d);
+		d.closeAll();
+		//-->
+	</script>
+        <br/>
+        <br/>
+
+</div>
+</div>
+
+<div id="content">
+
+<div style="text-align: center;">
+<h1>电子科技大学红心志愿者服务队<br/>青海支教总结</h1>
+</div>
+<hr/>
+<!-- <p style="text-align:center;"><img width="415" src="images/readheart.png" /> </p> -->
+<p>非常抱歉，因为各种复杂原因，我也是不久前才拿到这些资料。</p>
+<p>实在是太晚了一些，估计大家都忘了这回事了吧。</p>
+<p>这个页面是我从红心队的总结书中整理出来的文字，谨作纪念。</p>
+<p>支教总结书和照片我传到网上了：</p>
+<div style="padding-left: 60px;">
+<a href="http://yun.baidu.com/s/18BuRO">电子科技大学机电学院红心支教队团队总结书.doc (116M)</a>
+<br/>
+<a href="http://yun.baidu.com/s/1zisLj">支教照片.rar (452M) </a>
+</div>
+
+<p>
+关于“<span style="color: red;">青海湖慈善孤残学院</span>”，百度上已经可以找到不少信息。由于支教等类似活动的开展，学校已经得到了更多爱心人士的关注。
+</p>
+<p>这次支教活动通过网络发布的一些信息：</p>
+<span style="color: red;">&hearts;</span>  〖强国论坛〗红心支教队7月18日：初到青海湖畔孤残学校，支教活动正式开始。<br/>
+&nbsp; &nbsp;<a href="http://bbs1.people.com.cn/post/80/0/1/131426853.html" target="_blank">
+http://bbs1.people.com.cn/post/80/0/1/131426853.html</a> <br/>
+<span style="color: red;">&hearts;</span>  〖强国论坛〗红心支教队7月19日：第一堂课。<br/>
+&nbsp; &nbsp;<a href="http://bbs1.people.com.cn/post/80/0/1/131475352.html" target="_blank">
+http://bbs1.people.com.cn/post/80/0/1/131475352.html</a> <br/>
+<span style="color: red;">&hearts;</span>  〖强国论坛〗红心支教队7.20日：与孩子共话“中国梦，我的祖国"。<br/>
+&nbsp; &nbsp;<a href="http://bbs1.people.com.cn/post/80/0/1/131498323.html" target="_blank">
+http://bbs1.people.com.cn/post/80/0/1/131498323.html</a> <br/>
+<span style="color: red;">&hearts;</span>  〖强国论坛〗红心支教队7.21日：与学校孩子们参加藏族村落一年一度的聚会活动。<br/>
+&nbsp; &nbsp;<a href="http://bbs1.people.com.cn/post/80/0/1/131522215.html" target="_blank">
+http://bbs1.people.com.cn/post/80/0/1/131522215.html</a> <br/>
+<span style="color: red;">&hearts;</span>  〖强国论坛〗红心支教队8月8日：离别。<br/>
+&nbsp; &nbsp;<a href="http://bbs1.people.com.cn/post/1/0/1/132048992.html" target="_blank">
+http://bbs1.people.com.cn/post/1/0/1/132048992.html</a> <br/>
+<span style="color: red;">&hearts;</span>  〖新浪微博〗这里发布了很多关于支教生活的一些记录<br/>
+&nbsp; &nbsp;<a href="http://weibo.com/p/1005052542539825/weibo?from=page_100505&mod=TAB#place" target="_blank">
+http://weibo.com/p/1005052542539825/weibo?from=page_100505&mod=TAB#place</a> <br/>
+<span style="color: red;">&hearts;</span>  〖人民网〗“爱心支教 共享中国梦”专题提到了红心支教队。<br/>
+&nbsp; &nbsp;<a href="http://www.people.com.cn/n/2013/0805/c347407-22448312-4.html" target="_blank">
+http://www.people.com.cn/n/2013/0805/c347407-22448312-4.html</a> <br/>
+<hr>
+<!-- <div style="text-align:center;"><img src="images/leave.2.jpg" width="680"/></div> -->
+
+<hr class="newpage"/>
+
+<a name="preface"><h2>前言</h2></a>
+
+<p>“情系孤残儿童，爱暖青海湖畔。” 
+</p> 
+<p>这是红心的第一次支教，在20天的时间里，红心支教队的八名队员，从天府之国到青海藏区。我们出发的时候，适逢另一个队伍也去支教，他们去的是成都某地。他们有专车，有单反，有新闻媒体的报道。我们去的时候，除了行李和队旗，便只有一腔热血。可也正是在那一刻，每个队员内心，都有了一个坚定的信念，纵使前方是雪域高原，纵使那里贫穷困苦，红心也要去，我们也要去。我们不求做什么轰轰烈烈的大事，我们只想为那些藏区的孩子，带去一丝一缕的希望，一点一滴的关怀。
+</p>
+<p>我们带去学习文具、体育用品等物资，为孩子们带去外界的关爱。
+</p>
+<p>我们开展语文、数学、英语、美术、手工、体育等课程，帮助孩子们巩固知识。 
+</p>
+<p>我们组织“中国梦，我的祖国”主题班会、美化教室、心愿认领等活动，为孩子们开拓视野，带去希望。
+</p>
+<p>我们和藏族同胞一起搭帐篷、搬砖，为学校建设添砖加瓦。
+</p>
+<p>我们吃苦耐劳，齐心协力，支教工作得到了校方的认可和赞赏，最终成功和校方签订协议，将支教学校发展成支教基地，为之后的继续支教提供了平台。
+</p>
+<p>可以说，我们去的时候，是空空如也；但我们回来的时候，却是满载而归。我们经历了平时不曾经历的。我们为孩子们付出了爱，也收到了孩子们对我们的爱。那些高原的孩子们，他们虽然生活困顿，但犹如一朵朵格桑花，虽不起眼，却一直散发着特有的淡淡清香。
+</p>
+<p>而在经过了近20天的支教活动后，我们对支教二字有了更为深刻的体会。何为支教？ 
+</p>
+<p>“支教是指一项支援落后地区乡镇中小学校的教育和教学管理工作。 ”这是百度百科上，对支教活动的解释。
+</p>
+<p>然而我们，却并不认同。支教并不是如此冷冰冰的字眼。支教，这两个字背后，蕴含的是自然的美，更是人情的美。 
+</p>
+<p>每个队员在支教结束后，很长一段时间都时常怀念在青海的日子，怀念那些孩子们，怀念当地学校的老师……在青海湖畔的日子，我们不单单感受到了自然的雄浑壮阔，更是体验到了人与人之间的深情，体会到了人与人之间，那种超越民族，超越年龄，乃至超越时代的与生俱来的质朴情谊。
+</p>
+<p>当今，社会充满太多纷纷扰扰，我们的内心，过于烦躁。而在青海湖畔的日子，我们恍若误入世外桃源。孩子们的天真烂漫，洗涤了我们内心的污浊。
+</p>
+<p>支教，表面上是我们向孩子们传授知识，但从更深层面上说，是孩子们教会我们重新用淳朴的眼光审视世界。
+</p>
+<p>离开青海湖畔，已经多有时日了。但过往的美好，却始终不能释怀。
+</p>
+<p>谨编此书来纪念那段美好的时光。
+</p>
+ 
+
+<p style="text-align:right; padding-right: 30px;">红心支教队
+</p>
+<p style="text-align:right; padding-right: 30px;">2013年9月7日
+</p>
+
+<hr class="newpage"/>
+
+<a name="members"><h2>成员列表</h2></a>
+
+<table border="1" width="100%">
+<tr>
+    <td>队长</td><td>唐邦国</td><td>活动组织者，定时召开队内会议</td>
+</tr>
+<tr>
+    <td>副队长</td><td>申元媛</td><td>课程设计安排，活动安排调整，统一负责整个支教活动的经费问题</td>
+</tr>
+<tr>
+    <td rowspan="6">队员</td>
+    <td>冯可</td><td>物资管理，负责支教人员安全</td>
+</tr>
+<tr>
+    <td>黄逸帆</td><td>行程记录，资料收集、整理</td>
+</tr>
+<tr>
+    <td>卢佳园</td><td>完整的调研，包括调研项目的提出和行动安排及最后调研整理报告。</td>
+</tr>
+<tr>
+    <td>刘静</td><td>完整的调研，包括调研项目的提出和行动安排及最后调研整理报告。</td>
+</tr>
+<tr>
+    <td>刘丽</td><td>照顾队员的生活方面，医药管理</td>
+</tr>
+<tr>
+    <td>许岭木</td><td>策划、活动宣传，主要新闻稿撰写，新闻稿审核</td>
+</tr>
+</table>
+
+<hr class="newpage"/>
+<a name="preparation"><h2>前期工作</h2></a>
+<a name="preparation_money"><h3>资金募捐</h3></a>
+
+<h4>一元行动</h4>
+<!-- <div style="text-align:center;"><img src="images/1yuan.jpg"/></div> -->
+<p>
+因为我们队决定支教的地方在青海省，路途遥远所需要的资金也就比较多。于是我们红心志愿者服务队针对这个问题开了几次会。最终确定了几个筹集资金的方案，“一元行动”便是其中一个主要的活动。这个活动顾名思义就是“每人捐献一元爱心，便可汇聚一条爱心合流”，这个活动是靠我们全队人员来完成的，大家都在其中努力贡献自己的力量。活动分为几个方向：一是每个队员在自己班上进行宣传，号召班级同学捐献一份爱心；二是我们在银桦和学子餐厅门口设点向全校师生宣传我们的活动，号召大家参与进来；三是我们去顺江、红光等地方给路人宣传，让他们也为我们的支教帮帮忙。最开始我们之所以将活动定为一元，是因为我们考虑到一元钱既不是很大的数目，但又是一份爱心，积少成多也能帮我们缓解资金方面的压力。可没想到的是“一元行动”实施起来并没我们想象中容易。
+<p>
+    首先在学校中，因为支教的队伍太多也就是募捐的活动也太多了，大家对我们的活动并不是很支持。当时我们在学子餐厅宣传活动时，很少人参与进来，愿意捐献爱心的寥寥无几。但机械一班的何壮发同学在看到我们的宣传海报时，二话不说便捐献了二十元，让我们都很感动。还有我们红心队的一些小朋友，也叫来同学给我们帮忙，当时心里一下子就像有暖流流过。虽然我们的活动有人不支持，但还有很多的人在默默帮着我们，支持着我们的支教行动。
+<!-- <div style="text-align:center;"><img src="images/1yuan2.jpg"/></div> -->
+<p>
+    后来我们又去了红光募捐，我还记得那天天气很炎热，我们举着活动的宣传海报走在街上，走过的路人很多都用异样或是怀疑的目光看着我们，让我们既委屈又心酸。我们开始一直不敢向别人宣传我们的活动，就是怕别人以为我们是骗子，打着支教的名义来骗钱。直到一个好心的男生主动过来给了我们一个硬币，那一刻真有种流泪的冲动，后来我们几个人便壮着胆子去向路人介绍“一元行动”，有些好心的人会捐五元钱，但更多的人会质疑我们的身份，就算我们拿出学生证也认为是假的，心里真不是滋味。那天那么热，我们也没人舍得买水喝。一下午的汗水和委屈只得到70元钱，现在回想起来还是有些心酸和难受。但是一想到我们的每份辛苦都为孩子们多买到一支铅笔，一个本子，或是一个毽子，想想也觉得很值得很欣慰。
+<p>
+虽然我们的“一元行动”并没有募捐到很大的数目，但其中全是我们的汗水与努力，更有我们对他们满满的爱和期望。这些钱最后能为孩子们买到各种他们需要的东西，我们都很开心也很骄傲。
+</p>
+
+
+<h4>班级募捐</h4>
+<p>
+自从联系到青海湖慈善孤残学校以后，支教地点就完全定下来了。最主要的事就是筹集资金。由于成都距青海比较远，支教队一共确定了8个人，所以花费较大。我们决定首先在校内进行募捐，但是由于学校支教队较多，他们在我们之前就进行过募捐。所以我们在学子餐厅进行的募捐情况并不乐观。
+<p>
+最后我们就召集红心志愿者的全部队员，让每个队员到自己班级进行我们的支教募捐活动。由于很多班级自己班就开展了支教活动并且在支教募捐活动不久前雅安发生地震，那时红心就做了一个募捐活动，很多班级都积极参与了。这次再做一次募捐活动，情况就不太理想了。不过我们想，我们做好自己的宣传，大家自愿募捐，能捐多少算多少，这样总比一点都没有要好很多。
+<p>
+经过宣传几天后，大一机械四班共募捐到资金37.4元，11级的机械一班的王振昊同学们捐了100元，纪元和胡炎辉同学共捐100元，机械二班王鑫同学捐了200元，工业一班刘丽同学捐了100元。最后共募捐到资金537.4元。这笔资金虽然不是很多，也够我们买一些东西了。但是这对我们的预算来说，却远远不够，所以我们又想了很多募捐资金的方法。非常感谢那些为红心支教队的支教活动奉献爱心的所有同学。
+</p>
+
+<h4>物资收集</h4>
+<p>
+1、3月5号这一天是雷锋日，红心志愿者队举办了一个号召同学们募捐衣物和书籍的活动。这些募捐到的书籍和衣物将全部捐给支教学校。
+<!-- <div style="text-align:center;"><img src="images/banjimujuan.jpg"/></div> -->
+<p>
+活动详情：3月5号这一天在银桦门口派发宣传单，号召广大同学学习雷锋精神，募捐自己不要的衣物、图书。红心志愿者队在银桦食堂门口设有捐赠点，有很多热心的同学都将自己的衣物和书籍拿到银桦食堂门口捐赠。另外一些队员到各个寝室宣传该活动，有许多同学直接将衣物和书籍捐给队员。考虑到大学的书很多人都用不上，所以将图书义卖或者卖给知博书店，再将卖来的钱捐出去。
+<!-- <div style="text-align:center;"><img src="images/wuzishouji.jpg"/></div> -->
+<p>
+活动成果：此次活动募捐到大量书籍和衣物，这些书籍和义务将全部捐给需要帮助的学校。
+<p>
+2、7月16号上午，我们几名支教队员一起前往一家文具店为学校的孩子选购文具、体育用品和教学用具。文具店老板听说我们是为一所孤残学校购买物资，便将价格算的特别便宜，还捐赠了许多文具给学校的孩子。我们都深深地被她的无私精神给感动了，最后我们与他拍照留影后离开。
+<!-- <div style="text-align:center;"><img src="images/wenjudian.jpg"/></div> -->
+<p>
+3、8月4号上午，也是离开的前一天。我们几位支教老师前往倒淌河镇为孩子们选购瓜果蔬菜、一些生活用品、烧水设备和体育用品。
+<p>
+注：以上提到所有物资都已捐给青海湖慈善孤残学院。
+</p>
+<hr class="newpage"/>
+<a name="preparation_plan"><h3>活动策划<略></h3></a>
+<hr class="newpage"/>
+
+<a name="preparation_teach"><h3>教学安排<略></h3></a>
+<hr class="newpage"/>
+<a name="teamlog"><h2>团队日志</h2></a>
+<a name="teamlog_715"><h3>7月15日</h3></a>
+<p>
+今天是激动人心的一天。在经过两个月左右的筹划组织后，我们红心志愿者支教队终于正式启程，向目的地青海湖慈善孤残学校进发。由于我们乘坐的列车是在成都站发车，发车时间在中午12点多，而清水河校区离火车站较远，所以一大早大家便早早地在活动中心门口集合。在指导老师的带领下，我们和另一个将去青海的支教队集合。在拍了合照之后，向成都火车站进发。我们先是挤116，一直到犀浦动车站，坐上动车后直达成都火车站。在候车室等了良久后，一行人终于上了列车。由于经费有限，大家坐的都是硬座。而西宁和成都又比较远，火车大概要运行一天左右的时间，但队员们却丝毫没有因此感到疲惫。大家在火车上有说有笑，一起吃吃东西聊聊天，借此振作精神。硬座的夜晚，是最难熬的，队员们都努力让自己睡着，有的趴在桌子上，有的低着头，有的互相靠着，尽量让自己多多充电。虽然很艰难，好歹是熬到了新一天的到来。
+</p>
+<!-- <div style="text-align:center;"><img src="images/chufa.jpg" width="680"/></div> -->
+
+<a name="teamlog_716"><h3>7月16日</h3></a>
+<p>
+列车晚点了几十分钟，到达西宁临时火车站的时候，已经是下午一点左右。大家都是又累又饿，因为队伍中的申元媛同学是西宁本地的。所以我们就按照原先计划的，先到她家进行休整，稍作整顿后，第二天去学校。原先打算是16号下午，去她家放完行李后就先去附近的文具批发市场，为孩子们买一些文具。然而有时候，计划是跟不上变化的。原先预计20分钟左右一趟的公交车，我们足足等了一个多小时才等到。因此，当我们到申元媛家时，已经是下午三点半多了。令我们很感动的是，她的家人为我们做好了丰富可口的菜，都是很具有青海地方特色的菜肴，对于饥饿的我们，真是无异于雪中送炭。吃饱喝足之后，我们就立马开会，由于时间已经4点多了，再去文具批发市场就显得太迟。所以我们决定，第二天的早上去买，并且详细罗列了需要买的文体用品。
+<p>
+原先我们都很担心高原反应，不过庆幸的是，队员们都无大碍。只是觉得有些喉咙干什么的。因为第二天要早起，大家晚上便早早睡了。
+<a name="teamlog_717"><h3>7月17日</h3></a>
+<p>
+今天队员们都起得特别早，因为今天我们不但要去买文具，而且将要奔赴支教的学校。大家都显得特别兴奋。
+<p>
+由于我们行李比较多，买物资会不方便。所以，我们最终决定兵分两路，其中刘丽、刘静两位女生去安放行李，而其余的人就都去买文具。我们买文具的地点是在西宁市市中心的大十字附近，那儿有许多文具店。不过由于我们去得比较早，开的店家寥寥无几。但我们红心支教队的队员们是幸运的！因为我们遇见了，善良充满爱心的文具店大妈，她不但帮我们找文具，而且在最后结账的时候，她都按照最便宜的价格卖给我们。正当我们要走的时候，大妈突然让我们等等。不知何时，她的身边多了一只大箱子，她让我们把箱子里的东西带给孩子们。我们一看，里面是满满的自动铅笔。不禁感到大妈的对孩子们的浓浓爱心，我们突然觉得，关爱孩子们的不仅仅我们，还有更多社会上的其他人，心里便不由地暖暖的。
+<!-- <div style="text-align:center;"><img src="images/wenjudian.jpg"/></div> -->
+<p>
+两路人马最终在一家名字叫做五大队的枸杞店汇合。招待我们的是一个叫做柔旦的年轻人，也就二十出头的样子。但我们和他一比便有着明显的差距，外人看来他是店里的一名职员，但其实他有个更重要的身份——孤残学校的志愿者。他为人，坦诚、豪爽又富有爱心，是个令人崇敬的藏族汉子。我们等到五点多，活佛来了。和我们想象中活佛的样子不相同，他很慈祥，一点都不令人生畏。活佛请我们吃饭，都是些很具有藏族特色的食品，我们吃完饭，去学校已经是6点左右了。
+<p>
+八点天黑的时候，我们终于到了学校，入眼的便是有些破败的板房，和坑洼的操场，一下车就有阵阵冷风吹来，这时孩子们都在念经，我们被一个女生——希加卓玛接到了活佛的房间里，她给我们倒了暖暖的奶茶，一股暖流便涌上了心头，我们开始和她谈天，她有些腼腆羞涩，不是很敢和我们交流，但在我们耐心地和她轮流交谈后，她也渐渐地放开了一些。我们也见到了许多别的孩子，他们好奇地看着我们，显得都比较害羞。队员们和他们友好地打招呼，希望在今后的日子里可以和他们越来越亲近，消灭该死的距离感。
+<!-- <div style="text-align:center;"><img src="images/tiaosheng.jpg" width="680"/></div> -->
+<p>
+最后，在柔旦的带领下，我们去了各自的宿舍。四个女生是分在了两个宿舍，和孩子们一起睡。而我们四个男生（三名支教队员以及一名带队老师），是和两个工人一起睡在一间临时板房内。
+
+<a name="teamlog_718"><h3>7月18日</h3></a>
+<p>
+由于孩子们早上起得很早，队员们也都早早地起床了。不过当我们在刷牙的时候，勤奋的孩子们都已经跑完晨跑，在进行晨读了。第一次早餐吃的是馒头加奶茶，馒头又冷又硬，而奶茶是比较稀的。队员们嚼着冷冷的馒头，虽然都不太适应，却也顾不上那么多。大家心里想着怎样在有限的时间内融入孩子们之中，怎样能教好孩子。吃完饭后，我们给孩子们发了我们带去的文具。孩子们双手接过我们手中的文具，显得开心而激动。他们都很有礼貌，不时地用并不熟练的汉语，对我们说，谢谢，谢谢。
+<!-- <div style="text-align:center;"><img src="images/718.jpg"/></div> -->
+<p>
+由于下午有北京的学生要来和孩子们联谊，孩子们上午都自己动手打扫卫生，打水，抬水，泼水，扫地，整理宿舍。虽然孩子们年龄都不大，有两个小的甚至只有五岁左右的样子。他们干起活来却让我们这些大学生都感到汗颜。像他们这么小的年纪，城里的孩子都还是一个个小皇帝，过着衣来伸手，饭来张口的日子，他们却已经如此懂事。他们还自己排练节目，主要是一些舞蹈节目，其余的便是唱歌。藏族真是个能歌善舞的民族，看着他们跳舞我们都被感染，情不自禁地想去跳，却发觉自己的手脚是有多么不灵活。
+<p>
+同时在上午的时候，我们几个队员互相商量着制定了课表。制定课表的时候，一大群孩子围在我们周围，让我们觉得很亲切。
+<p>
+到了下午，北京的学生们来了。但我们却觉得他们娇气，一直带着个帽子，即使是唱歌，表演节目的时候也不肯摘下来。他们虽然个子比藏族孩子高的不止一点点。可我们总觉得他们的表情是麻木的，是被城市所污染的，失去了他们年龄该有的纯真。而我们的学校的小孩子们，虽然穿的比较差，个子也比较瘦小，但唱起来，跳起来，都让人们感到无限的纯真，无穷的生气。
+
+<a name="teamlog_719"><h3>7月19日</h3></a>
+<p>
+今天是我们正式上课的第一天。这是大部分队员第一次当老师，很多队员都显得有些紧张，特别是当有别的队员在窗外看着自己上课的时候。不过这世界上的事情，很少有一次性就能做得好的，很多事情的成功，都需要不断地积累经验再积累经验。
+<!-- <div style="text-align:center;"><img src="images/diyike.jpg"/></div> -->
+<p>
+中午吃饭的时候，当我们几个老师去排队的时候，站在前面的孩子，纷纷请我们到他们前面，先盛饭。当我们走过他们身边，即使他们坐着在吃饭，他们也会立马站起来向我们问好。这一切的一切都让我们感动，也让我们汗颜。忽然觉得，很多地方，其实我们应该向他们学习。
+<p>
+晚上当所有课上完后，我们队内开了个小会，大家纷纷提出自己第一次当老师的感受。有的说，没想到当老师那么累，站了几节课就觉得腿都麻了。有的说，虽然孩子们的基础不好，但他们的确学得很认真。有的说，孩子们很懂礼貌，上课前说老师好都特别大声。大家普遍都表示，虽然第一天上课觉得有些累，做老师挺艰辛的，但真的很值得，看到孩子们学习那个上进的样子，都很有成就感。
+
+<a name="teamlog_720"><h3>7月20日</h3></a>
+<p>
+今天是礼拜六，是我们支教的第一个周末。今天不上课，那么作为支教老师的我们，该怎么度过呢？我们的回答是：和孩子们在一起！上午的时候，我们向孩子们学习藏族舞蹈，虽然我们大多笨手笨脚，连基本的节拍都跟不上，但努力学习之后，在节目演出方面也总算是小有收获。午休过后，我们同孩子们一起看动画，看的是《龙猫》，孩子们都很喜欢。而我们也和孩子一起，共同体会这份童真的美好时光。虽然我们下午尝试帮助学校老师搭帐篷，只可惜没能实实在在地帮到别人，有些小失败。不过一个支教队想要取得成功，就应该和学校的每一个老师，每一个孩子熟悉，最好是打成一片。所以搭帐篷从客观上看，也是增加了我们和老师以及孩子们之间的互相沟通与了解。
+<!-- <div style="text-align:center;"><img src="images/720.jpg"/></div> -->
+<p>
+今天晚上举行了主题为“中国梦，我的祖国”的互动活动。队员依次上台为孩子们介绍我们美丽的祖国，青海、甘肃、四川、贵州、浙江、福建……孩子们在下面目不转睛地看着老师，听得津津有味，此时此刻，他们仿佛已经不再身处偏僻地区，而是和现代化的祖国紧紧地拥抱在了一起。支教，我们该给孩子们带去的不仅仅是课本上的知识，更多的应该是课本外的东西，比如良好的生活习惯，比如优良的传统美德，再比如一个开阔的视野。活动最后在大家《爱我中华》的歌声中结束，取得了令人满意的效果。
+<p>
+活动结束后，我们支教队内部，再次召开了会议。大家畅所欲言，发表自己的意见和想法。大家讨论了我们的教学工作，以及在教育孩子的过程中发现的很多问题，决定了以后的教学方法。任重而道远，针对学习程度不同的学生，我们决定一对一教学，在支教期间争取把同一年级学生的成绩提高到同一程度，以方便我们走后以后老师的统一教学。虽然大家在一些观点上存在一定分歧，但通过大家坦诚的交流，最终还是很好地解决了问题。
+
+<a name="teamlog_721"><h3>7月21日</h3></a>
+<p>
+今天是周日，天气有些阴阴的。早上，就有一群孩子兴奋地告诉我们：“老师，今天我们要去外面玩。”“包括我们？”“当然，我们所有人。”虽然只是相识短短几天，然而在孩子们的心中，我们和他们早已经如同一家人了。当我们问到是去哪里的时候，孩子们却都表示不清楚。
+<!-- <div style="text-align:center;"><img src="images/721.jpg"/></div> -->
+<p>
+一大早，孩子们便在忙着洗头，把脸擦得干干净净的，换上一些较为干净的衣服。女孩子们都忙着把辫子扎得整整齐齐的。支教队中的女老师，便忙着帮孩子们扎辫子，整衣冠。大家都很重视，好像是要参加一个隆重的活动。
+<p>
+到了大概9点多的样子，学校的操场上出现了几辆面包车和越野车。学校的老师们就先让孩子们集合，接着便安排孩子坐进车内。由于车有限，而人又很多。所以只好大点的孩子坐座位，小的孩子就坐在腿上，甚至后备箱都装满了孩子。有一辆越野车大概装了十几个孩子。
+<p>
+出发后大概过了一个多小时，车子停在了一片草原上。草原上已经满是人群，大部分是藏族的，也有少数汉族的。大草原上有很多帐篷，还有牛羊，骏马……看得我们眼花缭乱。热情的藏族同胞，将我们邀请到帐篷里。当时，我们这些支教队员真是一头雾水。不知道是要干嘛。之后，才听活佛说，这是当地藏族村落一年一度的聚会。他们盛情款待我们，我们坐在帐篷里，吃着正宗的羊肉，喝着可口的酥油茶，充分体验到了当地人的淳朴和好客。吃完饭后我们就走出帐篷，开始欣赏当地人的歌舞表演，藏族人民真的很能歌善舞，我们都看得很开心。后来我们的孩子也表演了节目，当地观看节目的人都非常善良，为孩子们捐了不少的钱。我们都被这些人的情谊深深感动着，也为自己能来到这里认识他们而感到骄傲。
+<p>
+欢乐的时光总是过得飞快。不一会儿便快傍晚了，我们又在帐篷里面大快朵颐后，就坐着车子回学校。一路上，孩子们高歌藏族歌曲，广袤的草原，壮阔的天地。这一刻，我们瞬间感到天地的博大，和自身的渺小。
+<p>
+
+<a name="teamlog_722"><h3>7月22日</h3></a>
+
+<p>
+由于，活佛打算为孩子们造新的学校，而7月25日正是学校的奠基仪式。在早上我们得知，今天不上课，全部学生为奠基仪式做准备。虽然这影响了我们的教学安排，但我们想到，造新学校可以很好地改善孩子们的生活环境，便也欣欣然地加入到劳动的队伍中。
+<!-- <div style="text-align:center;"><img src="images/722.jpg"/></div> -->
+<p>
+主要的劳动，便是搭帐篷。因为奠基仪式要来很多人，而藏族招待客人的传统，是在帐篷里面。所以帐篷是不可或缺的。由于大家都是第一次搭帐篷，所以一开始显得有些没有头绪。第一个帐篷搭了好久，才算是有了骨架。当要把帐篷顶套上去的时候，却又出了岔子，顶棚好像太小了，怎么扯都不能完全覆盖骨架。折腾了好一阵子才勉强完成。好在之后的几个帐篷，大家有了经验，一切便显得轻松一些了。
+<p>
+因为有些年龄过小的孩子，没法参加这些劳动。所以，就有几个支教的女老师留下来，辅导他们写作业，读课文。
+<p>
+到了下午，包包子的任务开始了。由于要来的宾客很多，要包的包子，便也很多。虽然有专门包包子的人，但也人手还是显得紧张。于是一些会包包子的队员便帮助当地人包羊肉包子，虽然辛苦，但也更贴近了藏民的生活。
+
+<a name="teamlog_723"><h3>7月23日</h3></a>
+<p>
+今天，只是上了半天的课，因为奠基仪式需要做的准备比较多，年纪大些的孩子需要去帮忙。
+<!-- <div style="text-align:center;"><img src="images/723.jpg"/></div> -->
+<p>
+奠基仪式需要表演节目，一部分是邀请当地的舞蹈团，一部分是由孩子们来表演。今天，活佛突然对我们说，要不你们支教老师也表演一个节目吧。我们当时一愣，让我们教孩子，我们还行。让我们唱歌跳舞，就真有难度了。队员们商量了一下，最后决定表演手语《最好的未来》。
+<p>
+其实手语也不是容易的事情。而且这首歌的手语也比较复杂。队员们就反复看视频，然后跟着一句一句地学。一个动作，一个动作不断重复。
+<p>
+虽然说，今天只上了半天的课，但我们对孩子们的生活有了更多的了解，在劳动中，我们和孩子们的距离拉近了。
+<p>
+不过，我们觉得由于开工典礼，孩子们落下的课比较多，便向活佛提议，周六给孩子们补课。活佛是个随和的人，他让我们自己安排教学进度。毕竟我们来这里是来支教的，我们都想在有限的时间里，多教会孩子们一些东西，让他们多懂一些知识，多懂一些道理。
+<p>
+晚上开会的时候，很多队员都说，好想在这儿多待几天。
+ 
+<a name="teamlog_724"><h3>7月24日</h3></a>
+<p>
+今天终于照常上课了，孩子们上课也很认真。当城市里的孩子，在大人的逼迫，甚至威胁下去学习，去做作业的时候。如果他们看到这儿的孩子，他们内心，该是有多么内疚。城市里的孩子，是为了玩电脑，打游戏，而不想学习。而这里的孩子们是渴望着学习的机会。我们有次问他们，你们是喜欢去干活，还是学习。几乎所有的孩子都异口同声地告诉我们，学习。学习，对于他们而言，是相对轻松的一件事情。
+<!-- <div style="text-align:center;"><img src="images/724.jpg"/></div> -->
+<p>
+晚上的时候，活佛突然把我们叫到了他的办公室。他分配给我们一个任务，在明天的开工典礼上招待客人。每个队员都被分到了一些帐篷里，主要工作应该是倒茶什么的……
+<p>
+
+<a name="teamlog_725"><h3>7月25日</h3></a>
+<p>
+今天一大早，大概是5：30的样子，当地学校的老师夏洛加，便把我们从被窝里叫了起来。早早的，我们要为开工典礼做准备。
+<p>
+主要是搬东西，把一些吃的水果，馍馍，还有其他的面食，从学校搬到工地上的帐篷里面。之后我们几个支教老师便在帐篷里等待客人们的到来。但事情没有我们想象得那么顺利。
+<p>
+天公不作美，突然下起雨来，起先只是小雨，不一会儿便大了。工地上变得泥泞不堪，更糟糕的是大帐篷开始漏水，在四周的一些地方，水断断续续地滴下来，弄湿了铺在地上的摊子。这时，几个男生便出去，冒着雨，和当地老师一起把巨大的塑料膜套在帐篷上，再用绳子固定住。虽是如此，但漏水的问题并没有因此彻底解决。队员们只好时不时地把帐篷上的积水清理掉。
+<p>
+到了大概十点多的样子，客人们陆陆续续地到来了。我们就指引客人们入座，并不断地给他们加茶，之后是不断地上菜。一个上午都过得很是忙碌。
+<p>
+下午，也是如此忙碌地忙活着。到仪式结束的时候，大家都已经十分疲惫。
+
+ 
+<a name="teamlog_726"><h3>7月26日</h3></a>
+<p>
+今天天气终于放晴了，孩子们和往常一样，早上六点半就起床，先在操场上跑步，然后一起诵读经文。大家先到教室上早自习，早自习结束后，吃完早餐就开始正式上课。每天早上四节课，下午四节课，他们的特长课是英语和藏语，因为这儿一直有英语和藏语志愿者老师，而数学和语文却特别差，之前这里只有一个语文数学老师，他要教各年级的数学和语文，所以没有那么时间和精力，所以大部分学生，他们的语文和数学几乎没有任何基础。可是他们很认真。这里有很多一直默默奉献的志愿者，他们年龄和我们相仿，但是已经在这教学很多年。今天我们队员除了正常教学外，还教孩子们打篮球，踢足球等运动。最近，学校在重建，我们与孩子们都参与了，无论多少，我们都在奉献自己的那份力量。
+
+<a name="teamlog_727"><h3>7月27日</h3></a>
+<!-- <div style="text-align:center;"><img src="images/727.jpg"/></div> -->
+<p>
+今天是周末，本来孩子们是不用上课的，但是由于他们在这里每天的主要任务并不是学习，只要有活，他们就必须干活，无论多少。因为之前为那个开工典礼搭帐篷什么的，他们真正上课的时间并不多，所以我们决定周末的时候给他们补课，上午和往常一样，八点半开始，主要补数学，英语，和语文。差不多10点的时候，队员发现很多孩子都拉肚子，可能是吃东西出了问题，我们就每个寝室，每个教室都去问，发现了更多的孩子都拉肚子了。我们第一次遇到这种状况，马上就到食堂反应，他们只是说看一下。然后我们又去找这里的主管，他也是只是说待会儿去看一下。我们不能理解这样的问题，后面才知道，他们时常出现这种问题，孩子们生病的时候，年龄大一点的就挨过去，年龄小的，除非很严重了才会送出去看。我们就把我们的带的药给他们吃，因为这里比较偏僻，离镇上差不多30公里，这里有一个藏医，可是他好像对这种状况也是见怪不怪了。队员在爱心房屋那个地方发现两个孩子洗澡，因为他们也是拉肚子，拉到了身上，他们就用几度的水洗澡，队员发现他们时，让他们赶快穿上衣服，可是他们几乎不能动了，手是僵硬的，队员为他们穿好衣服，带到寝室，给他们拿上开水，他们的手还在发抖。过了好久才缓和过来。幸运的时，中午的时候，大家差不多都好了。
+<!-- <div style="text-align:center;"><img src="images/727.2.jpg"/></div> -->
+<p>
+本来下午也是要上课的，由于今天天气比较好，所以大家都得干活，把前几天搭的帐篷拆了，还要把操场上一些杂物搬掉。我们与孩子们一起干活，搬杂物，拆帐篷，一直弄到6点多。无论他们多小，他们都参加干活。傍晚时，柔旦来学校了，我们之前联系到这个学校就是通过他，他是这个学校的志愿者，为这个学校的资金，物质什么的准备。他今天带来了几个人来考察，说是北京那边一个叫什么天使基金会的，他们准备向西北这边资助，所以来考察一下。他们还给孩子带了很多好吃的零食。周末的晚上，孩子们们可以看电视，就是一些他们喜欢的动漫，我们去学校时给他们带了一些动漫碟子。我们希望他们能像普通的孩子一样，有一个有动漫的童年。看到这群懂事的好孩子，我们能做的就是尽我们所能帮助他们，把我们的爱给他们，希望我们的行动能给他们来去一丝温暖。
+
+<a name="teamlog_728"><h3>7月28日</h3></a>
+<!-- <div style="text-align:center;"><img src="images/728.jpg"/></div> -->
+<p>
+今天周日，没课，白天的的时候，大家自由活动。孩子们可以打篮球，踢毽子，踢足球。晚上的时候就要开会，这是他们的惯例，每周日晚都要开一个总结会，表扬卫生优秀的寝室和个人，同时也要惩罚那些犯错的，调皮的孩子。我们支教老师也在会上提出自己的问题和建议。今晚，也和往常一样，参加的人有全部的学生，老师，还有这儿的教导主任，会开始时，孩子们都会全部起立，然后说一些藏文，然后鞠躬。等教导主任就坐后，他们才坐下，每当老师提到某个同学的时候，他们就会自觉起立，没有老师的允许，他们不会坐下。会上，除了发言人外，没有一点其他的声音，十分安静。老师和教导主任全部说完后，就散会，但是对于那些被批评的同学，他们还要留下来，这里的老师还要教导他们，直到他们意识到自己的错误，并保证不能再犯。
+
+<a name="teamlog_729"><h3>7月29日</h3></a>
+<p>
+今天各支教老师按课表正常上课，孩子们和往常一样，六点半起床，跑步，诵经，吃早餐然后上课。在第二节课下的时候，他们还有一个类似舞蹈的东西，各有三个部分，当三个部分都跳完时，休息几分钟就开始上课。傍晚的时候全部都会到学校后面的草坪上进行自习，有读语文，英语，藏文的，也有看书，写作业的，我们支教队员全部和他们一起，当他们遇到问题就给他们讲解，今天最高兴的事是我们的一个队员终于教会了一个有听力障碍的女孩读拼音。差不多八点半的时候，他们就要到一个教室里面诵读经文，直到九点，然后开始在教室上自习。这段时间我们队员选择给孩子们讲题，因为我们在这的时间是非常短暂的，我们想争取在这段时间内教给孩子们更多的东西。
+
+<a name="teamlog_730"><h3>7月30日</h3></a>
+<p>
+今天一切课程和往常一样正常进行，只是一年级的课程有点难度，特别是数学。每节课都要分三部分讲，因为里面有数数都不太会，有只会基本加减法，有乘除法会一点的同学。所以每次上课都像同时在上三个年级一样。才旦每次上课他都在表现自己，所以老师每次都得给他一些比较难的题，挫一下他的锐气。
+<!-- <div style="text-align:center;"><img src="images/730.jpg"/></div> -->
+<p>
+今天三年级的班玛龙周比较反常，他成绩是不错的，一般在上课时老师问的问题，他都不会答错，可是今天他一直出问题。感觉他一直想睡觉的样子。我问他是不是不舒服，可是他说没事。问他好几次，他都这么说，总感觉他有些不对劲，又不知道在什么地方。第四节课的时候，我去他们班转，他们是藏语课，由于没有老师，所以就上自习课，我发现龙周的座位是空的，就问了一下其他同学，他们说他头痛，回寝室休息了。我去寝室找他，遇到厨房的厨娘，我问龙周怎么了。她和我说龙周在7个月的时候头上做过手术，在温度特别高时，如果他不戴帽子的话，就会头痛。我才想起来，应该是今早第二节课下的时候，他在做课间操时没有戴帽子，这边的太阳有特别辣，所以才会这样。可是上课的时候，我问他，他总说没事没事，我不知道什么让他这么坚持。从来到这开始，队员就发现好多孩子们在上课的时候几乎不会因为身体的原因而缺课的，他们总在坚持。如果是我们呢？
+<!-- <div style="text-align:center;"><img src="images/730.2.jpg"/></div> -->
+<p>
+六年级即将毕业，所以我们在这几天的语文课上很少讲课本，我们几乎都是在和他们讲一些我们的经历和外面的世界。当其他老师没课都时候就去给他们上语文，其实就上和孩子们聊天，鼓励他们要自信，自强。让他们知道他们不比别人差，他们拥有许多别人没有的东西。我们说一些个人的经历，一些故事，希望对他们有所帮助，也希望他们走进社会，早日实现他们的梦想。我们能做的只有这么多……
+<!-- <div style="text-align:center;"><img src="images/730.3.jpg"/></div> -->
+<p>
+晚上的时候，红心支教队的全部队员一起开会，会上队长说了很多我们队员存在的问题，各位队员也提出了大家自己的看法和意见。我们来这在很多方面做得不是很好，每个人的缺点或多或少的暴露出来。岭木说的对，为人师表，我们必须要尽全力做到最好。昨晚说了很多重话，几乎每个人都被队长说了，大家针对自己遇到的问题，全都提了出来，虽然之前大家因为不同的事争吵，但是一个优秀的团队总要经历这些，大家有分歧，只是因为都想做好某件事情。这是一个优秀的团队必须具备的品质。
+
+<a name="teamlog_731"><h3>7月31日</h3></a>
+<p>
+离我们离开的日子又短了一天，今天早上，大家都读起得比较早，队员申元媛还和孩子们一起跑步了。在孩子们在操场早读的时候，队员们全到操场上，解答他们的问题，英语单词，或者汉语拼音。藏语的话，我们也只有看的份，远远没有他们知道的多，上午的课程正常进行。
+<p>
+下午本来有两节体育课，由于要搬砖，所以没上课，我们全部支教队员和孩子们一起参加了搬砖。他们年龄虽小，可是力量却大得惊人。今天搬砖后，我知道了，他们从小就这样，一直干活。在干活的时候，班玛措和我说：“老师，你们走了，我们就没老师了上课了”。我当时不知道怎么跟她说，唯一的感受是我们能力的苍白，我希望，我想我们队员也这么想，大家都想一直留在这，可是我们还有另一些牵挂，我们身不由已，我们是多么得无能为力……
+<!-- <div style="text-align:center;"><img src="images/731.jpg"/></div> -->
+<p>
+傍晚时他们还是一样在学校后面上自习，我们也在。今天队员卢佳园让三年级的背一首诗叫《游子吟》。他们一直在读，用藏语口音的普通话，坐在草地上，一次一次的读，他们的拼音不好，所以很多是错的，我给扎西讲了，又给龙周讲，然后给东主讲。后面东主问我这首诗是什么意思，我就给他讲了一下，他突然问我什么叫孝顺？我就说怎么报答父母之类的，他又问那我们怎么报答老师？我瞬间就哑了，我们曾为他们做多少呢,感恩在他们心中却根深蒂固。最后我说了句，你们好好学习就是报答，他愣了一下，笑了说：“喔”。一会儿旦正项本来找我，说他在卢老师那儿背了，问我他厉害吗？我说你从新背一遍，他说好，要是我背下来了，你要帮我拍照，我答应了他，虽然不是很熟，有些字还是音没读准，但是他还是背了下来。自习时间快要结束的时候，我走到李毛才总身边，问她在干嘛，她把她的本子给我，我看到上面也是《游子吟》。原来卢佳园上三年级的语文时，也叫她到三年级上。我问她背了吗，她说背过了，我让她背一遍给我听，虽然她记得不清楚，可是她的读音是所有学生中最准的一个。问她来多久了，她说两周。这和我们到这儿的时间差不多，她穿衣服都比较单薄，人又小。又初到这个地方，对这么小的孩子，我不知道她心里是否孤单。夜晚的时候他们的身影总在我心里转啊转，我不知道我们走后他们会不会想起我们，但是我一定会想起他们，这些可爱的小孩，我想每个到这的人都会爱他们，疼他们。
+<!-- <div style="text-align:center;"><img src="images/731.2.jpg"/></div> -->
+<p>
+自习结束后，他们要去诵经。我们队员就回宿舍了，途中申元媛说我们支教队就像土八路。看人人上那些支教队发的照片，什么领导又发言，队长有开总结大会，又与外国友人交流，书记又来看望，还西装革履，均是在和我们电子科大图书馆一样的报告厅，华丽而美丽。据说走的时候还是专车相送。我们队出发的那天，别人是单反，出发时轰轰烈烈。我们除了队旗还有给孩子们的文具和体育用品，就只有队员的满腔热血了。
+<!-- <div style="text-align:center;"><img src="images/731.3.jpg"/></div> -->
+<p>
+我想说，我们来这，我们没有一点抱怨。我们更觉得是一种荣幸，能遇到这么可爱的孩子们。我们更希望大家把精力放到那些被人们忽略的地方，他们更需要关心，更需要帮助。
+
+<a name="teamlog_801"><h3>8月1日</h3></a>
+<p>
+支教时间一天天过去，孩子们好像知道我们不久就要离开，上课时更认真了。我们队员也在尽全力的教大家，希望在有限的时间里多教一些东西给孩子们。孩子们只要有空闲时间，就去问老师题，就让老师写题给他们做，他们一刻也闲不下来。因为我们走后，他们更多的时间将都是上自习。这里老师严重缺乏，他们就是想学也没有资源。全校的语文数学都压在一个老师身上，她怎么可能忙得过来。
+
+<a name="teamlog_802"><h3>8月2日</h3></a>
+<!-- <div style="text-align:center;"><img src="images/802.jpg"/></div> -->
+<p>
+今天几乎是所有班级的最后一节课了，因为明后天是周末，都不上课，而大家定的走的时间是周一。今天也一样，我有三年级和一年级的数学，在三年级上课时，我把所教的内容复习了一遍，而且尽我能力多教他们，所以下课时都拖堂了好久，今天中午我没有休息，就在三年级的教室，为他们解答问题。
+<!-- <div style="text-align:center;"><img src="images/802.2.jpg"/></div> -->
+<p>
+下午上一年级的课，我让大家到黑板上做题。令我意外的是今天大家争先恐后地举手，都要上来做，那两个聋哑的孩子也是上来，她们比划手势，让我写题给她们做。我想他们可能知道我们要离开了，数学课下了以后，他们自习课，我就呆在他们教室，针对不同的孩子，在他们作业本上写不同的题让他们做。突然，李毛才忠问我：“老师，你们什么时候走”。然后她就哭了，其他几个女孩子也哭了，我当时束手无策，我知道不论我怎么说，他们都会难过。我就说大家唱歌吧，然后才旦就到讲台上上了一首藏语歌，虽然我不知道什么意思，但觉得很好听，还有一个聋哑女孩，她上去表演了一段舞蹈，李毛才忠唱了一首《兄弟》。她那小小的身体，我无法想象，竟能迸发出那么大的能量。他们的多才多艺，让我钦佩他们。
+
+<a name="teamlog_803"><h3>8月3日</h3></a>
+<!-- <div style="text-align:center;"><img src="images/803.jpg"/></div> -->
+<p>
+今天周六了，离我们离开的时间近了一天。今天我们决定到倒淌河镇去给孩子们买点东西。唐邦国，许岭木，卢佳园，刘静还有阿卡，我们为孩子们买了水杯，篮球和一些生活用品，为每个宿舍买了热水器，为厨房买了一些菜。比较幸运的是当卖菜的老板知道我们是为孤残学校孩子买的时候，都以最低的价格卖给我们。这一天我们做了一个心愿认领的活动，就是让他们在纸上写上自己的心愿和自己想要的东西，明年来的时候，我们会尽量带着他们所期盼的东西过来。但是让我们意外的是，他们很多人在纸上写的都是：“我什么都不想要，我只希望你们明年能再过来当我们的老师”。
+</p><!-- <div style="text-align:center;"><img src="images/803.1.jpg"/></div> -->
+<p>
+下午的时候，许岭木和四年级的孩子去爬山了。我们其他队员都在寝室，和孩子们聊聊天，准备傍晚的时候去爬山。傍晚，大家吃完饭，准备出发，因为没有活佛的允许，很多孩子不敢去，但是才让东主和文昌还是和我们一起去了，大家一起向山上进发，在日落的时候，我们还没有到达山顶。然后就直接去了拉科加老师家，阿妈为我们煮奶茶，非常热情地招待了我们。差不多九点的时候，我们准备回学校了。虽然有星星，但是还是比较黑，几乎都是相互搀扶着走，也看不见学校，大家就跟着文昌向黑暗中那几点星光处走去。差不多十点的时候，我们回到了学校。
+</p><!-- <div style="text-align:center;"><img src="images/803.2.jpg"/></div> -->
+
+
+<a name="teamlog_804"><h3>8月4日</h3></a>
+<p>
+今天，据说将有北京的客人要到学校，所以大部分人都在为这准备。差不多中午的时候，他们终于来了，也为学校带来了好多物质，在他们用餐后，活佛要带他们去青海湖，同时也叫上了我们这些将要离开的支教老师。和往常一样，有活佛在的地点，那些老板都不会收费，还很热情。我们在青海湖的耳环这里划船，不知道那叫不叫船。在差不多两小时后我们就回去了，因为我昨天和孩子们说好，今晚要在学校后面的草坪聊天。回到学校吃完饭后，大家都到了草坪，我们静静地听孩子们唱歌。大家嬉戏到差不多九点的时候，拉老师通知所有学生开会，因为今晚是一周一次的全体师生会议。今晚主要是我们队员说，每个人都说了很多很多，是因为第二天的离别吧！我能听到他们的啜泣声。老师们都唱了很多歌，还有班玛措也唱了。会议差不多持续到十一点多，这也不算会议，也就是大家一直聊一直聊。最后我们队员为孩子们表演了大家准备的手语《最好的未来》。“……每个孩子，都应该被宠爱……”就像歌词一样，这里的孩子都应该被关爱，被关怀。
+
+<a name="teamlog_805"><h3>8月5日</h3></a>
+<!-- <div style="text-align:center;"><img src="images/805.jpg"/></div> -->
+<p>
+这是我们离开的日子，有两个支教队员坚持留下来，她们准备20号再走。上午我们和活佛签关于建立社会实践基地和请活佛为队员们的实践表盖章的事。过了一会儿，活佛叫我们到他的办公室，学校为我们每个队员都准备了一份礼物和一条哈达，他还说：“这里永远是你们的家，任何时候都可以来”还说：“你们来这里教孩子们，吃不好，住不好……”我们听了他的话，觉得十分惭愧，学校为我们改善了伙食，改变了许多，可是我们除了教孩子一点有限的知识，又为他们带去些什么呢！活佛为我们安排了车，他有点急事去了海南州，我们就一直在学校等待车的到来。
+<!-- <div style="text-align:center;"><img src="images/leave.1.jpg" width="680"/></div> -->
+<p>
+傍晚时，孩子们和往常一样在学校后面草地上自习，我们全都在宿舍等车的到来，突然孩子们全跑到我们宿舍，高兴地说：“老师没走，他们行李还在……”,原来一个老师听到汽车的声音，以为我们走了，就和孩子们说，我们离开了，孩子们就放下书，全部一起跑到我们宿舍，还说老师走时为什么不和我们说……,看到他们高兴的样子，我们希望车一直别来，时间一直停留在这一刻。晚上车还没到，拉科加老师叫所有孩子在教室里开会，教室就在我们宿舍旁边。差不多九点半的时候，接我们的车来了，司机是工地上的老板。我们从宿舍拖着行李箱出来的时候，孩子们全从教室里冲出来，天很黑，但是还是能看到他们的泪光，他们和每一个老师拥抱，都说：“老师，你们一定要回来……”。这一刻，我们想对他们说很多话，但又说不了多少话。上车后，我们的手与拉科加老师的手，与学生们的手紧紧地握着。车子开动了，学生们想要跟着，却被工地上的工人拦着，看着他们，我们再也无法控制自己的情绪，眼泪不自觉地掉落。开车的赵老板告诉我们：”在你们跟那些娃儿拥抱的时候，我的眼泪也掉了下来“。是的，这些孩子实在是太懂事了，我们舍不得他们，舍不得这里的一切。短短的20天，也许是我们人生中最宝贵的20天，在这里，没有任何烦恼。无论是活佛，还是老师，还有学生都特别待见我们，照顾我们。我们仅仅教会了孩子们课本上的知识，但他们教会我们的东西更多，更宝贵,“懂礼貌，吃苦耐劳，还有那积极乐观的人生态度……”。这里的每一人，每一件事都在感动着我们，同时也让我们肃然起敬。
+<!-- <div style="text-align:center;"><img src="images/leave.2.jpg" width="680"/></div> -->
+<p>
+深夜，车在公路上疾驰，我们坐在车里，望着车窗外那后退的草原，渐行渐远的几点星光，渐渐模糊的校园，没有人说话。我们知道，这里将是我们永远的牵挂，明年红心一定还会回来。
+
+
+<hr class="newpage"/>
+
+<a name="memberlog"><h2>个人日志</h2></a>
+<a name="memberlog_tbg"><h3>唐邦国</h3></a>
+<p>
+虽然晚了很多天，但是我还是来到了青海——青海湖慈善孤残学校。我们红心支教的地方，从队员们出发那天起，我就无时无刻不在担心他们，我这个队长真的很不负责，他们走的那天我还在都江堰做那个科技展，都没能送他们。看着他们发来的照片，我想他们，不管怎么样，我一定要和大家在一起。我决定去找他们，订的是23号的票。可是偏偏22号早上甘肃发生地震，这让成都到甘肃的列车晚点2小时40分，不过幸运的是列车还是启动了。而且中途没出任何问题，安全到达兰州车站，本来预计24号晚上到达西宁，到达兰州后才发现24号所有开往西宁的列车停运，不得不在兰州旁住了一晚漆黑而且有怪味的旅馆。
+<p>
+25号早上，顺利坐上了从兰州到西宁的列车，3个小时后终于到达了西宁，出了西宁站，我发现自己找不着北，走了好久才发现出租车。到了新宁路汽车站后买了到共和镇的票，以为学校离那个镇应该不远，坐上车后和旁边以为阿姨闲聊起来，然后就说起了我的目的地，她说你不要坐到共和镇，直接到倒淌河下车就行。我差点就直接到共和镇了，要是那样的话，我还得折回来。运气比较好，少走了一节弯路。
+<p>
+之前传的是一件衬衫，在倒淌河下车后，我才发现，这里真的有一种初冬的感觉，那种寒风，能让人发抖。
+<p>
+这里的天空不像贵州，也不像成都，感觉大地真的像和天连在一起。之前媛妈说一直走青海湖那条路。向一个阿姨打听到青海湖的那条路后，我就拖着行李向那条路走去，走了十几分钟，没看一点学校的踪影。然后我就到一个居民家打听，一个叔叔说，还得走20几公里。我觉得应该能走过去，因为我在这条路上没看到一辆专载人的车，途中我遇到一个放羊的少年，
+<p>
+向他打听学校，还让他帮我拍了一张照片。慢慢的下起雨来，我一个人撑着伞，拖着行李，继续前行，雨渐渐大了起来。我不知道走了多久，看到公路边有两个卖东西的青年，那个东西我没见过，好像是蘑菇。他们不会说普通话，但是隐约能听懂我说的普通话，我说了我在找一个在甲乙村的孤残学校。从他们的描述中，我大约知道了，他们想告诉我，去甲乙村还有很远。他们帮我拦车，希望能搭车过去，我们一起在路边向过往的车辆挥手，可是没有一辆停下来。过了好久，还是没有车为我停下来。我谢过他们，说我自己走吧，告别了他们，我一路前行，一路拦车，有几辆停下来司机也对我说他们不去那个地方。我正准备自己慢慢走，直到找到学校时，看到了一辆出租车，怀着最后一丝希望挥了挥手，幸运的，司机停下了，还带上了我，他用很浓的地方口音说，他也不知道那个地方，但是他可以和我一起找。车行驶了差不多半个小时后，我隐约看到了那个我只是在网上看到的学校。我终于到了，乘车都这么久，不知道要是我步行的话，得走到什么时候。不过，比较幸运。
+<p>
+之前就听队员说过今天是学校的重建开工典礼，我看到学校周围有几个帐篷，很多人都在一个类似舞台的地方，据说今天教育局有人过来。因为学校操场已经被施工几天，所以全是松土，加上又下雨，整个操场全在一片泥泞中。到校门口时，我看见了队员许岭木，他多了几分成熟，脸上也多了点青海的气息。他带我走到一个帐篷外，我看到了红心的全部队员，申元媛，刘静，冯可，卢佳园，黄逸帆，刘丽。他们正在为今天参加典礼的客人准备食物。看到我后，他们都好开心。当然我更是激动，他们出发时我还在都江堰参加一个科技展，没能送他们，已经好久好久没见到他们了。我不知道他们在这里过得好不好，有没有遇到什么问题。今天终于看到大家，见到大家都还好，我非常高兴，听他们说他们这几天的经历，他们或多或少的感触，我很感动。
+<p>
+傍晚的时候，我和队员们回到寝室。这时还在下着雨，我出寝室想看看他们的教室，这里是学生的寝室，支教老师的寝室，教室都是在连在一起的。看到两个小孩在抬桌子，可能之前是从教室抬去为那个典礼准备的，雨很大，他们没有伞，脚上全是泥，衣服裤子应该全湿了。他们的身高就和桌子的高度差不多，我小时候也经历过很多艰难的时刻，但是像他们的年龄，我绝对没有经历过这些。我帮他们把桌子放到教室后，让他们赶快回寝室换衣服，他们很礼貌地说了句谢谢老师。我当时心里一片空白，哪里去找这么有礼貌的学生，我不曾为他们做过什么事，可是他们心里的那种感恩，我自愧不如。在他们的年龄，外面的孩子应该在父母的宠爱中，看着动漫，吃着好吃的，享受着一切。可是这里的孩子呢？他们要干活，几乎什么事都是自己做，无论多么小，吃的是最简单的东西，什么玩具，也许他们都不知道。他们每天都经历同样的事，日复一日。由于老师的缺乏，他们的知识也是特别少，特别是语文和数学。可是他们求学的欲望让我们汗颜，我不知道我像他们那么小的时候，有没有他们百分之一的认真。来到这我才知道，我们所能给他们的只有有限的知识，而他们给我们的是一种力量，一种触动，一份责任。
+<p>
+7.26号，今天早上我还在床上，就听到一声哨声，往窗外看去，孩子们已经在跑步了，然后就是一起诵经。后来队员和我说，他们每天都六点半起床，一起跑步，再一起诵经，然后上早自习，八点的时候吃早餐，八点半开始正式上课。吃早餐的时候，我进入他们的食堂，他们在排队，但是当老师到的时候，他们都主动让老师先打饭。由于之前我没带饭盒，所以我在和厨房的工作人员沟通的时候，工作人员说等一下再给我找。我就准备在旁边等一下，这时一个学生拿着一个碗过来给我，说了句“老师，给”。我当时除了一句谢谢，我真不知道我还能说什么，他们太可爱，太懂事。
+<p>
+上午的时候，由于我和刘静都是第四节课，所以我们和当地的一个老师，他叫拉科加，我们都叫他拉老师，或者也开玩笑地叫他娃娃脸，他来这才一年。我们和他送一条狗到他家去，他家在学校后山上的一个帐篷，我们走了差不多一个多小时才到，那是我第一次登山，慢慢的感觉头有点晕了，而且山上也开始下雨了，雨越来越大，我没带帽子，衣服也没帽子，很快衣服就全湿了，而且那种雨能让人感觉是冰一样，我感觉自己的耳朵都全冻冰了。边走边发抖，不过我第一次看到那么美的风景，似乎可以看到青海湖。而且在山上我能看见羊，牦牛，马等动物。看着辽阔的草地，我不知道那叫不叫草地，也不能叫平原，因为有很多山，虽然不高，但是山上有很多雾气，让人感觉那就是和天相接的地方，让我觉得自己很渺小。
+<p>
+一个多小时候我们终于到了，我们三都被淋湿了，进了帐篷后，拉老师的阿妈就把火加大，让我们取暖。我完全不会藏语，刘静还会一两句什么您好，谢谢啥的，阿妈人特别好，为我们准备他们的茶，还有当地的糍粑啥的，我叫不出名。她一直为我们添茶，还说一些藏语，我们两都听不懂，拉老师为我们翻译，说:“多喝点比较暖和，冷吗？”之类的话，他们对客人的热情真的让我感触颇深。
+<p>
+由于时间赶不及了，我和刘静就让其他队员帮我们代课，我们在帐篷坐了差不多一个小时，裤子差不多都干了，但是鞋子里面依然是水。我们离开帐篷后，刘静说要采蘑菇，这种蘑菇可以吃，阿妈就和我们一起了，当然大部分是阿妈采的，我和刘静不行啊，我采到一个，她采到两个，其他的几乎是拉老师和阿妈采的。回来的时候雨已经停了，风有点大，此时看到青海湖特别蓝，感觉离她特别近。但刘静说差不多要走两个多小时，她也是听别人说的。途中刘静问拉老师要在这呆多久，他说不知道，应该以后会一直在这里。他初中毕业，然后出去进行了差不多一年的英语培训，然后就来这了，他的年龄还没有我大。这些老师，这里的人们，他们的态度，他们的热情，他们的奉献无一不让我钦佩。
+<p>
+下午的时候，我教一些孩子们打篮球，他们虽小，可是对篮球却很喜欢，一个小孩知道乔丹，我不知道他从什么地方知道乔丹的，应该是来这支教或者那些募捐的书籍，或是听别人说的。傍晚的时候，活佛让我们和他一起吃饭，所有的支教老师，还有这里的主管。活佛就是这个学校的建立者，他是一个可爱，博爱，和蔼可亲的人，这里的学生都叫他活佛或者院长。这里我还认识了一位朋友，据说他在西北民族大学上学，他来这才两天，好像是因为那个开工典礼，他为这个学校设计校徽。他叫班玛多杰，我不知道他名字我有没有写错，他是个特别豪爽的人，又高又帅，在帐篷里，我和他坐在一起，他一直为我切羊肉，还一直说，“吃，吃…..”在吃饭的时候活佛让大家表演节目，我听到了他们藏语的歌曲，虽然不懂其意，但是真实很美。吃完饭，活佛就要走了，他要送班玛多杰回学校，真心舍不得这个家伙，虽然和他认识时间比较短，但是他的那种热情，几句话就能成为朋友。当然不只是他，这边的汉子都是一样，豪爽而善良，他们的心胸就像这里的环境，宽广而辽阔。
+<p>
+7.27日，今天是周末，原来是不上课的，但是由于之前为学校开工典礼做准备，所有的孩子都要参加搭帐篷什么的，所以都没有上课，所以我们想周末给孩子们补课，今天我是第一次上课，第一节是三年级的数学，没上之前，听他们说孩子们的基础都不太好，可是我上课发现，三年级的数学都不错，他们班只有五个人，上课时他们都很认真，这是所有支教队员都认可的，他们都比较乖，没有那种调皮的孩子。在上课时，我们队员许岭木叫我，说找班上一个学生，他叫才让东主。原来是其他同学说他头疼，还拉肚子，我们把他叫出教室，问他是不是真的，他就哭了，说是。我让岭木送他回寝室，我上课时没有发现他的一点异常，我不知道是什么让他那么坚持，那种执着是因为什么，我不知道。然后又去一年级上了一节数学，这个班级很特别，里面有学习比较好，有一般的，有什么都不知道的，还有一个聋哑的孩子。因为这个班级是流动的，很多新来的都是从一年级开始。上课时我一直用他们最熟悉，最简单的方法讲，希望他们都能理解。对我所提的问题，只有一个女孩子，她叫李毛才忠，几乎都能回答，在大家在用手指计算时，她已经心算说出答案，而且每次都是对的，我很意外，后面才知道，原来她已经读到了三年级，什么乘法，除法都会了。还有一个叫多杰彭措，他几乎什么都不会，每次我说的话，他都听不懂，我必须找一个学生来为我翻译，他数数都不会，我就叫李毛才忠教他数数。还有那个聋哑女孩，我想用尽我全力教她，可是我不知道怎么教，我只能用手势，在黑板上画图来描述我的意思。我不知道她能理解多少，我能从那认真的眼神，求知的眼神中看到她的求知欲望。
+<p>
+最后又和刘静去四年级一个一个地辅导数学，在这里我发现他们的数学能力和三年级的差不多是在一个水平。在这个班级又有一个特别的学生，他的作业几乎是满分，除了一些特别小的错误。岭木是他的班主任，后来听岭木说他本来是上初一了的，所以才这样。
+<p>
+三节课下来，感觉声音都哑了，第四节，我没课，就在宿舍写总结，这时，岭木拉着两个孩子来到寝室，原来他们也拉肚子了，而且他们拉在了裤子上，所以他们就去洗澡，用几度的水，岭木发现他们时，让他们穿上衣服时，他们手几乎不能动了，冻僵了。岭木为他们穿上衣服，带到寝室，给他们每人一杯热水，他们还是全身发抖。这时进来了以为当地老师，他年龄比我小一些，叫夏罗加，来这很久了，我们和他说了孩子的情况后，他说去他们寝室。因为他们寝室有炉子，孩子们可以取暖一下。中午吃完饭后，他们情况好转了。
+<p>
+下午，我是第二节课，可是第一节课教室里都没人，原来他们都要干活，所以就不能上课了。要拆之前搭的帐篷。我们也全部参加了，和他们一起拆帐篷，搬操场上的一些杂物。在搬杂物时，一些比较小的孩子，也拿比较重的东西，我们让他们放下，我们来拿时，他们都不同意，没有一个人偷懒，没有一个人埋怨。差不多六点的时候，所有活都结束了，我回来寝室写总结，这时一个学生叫我去打篮球。我出去以后发现，那些人我都不认识，原来他们是附近在其他地方上学的学生，假期回来了，知道这有支教老师，就叫大家一起玩。他们非常热情，和他们打了一会，我实在是受不了了，喘不过气来，应该是高原反应了。我就下了，这时看到了柔旦，我们之前联系到这个学校就是通过他，他是这个学校的志愿者，为这个学校的资金，物质什么的准备。他今天带来了几个人来考察，说是北京那边一个叫什么天使基金会的，他们准备向西北这边资助，所以来考察一下。他们还给孩子带了很多好吃的零食。
+<p>
+吃过饭后，其他队员都在夏老师那儿玩，我就回寝室了，真有点不适应这边的生活，从23号赶车开始，到27号晚上，我都没吃过米饭，嘿嘿，可能又要瘦一点了。八点的时候，一个一年级的学生来敲门，我早上留了几道题，以为她是来问题的，可是不是，她说让我写几道题给她做。过了一会儿冯可让我找影碟给他，这是之前他们让我买的动漫，可是我在顺江找了好久，才找到两个，他们还让我试放一下，看能不能放，是不是国语的。我都没试，刚来时我说我忘记试了，各种被他们骂呀。不过还好，能放，哈哈，要不然我该怎么和孩子们解释啊！
+<p>
+不下雨的时候，这里特别美，可以看到蓝色的青海湖，还有大雾围绕的山。我喜欢这里的环境，喜欢这里的人们，更喜欢那些身在逆境，却仍乐观，积极向上，爱学习，懂礼貌的孩子们。
+<p>
+7.28，今天周日，孩子们放假，他们可以打篮球，踢毽子。我们都在寝室呆了一上午，下午的时候大家说出去走走，据说不远的地方有泡面，所以就准备去那儿买点泡面。今天我是早餐和午餐都没吃，学霸（黄逸帆）没去，他说他想睡觉，岭木也没去，也睡觉。我和媛妈，刘静，冯可，刘丽，卢佳园，拉老师，夏老师，还有一个六年级的学生叫才让加两点几分就出发了，他们大多数都有帽子（这边紫外线太强了），带上很酷的样子，要是有一匹马，我想更酷了。
+<p>
+差不多走了两个小时，终于到了那个店，我实在是饿的受不了了，就问老板有没有开水，直接在那买了一盒泡面，当场就泡了吃，哈哈，就我一个人边走边吃泡面，无法想象那是什么场景。老板也是特别好，夏老师和他说我们是来支教的，他卖给我们的东西都特别便宜。每人买上一点吃的，本来说回去的，但是那个青海湖离我们好像很近，我们都想去看一下，所以大家有向那个青海湖出发了，从店出来就是一条笔直的公路，直达那个湖，看起来很近，其实这边都这样，看起来很近，其实特别远。中途还遇到一辆车，不知道那两个家伙怎么开的，竟然开到旁边的一个沟里，而且那儿离公路特别远。我们看到后，媛妈大喊要不要帮忙，他们好像听不懂普通话，还是夏老师和他们交流一下，才知道他们说需要，我们就全员上阵，终于帮他们把车弄了出来。
+<p>
+然后继续前进，一路上有很多骑自行车的，好像是去拉萨。每遇到一个人，夏老师，还有才让加，他们都会说：“加油”。我们也被他俩感染了，遇到骑自行车的，我们也说加油，鼓励他们继续前进。差不多走了半个小时，终于到了，没靠近水的时候，整个水面看起来就像水泥铺的一样。
+<p>
+刚要靠近水的时候，一个骑马的人过来，说了一些藏语，好像要收费。拉老师和夏老师和他说了几句话以后，他就让我们进去了，原来拉老师是和他说了活佛。就是我们支教的学校的建立者，原来他在这里非常受人尊敬，据媛妈说，他们来的时候，活佛去接他们，在经过高速路收费站的时候，他们看到是活佛，就直接放行。瞬间觉得活佛太牛了。据说，这边的人说活佛的时候，都会鞠躬。
+<p>
+刘静那货看到水，直接脱了鞋就跳进去了，当然我也是。因为我是第一次看到这么大的湖，可是拉老师说，这只是青海湖的耳环。瞬间对青海湖膜拜了，耳环都这么大，那青海湖到底有多大。真心想回去之前看一下她的芳容，嘿嘿不过媛妈说，活佛讲过，三号的时候，会让我们带上所有孩子，我们一起去青海湖。哈哈，期待……他们还有一些在湖边写上自己名字啊什么的，当然我也写了，不过我还写了“红心志愿者”。哈哈，我要把这些记忆带回红心。耍了很久，我们决定回去了，一路上小拉老师各种被刘静和冯可欺负啊，最牛逼的是冯可，穿了件我们红心的队服，背上“电子科技大学，机械电子工程学院”引起无数自行车旅行者的关注啊，一哥们大叫“嘿，哥们，你电子科大的啊，我川大的，你们徒步吗？”哈哈 瞬间碉堡了，任何时刻都不忘为学校宣传啊。
+<p>
+回到那个店的时候，我怒买了十袋泡面。他们也是买了好多。7点半左右，俺们终于到了，那个腿啊，完全拖不动了。到的时候，他们才开饭，今天吃的是面，我那个高兴啊，怒吃了两碗。前几天老啃啥麻花，啥的，哈哈！今天爽了一次。
+<p>
+晚上的时候开会，这是他们的惯例，每周日晚上都要开一次会，对卫生优秀的寝室和个人进行表演，同时对那些犯错，调皮的孩子也要进行惩罚。我们支教老师也在会上提出自己的问题和建议。今晚，也和往常一样，参加的人有全部的学生，老师，还有这儿的教导主任，会开始时，孩子们都会全部起立，然后说一些藏文，然后鞠躬，当然这些藏文我们都听不懂。等教导主任就坐后，他们才坐下，每当老师提到某个同学的时候，他们就会自觉起立，没有老师的允许，他们不会坐下。会上，除了发言人外，没有一点其他的声音，十分安静。老师和教导主任全部说完后，他们也是说一些藏文，然后鞠躬后才散会。但是对于那些被批评的同学，他们还要留下来，这里的老师还要教导他们，直到他们意识到自己的错误，并保证不能再犯。每周如此，从无中断。
+<p>
+7.29日，今天周一，孩子们正常上课。我今天上午上了两节课，一节一年级数学，一节三年级数学。一年级的课就让我很纠结，布置作业时都分三块，哪些同学做第一部分，哪些做第二部分，只有李毛才忠一个人做一部分，因为她比较特殊，应该是读三年级的。三年级的孩子特别乖，上课很认真，早上布置的作业我说第二天交，他们今天中午就给我了，可是几乎没人全对，还有拉松扎西这家伙一个都没对，气死我了。下第二节课时，他们都要做特别的课间操，我暂时叫跳舞吧，我不知道它叫什么，就是全部的人都围起来，跟着音乐跳，媛妈，刘静也参加了，我没去，完全不会啊，据说岭木这家伙学一个简单步伐都学了好久。
+<p>
+好像六年级的班玛措跳的很好，今天见识了一下，真心不错。改天一定得请她教我，得学点东西回去啊。她的梦想是当一名歌手，听说过两个月她就六年级毕业了，活佛要送她去深圳学音乐，最近让我们多和她聊聊，提升一下她的汉语。
+<p>
+下午一年级的作业也交了，有几个小鬼直接把本子给我，里面什么都没有。不过在三年级的一个学生才让东主的本子里面，他把本子弄花了一点，还在旁边写了一句“对不起”让我很感动。七点吃完饭后，夏罗加老师就把全部学生带到学校后面的草坪上上自习，他们有读英语，汉语，藏语，也有些作业，看书的。我教一个叫南开卓玛数数，她拿一本一年级的语文课本，其实她一个字都不知道，还特别爱拍照，每当我说要给她拍照时，她就拿上课本，假装在看书，她是这个学校最小，最可爱的孩子。
+<p>
+媛妈可高兴了，她今天终于教会一个有听力障碍的孩子拼音了，还有她早上孩子们在上早读时，他看到一个孩子哭，她叫旦知才旦，媛妈问他怎么了，他说想家了，媛妈说中午时，你来找我，我拿电话给你打电话给你妈妈。中午媛妈忘记了，媛妈在学校旁边洗衣服，媛妈说才旦就坐在她旁边，啥也不说，过了半天她才反应过来，才旦想打电话。
+<p>
+差不多八点半的时候，他们就要结束自习，全部到一个教室里面诵经，直到九点。再上自习到十点，我到三年级讲作业了，然后就写题让他们做，才让东主和班玛龙周这两家伙，每次都先做完，还老自信地说一定对，非得逼我写一些难题难住他们。东主这家伙就是每次都说五七四十五，所以每次上课我都问他五七是多少？扎西今天的作业是一个都没对，还老在笑，晚上被我小批了一下。一不小心就上到了十点九分，我也哑了，他们也憋坏了，不过他们是所有年级里面最老实的，听队员说，要是其他年级，我上课这么晚，孩子们早闹翻天了。嘿嘿，我只不过想在这么短时间内尽量多教一些东西给他们，而且他们特别好学。我们走后，他们就几乎没有数学课了。
+<p>
+7.30日，今天上午有一节一年级的课，在一年级上课，是最难上的，每节课都要分三部分讲，因为里面有数数都不太会，有只会基本加减法，有乘除法会一点的同学。所以每次上课都像同时在上三个年级一样。才旦这个家伙，每次上课他都在表现自己，所以我每次都得给他一些比较难的题，挫一下他的锐气。
+<p>
+第三节课是三年级的数学，今天班玛龙周比较反常，他成绩是不错的，一般在上课时我问的问题，他都不会答错，可是今天他一直出问题。感觉他一直想睡觉的样子。我问他是不是不舒服，可是他说没事。问他好几次，他都这么说，总感觉他有些不对劲，又不知道在什么地方。第四节课的时候，我去他们班转，他们是藏语课，由于没有老师，所以就上自习课，我发现龙周的座位是空的，就问了一下其他同学，他们说他头痛，回寝室休息了。我去寝室找他，遇到厨房的厨娘，我问龙周怎么了。她和我说龙周在7个月的时候头上做过手术，在温度特别高时，如果他不戴帽子的话，就会头痛。我才想起来，应该是今早第二节课下的时候，他在做课间操时没有戴帽子，这边的太阳有特别辣，所以才会这样。可是上课的时候，我问他，他总说没事没事，我不知道什么让他这么坚持。从来到这开始，队员就发现好多孩子们在上课的时候几乎不会因为身体的原因而缺课的，他们总在坚持。如果是我们呢？
+<p>
+下午的时候，刘静让我去六年级上一节课，原本是她的语文课，但是六年级只有两个多月就毕业了，他们可能走出这里。所以刘静说咱们应该给他们讲一些其他的东西。他们只有五个人，我以“自信”两字开始，鼓励他们。让他们知道他们不比别人差，他们拥有许多别人没有的东西。从我个人的经历，一些故事，我希望对他们有所帮助，也希望他们走进社会，早日实现他们的梦想。我们能做的只有这么多……
+<p>
+7.31日，离我们离开的日子又近了一天，昨晚红心支教队开了一次会议。这是自组建红心支教队以来，我是第一次那么严肃，那么深刻的说每一个问题。我们来这在很多方面做得不是很好，每个人的缺点或多或少的暴露出来。岭木说的对，为人师表，我们必须要尽全力做到最好。昨晚说了很多重话，几乎每个人都被我说了，我不知道他们怎么看我，我不想我们支教队和其他支教队一样。大家针对自己遇到的问题，全都提了出来，虽然之前大家因为不同的事争吵，但是我不觉得这有什么不好，一个优秀的团队总要经历这些，大家有分歧，只是因为都想做好某件事情。
+<p>
+把一些存在的问题处理后，一切从新开始。今天早上，大家起得比较早，媛妈还和孩子们一起跑步了。在孩子们在操场早读的时候，队员们全到操场上，解答他们的问题，英语单词，或者汉语拼音，藏语的话，我们也只有看的份。远远没有他们知道的多。上午上了一节三年级的数学，因为三年级和一年级的课冲突了，所以刘丽就去上一年级的了。今天我把之前说过的一年级的李毛才忠叫到了三年级教室，我要她以后都来三年级上数学。她的能力不比三年级差多少，上课让她做的题，几乎都做对了，今天班玛龙周的头没有再痛，所以上课的状态也特别好，每次课上我都得写比较难的乘法给他和才让东主做，不然他们就一下说出答案，让其他同学没有思考的空间。
+<p>
+下午本来有两节体育课，由于要搬砖，所以没上课，我们就一起去搬砖了。我搬几块都感觉很沉，可是那些小孩，她们搬好多。我突然想起，昨天晚上，我们队员全到教室去，然后他们全在扳手腕，当然我也参与了，他们很小的年纪，可是力量很大，给我印象最深的是一个六年级的叫班玛措的女孩，她说老师，我和你来。她的力量让我吃惊，这是一个女孩子在她的年龄应有的力量吗？今天搬砖后，我知道了，他们从小就这样，一直干活。在干活的时候，班玛措和我说：“老师，你们走了，我们就没老师了上课了”。我当时不知道怎么跟她说，唯一的感受是我们能力的苍白，我希望，我想我们队员也这么想，大家都想一直留在这，可是我们还有另一些牵挂，我们身不由已，我们是多么的无能为力……
+<p>
+傍晚时他们还是一样在学校后面上自习，我们也在。今天队员卢佳园让三年级的背一首诗叫《游子吟》。他们一直在读，用藏语口音的普通话，坐在草地上，一次一次的读，他们的拼音不好，所以很多是错的，我给扎西讲了，又给龙周讲，然后给东主讲。后面东主问我这首诗是什么意思，我就给他讲了一下，他突然问我什么叫孝顺？我就说怎么报答父母之类的，他又问那我们怎么报答老师？我瞬间就哑了，我们曾为他们做多少呢,感恩在他们心中却根深蒂固。最后我说了句，你们好好学习就是报答，他愣了一下，笑了说：“喔”。       一会儿旦正项本来找我，说他在卢老师那儿背了，问我他厉害吗？我说你从新背一遍，他说好，要是我背下来了，你要帮我拍照，我答应了他，虽然不是很熟，有些字还是音没读准，但是他还是背了下来。自习时间快要结束的时候，我走到李毛才总身边，问她在干嘛，她把她的本子给我，我看到上面也是《游子吟》。原来卢佳园上三年级的语文时也叫她到三年级上。我问她背了吗，她说背过了，我让她背一遍给我听，虽然她记得不清楚，可是她的读音是所有学生中最准的一个。问她来多久了，她说两周。这和我们到这儿的时间差不多，她穿衣服都比较单薄，，人又小。又初到这个地方，对这么小的孩子，我不知道她心里是否孤单。夜晚的时候他们的身影总在我心里转啊转，我不知道我们走后他们会不会想起我们，但是我一定会想起他们，这些可爱的小孩，我想每个到这的人都会爱他们，疼他们。
+<p>
+自习结束后，他们要去诵经。我们队员就回宿舍了，途中媛妈说我们支教队就像土八路。看人人上那些支教队发的照片，什么领导又发言，队长有开总结大会，又与外国友人交流，书记又来看望，还西装革履，均是在和我们图书馆一样的报告厅，华丽而美丽。据说走的时候还是专车相送。媛妈还说我们队出发的那天，别人是单反，各种华丽的物质，出发得轰轰烈烈。我们除了队旗还有给孩子们的文具和体育用品，就只有队员的满腔热血了。
+<p>
+我想说，我们来这，我们没有一点抱怨。我们更觉得是一种荣幸，能遇到这么可爱的孩子们。同时我更祈求那些为了虚荣的队伍，能不能不要老在乎那些表面东西，一个什么都有的学校需要你们去支教什么？把你们所谓的奉献教给孩子们吗？能不能把精力放到那些被人们忽略的地方，他们更需要关心，更需要帮助。
+<p>
+8．1日，今天教学进度和往常一样进行，各位支教老师都在拼命的教孩子们，因为大家都要离开了，想在离开之前多教孩子们一些东西。孩子们也隐隐感觉到我们将要离开的消息，上课时都特别认真。今天早上我有一年级和三年级的数学，下午也有三年级的数学，一年级的孩子能力参差不齐，每次上课都像分几个年级上一样，三年级的基础也不是很好。
+<p>
+但每个年级总有那么几个特别优秀，一年级的才旦，上课时我写的题，他几乎都会，还有李毛才忠，这不奇怪，因为她本来是读三年级的，所以每次三年级上课，我都让她去听，作业也和三年级一样。傍晚的时候，他们在学校后面自习，一年级的都在读单词，大家几乎只会1到9这几个数字，可是才旦竟然能读到40，这让我非常高兴。三年级的班玛龙周，才让东主成绩都不错，还有项本，上课反应都特别快，扎西上课就知道笑，每次作业都几乎是错的，大部分是粗心，才行吉特别踏实，虽然反应比较慢，但是作业还是几乎都对，最让我骄傲的是三年级的同学从来不抄作业，无论对错都是自己做。
+<p>
+8.2日，今天几乎是所有班级的最后一节课了，因为明后天是周末，都不上课，而大家定的走的时间是周一。今天也一样，我有三年级和一年级的数学，在三年级上课时，我把所教的内容复习了一遍，而且尽我能力多教他们，所以下课时都拖堂了好久，今天中午我没有休息，就在三年级的教室，为他们解答问题。
+<p>
+下午上一年级的课，我让大家到黑板上做题。令我意外的是今天大家争先拥后的举手，都要上来做，那两个聋哑的孩子也是上来，她们比划手势，让我写题给她们做。我想他们可能知道我们要离开了，数学课下了以后，他们自习课，我就呆在他们教室，针对不同的孩子，在他们作业本上写不同的题让他们做。突然，李毛才忠问我：“老师，你们时候走”。然后她就哭了，其他几个女孩子也哭了，我当时束手无策，我知道不论我怎么说，他们都会难过。我就说大家唱歌吧，然后才旦就到讲台上上了一首藏语歌，虽然我不知道什么意思，但觉得很好听，还有一个聋哑女孩，她上去表演了一段舞蹈，李毛才忠唱了一首《兄弟》。她那小小的身体，我无法想象，竟能迸发出那么大的能量。他们的多才多艺，让我钦佩他们。
+<p>
+8.3日，今天周六了，离我们离开的时间近了一天。今天我们决定到倒淌河镇去给孩子们买点东西。我，许岭木，卢佳园，刘静还有阿卡，我们为孩子们买了水杯，篮球和一些生活用品，为每个宿舍买了热水器，为厨房买了一些菜。比较幸运的是当卖菜的老板知道我们是为孤残学校孩子买的时候，都以最低的价格卖给我们。
+<p>
+下午的时候，岭木和四年级的孩子去爬山了。我们其他队员都在寝室，和孩子们聊聊天，准备傍晚的时候去爬山。傍晚，大家吃完饭，准备出发，因为没有活佛的允许，很多孩子不敢去，但是才让东主和文昌这两家伙还是和我们一起去了，大家一起向山上进发，在日落的时候，我们还没有到达山顶。然后就直接去了拉科加老师家，阿妈为我们煮奶茶，非常热情地招待了我们。差不多九点的时候，我们准备回学校了。虽然有星星，但是还是比较黑，几乎都是相互搀扶着走，也看不见学校，大家就跟着文昌向黑暗中那几点星光处走去。今晚还看到了流星，比较兴奋，也就忘记了许愿。差不多十点的时候，我们回到了学校。
+<p>
+8．4日，今天，据说将有北京的客人要到学校，所以大部分人都在为这准备。差不多中午的时候，他们终于来了，也为学校带来了好多物资，在他们用餐后，活佛要带他们去青海湖，同时也叫上了我们这些将要离开的支教老师。和往常一样，有活佛在的地点，那些老板都不会收费，还很热情。我们在青海湖的耳环这里划船，不知道那叫不叫船。在差不多两小时后我们就回去了，因为我昨天和孩子们说好，今晚要在学校后面的草坪聊天。回到学校吃完饭后，大家都到了草坪，我们静静地听孩子们唱歌。大家嬉戏到差不多九点的时候，拉老师通知所有学生开会，因为今晚是一周一次的全体师生会议。今晚主要是我们队员说，每个人都说了很多很多，是因为第二天的离别吧！我能听到他们的啜泣声。老师们都唱了很多歌，还有班玛措也唱了。会议差不多持续到十一点多，这也不算会议，也就是大家一直聊一直聊。最后我们队员为孩子们表演了大家准备的手语《最好的未来》。“……每个孩子，都应该被宠爱……”就像歌词一样，这里的孩子都应该被关爱，被关怀。
+<p>
+8.5日，这是我们离开的日子，有两个支教队员坚持留下来，她们准备20号再走。上午我和活佛签关于建立社会实践基地和请活佛为队员们的实践表盖章的事。过了一会儿，活佛叫我们到他的办公室，学校为我们每个队员都准备了一份礼物和一条哈达，他还说：“这里永远是你们的家，任何时候都可以来”还说：“你们来这里教孩子们，吃不好，住不好……”我们听了他的话，觉得十分惭愧，学校为我们改善了伙食，改变了许多，可是我们除了教孩子一点有限的知识，又为他们带去些什么呢！活佛为我们安排了车，他有点急事去了海南州，我们就一直在学校等待车的到来。
+<p>
+傍晚时，孩子们和往常一样在学校后面草地上自习，我们全都在宿舍等车的到来，突然孩子们全跑到我们宿舍，高兴地说：“老师没走，他们行李还在……”,原来一个老师听到汽车的声音，以为我们走了，就和孩子们说，我们离开了，孩子们就放下书，全部一起跑到我们宿舍，还说老师走时为什么不和我们说……,看到他们高兴的样子，我们希望车一直别来，时间一直停留在这一刻。晚上车还没到，拉科加老师叫所有孩子在教室里开会，教室就在我们宿舍旁边。差不多九点半的时候，接我们的车来了，司机是工地上的老板。我们从宿舍拖着行李箱出来的时候，孩子们全从教室里冲出来，天很黑，但是还是能看到他们的泪光，他们和每一个老师拥抱，都说：“老师，你们一定要回来……”。这一刻，我们想对他们说很多话，但又说不了多少话。上车后，我们的手与拉科加老师的手，与学生们的手紧紧地握着。车子开动了，学生们想要跟着，却被工地上的工人拦着，看着他们，我们再也无法控制自己的情绪，眼泪不自觉地掉落。男儿有泪不轻弹，今夜我却泪千行。开车的赵老板告诉我们：”在你们跟那些娃儿拥抱的时候，我的眼泪也掉了下来“。是的，这些孩子实在是太懂事了，我们舍不得他们，舍不得这里的一切。短短的20天，也许是我们人生中最宝贵的20天，在这里，没有任何烦恼。无论是活佛，还是老师，还有学生都特别待见我们，照顾我们。我们仅仅教会了孩子们课本上的知识，但他们教会我们的东西更多，更宝贵,“懂礼貌，吃苦耐劳，还有那积极乐观的人生态度……”。这里的每一人，每一件事都在感动着我们，同时也让我们肃然起敬。
+<p>
+     
+<a name="memberlog_syy"><h3>申元媛</h3></a>
+<p>
+7月19日，今天是正式上课第一天，一共5节课，虽然口干舌噪的时候十分想休息，但看着孩子们一双双明亮的眼时我再也找不出理由去偷懒。刚去上二年级的语文时有些紧张，颤颤抖抖地居然连字都写不上去，幸亏孩子们积极配合，我才能安下心来好好上课。原来得到孩子们的认可对一个老师来说这么重要～到后来上一年级语文的时候，扫不清的拼音障碍不得不让我回过头来一遍遍的教拼音，但心里还是满足的！我所担任的课程没有太大的问题。与孩子们相处的时候总是最愉快的，孩子们的心灵是纯洁的，愿望是美好的，他们没有我所预想的课堂坏习惯，也没有不懂事的坏想法，只有那一双双渴望知识的眼和乐观上向的美好心愿。其实是孩子们在教我们成长，教我们怎么做一个合格的个人。 
+<p>
+支教第一个周末全队成员在欢乐的气氛下与孩子们度过，我们向孩子们学习藏族，在节目演出方9面小有收获。午休过后我们同孩子们一起看动画，共同体会这份童真的美好时光。虽下午有帮学校老师搭帐篷但没能实实在在的帮到别人，有些小失败。今天晚上举行了主题为“中国梦，我的祖国”的互动活动，队员为孩子们介绍我们美丽的祖国，活动在大家《爱我中华》的歌声中结束，总体效果还算可以。
+<p>
+在今晚的队内会议中，虽在支教配合和行动方面大家产生了一些矛盾，但最后在都方面沟通谅解的情况下矛盾得到解决。会议重点讨论了教学问题，孩子们的知识掌握程度不同，所出现的问题也不同。几个年级的数学存在不同程度的脱节和未掌握问题，就其问题大家仔细商讨，提出了相应解决的方法。
+<p>
+7月20日，今天是个很不一样的周末，从早上睁开眼的一刻起我便对孩子们的有种敬佩之情。望着简陋的寝室里熟睡的她们，看着教室的角落里悄悄下棋的他们，再到自觉排练节目的他(她)们，每一个细节都是感动的瞬间。你永远体会不了孩子们用冷水洗头的滋味，暂不说用冷水洗衣服，我不敢想象，夏天都是这样真正刺骨的冷水，到了冬天孩子们是怎么生活的？我没有这种毅力承受这般生活的艰辛，而孩子们却能做到微笑着面对这一切。感谢孩子们每天都是我的好老师，教会我无数不能言语的生活真谛。相信明天会更好！
+<p>
+7月21日，今天很激动很兴奋！活佛真的很热情，都带着我们支教队员前去参加集会，那盛大的节日活动足以让每个人欣喜不已。在节目表演快要结束的时候，学校的孩子上去唱歌，好心的村民络绎不绝地上前送上给学校孩子的善款那一刻，我自己真的被感动到了。这份感动直到在回学校的车上5岁的小姑娘熟睡在我怀里时我才真正理解:每个孩子都应该被关怀，每一个孩子都应该被爱。
+<p>
+7月22日，大清早的自己还在为今天的课程做准备，后才知道今天孩子们都不上课要干活儿了。无奈之下，今天的行动就变成了:包包子(藏族人特有的一种包子，表示满手的羊肉味)——帮忙搭帐篷——包包子。不过兴奋的是临睡之前还学了几遍要表演的手语，感觉支教的生活真的其乐无穷！ 
+
+<a name="memberlog_fk"><h3>冯可</h3></a>
+<p>
+7月19日，今天是正式支教的第一天，作为三五年级的数学老师，所有同学的美术老师，今天共上了四节课，虽然站得腿疼，讲得口干，但心里却是另一般甜蜜，因为我讲的东西，他们全部吸收消化了，看到了他们上课前渴望的眼神，和他们下课后知足的笑容，我们每个老师都有一种成就感油然而生。
+
+<a name="memberlog_hyf"><h3>黄逸帆</h3></a>
+
+<p>
+7月19日，支教感悟。今天是正式上课的第一天，我负责的是三年级和四年级的英语教学工作。孩子们虽然英语基础都不是很好，英语水平参差不齐，但上课时，他们听讲都十分认真。藏族的孩子还很懂礼貌，体贴人。我在三年级上课，上到一半左右的时候。坐在第一排的小男孩突然搬着他自己的小凳子跑上讲台来，指着凳子示意让我坐。那一刻，我的心里是一阵浓浓的暖流。虽然青藏高原寒冷，这里条件艰苦，但孩子们的心，却显得那么纯真而自然。令我们这些经历了太多世俗纷扰的人，有了无限感慨和感悟。
+<p>
+7月20日，今天是第二天，因为是周六所以不上课。批改下孩子们上交的英语作业。感觉自己是任重而道远，有的孩子大小写不分，有的孩子抄英语单词还抄错了，有的孩子不该有空格的地方有了空格。孩子们的基础比较薄弱，有些虽说是在读三四年级，但其实一二年级的东西都尚未掌握。因此，在下阶段的教学中，不宜贪图进度，而应当好好帮助孩子们打牢固基础。如果根基是错的，那上面的建筑就只能是歪的。虽然是周末，但孩子们的生活却也并不轻松。由于学校正在造房子，很多学生需要干活，在工地上搬东西。他们生活的艰辛，是我们所无法想象的。教育资源分配的不均匀，普遍存在。在这里却更加明显，老师经常变更，孩子们的知识也因此缺乏体系。我们在这里支教的时间是短暂的。如果，可以在这短暂的时间内，可以教会他们些有用的东西。对他们的人生有些许指引的作用，那我们的付出也算是有了意义。
+<p>
+7月21日，今天是周日，参加了当地藏族村落一年一度的聚会活动，聚会很隆重。让人深深感受到了藏族同胞的热情奔放。一方水土养一方人，广袤的高原牧场，孕育了藏族同胞性格中的淳朴好客，大块吃肉，大口喝奶。这种氛围令我们陶醉。支教不单单是向孩子们传授知识，介绍外部社会的过程，更是使我们领略各个地方不同风情，促进不同民族交流的好机会。中国是一个多民族的国家。汉族与少数民族能否和睦相处，不仅事关个人，更是关系到国家安定繁荣。只有各个民族之间加强合作与交流，国家才能发展，社会方能安定。民族关系，绝非小事。参加藏族同胞的聚会，让我们对藏族文化有了更深刻的了解和认识，这对我们处理好民族关系，也是大有好处的 
+<p>
+7月22日，由于学校要扩建，25号就要进行奠基仪式，今天大点的孩子们都要帮忙搭帐篷，搭炉灶，所以便停课了。  我们这些支教老师，参加了部分搭帐篷的活动，感受到了别样的民族风情。大概中午的样子，大家开始准备宴会需要的包子，几个会包包子的队员便自告奋勇地参加，而不会包包子的也是跃跃欲试。来学校的这几天，由于种种原因，我们实际上课其实只有一天。为了下阶段给孩子们上更多的课，让孩子们更多地了解外面的世界，体验知识的重要。我们打算下阶段在一些周末或周日还有晚自习对孩子们进行补课的活动。用我们的绵薄之力，希望能让孩子们更好地成长。 
+<p>
+7月26日，星期五。支教已经经历一个礼拜了。和孩子们也是一天天越发熟悉，到如今，已经是打成一片。不过时间长了，有的孩子就有些调皮起来，特别喜欢开老师的玩笑。我们知道，孩子们都是很淳朴的，他们的玩笑也是充满善意的。因此，大部分时候，我们都是欣然接受。不过，遇到上课的时候，有些孩子太调皮，就不能置之不理。今天上课的时候，有个孩子太调皮了。而且不止这么一节课调皮。我罚站他，直到他能回答出问题。怎样和孩子们相处好是个大问题。太亲近，就容易缺少必须的威严。太威严，又产生过多的距离感。 
+<p>
+7月27日，星期六。今天本该休息，不过，我们给孩子们补了课。原本打算补一天的，然而下午很多孩子要帮忙拆帐篷，于是便只能如此作罢。上课和平时无异。而我慢慢想到了一个问题上去，如果我是他们，我会怎么样？如果我也是家境极度贫穷，或者父母离异，或者天生残障，抑或是孤儿。当大自然，将我扔至如此的境地时，我将何去何从，我该怎么把握自己的命运。有时候，真会觉得限制生命的因素太多，生命本身能呐喊发出的又太少。的确人可以尝试改变环境，但更多的人，是被环境所束缚。或许可以选择奋力挣脱，但有时候在大环境下，又显得如此无力而软弱。视界决定了世界。处于一个极度艰难的环境下，就需要个人更大的决心和信念，如果不是自己去勇敢开拓自己的视界，那么自己的世界，便势必受到禁闭。
+<p>
+7月28日，星期日。今天没有课，孩子们休息。本来打算周日也给孩子们补课的，但考虑到连续上课没有休息，会导致效果不佳。所以最终还是给孩子们休息一天。孩子们的课余活动主要是做游戏，和做一些体育运动，例如篮球，足球等。至于看动画片，是孩子们最喜欢的娱乐活动了。每到看动画片的时候，大家都会一起搬着凳子聚集在四年级的教室（因为只有四年级的教室才有电视机）。孩子们平时是不能看电视的，只有到周末才会有机会看动画片。 
+<p>
+7月29日，星期一，今天重新开始上课。觉得在这里的生活有点世外桃源的感觉。交通不便，钱变成了废纸，和外界的交流少之又少。学生们每天上课，然后就是干活，运动。他们和外界的交流很少，虽然，我不知道他们眼中的世界是什么样的，但我知道，那个世界比我们眼中的世界小。但他们眼中的世界也比我们的单纯得多，但他们对生活的幸福感却绝不比我们低。现代社会，人们的物质生活日益富足，而内心的贫瘠也是每个人都能感受得到。我们追求着什么，我们想要的什么，我们富足的物质是否能换得内心的片刻宁静。何去何从，这是一个问题。我若停下来感受内心，身边就可能会一无所有，可能便会没有立足之地。我若马不停蹄，昼夜不息，便不知明天内心将放置何处。或许人生本不应该想得太多，活着，做自己该做的，想自己该想的，去感受身边的细小美好，我们或许就会发现，生命有很多值得享受的地方。我们看着孩子的生活，觉得孩子们生活很贫困很艰难。但孩子们看我们，会不会觉得，我们才是贫穷的呢？我想这是一种必然。
+<p>
+7月30日，星期二。其实支教剩下的日子已经不多了，作为队员的我们能给孩子们留下些什么呢？两周多的时间其实是很短暂的，能够传授的知识也颇为有限。师者，传道授业解惑也。其实更重要的，我们应该帮助孩子们拓宽眼界，让他们了解外面的世界，让他们感受到世界对他们的关爱，令他们觉得人间充满真情和关爱。今天上课的时候，我给孩子们讲到单词sun（太阳），并说到地球是绕着太阳转动的。孩子们很迷惑，有一个孩子大声说，不对，不对。他告诉我，他们老师告诉他们，太阳是绕着地球转动的。真正的教育，如同灯塔，能驱除人们内心的恐惧，充足精神世界。如果我们单单是教一些知识点方面的内容，对孩子们的启发意义其实不大。帮助他们驱散内心的困惑，让他们能自信地面对充满未知的将来，这才是有意义的事情。支教的日子所剩无几。在剩下的时日里，我想我会在上课的过程中，除了传授知识点，更多地教授一些课外的知识。若对他们的人生观世界观，有些许帮助乃至指引，就再庆幸不过了。
+<p>
+7月31日，星期三。这几天吃的馍馍是一周前剩下的，有的甚至已经有些酸味了。条件虽然比较艰苦。但这儿的孩子们却让我们感到温暖，让我们充满希望。虽然，因为条件比较差，他们普遍个子都比外面的同龄人小，虽然他们穿的衣服一般都是脏脏的，甚至很多人连袜子也只有一双。但他们比外面的许多孩子都要淳朴，他们的微笑，他们的眼神，都是显得那么纯真。的确，我们的到来，带给他们希望，让他们知道这个世界不曾将他们遗忘。但其实他们，更给我们带来希望，让我们发现，原来人世间仍有未被污染的净土。原来，快乐是那么简单，人性的光芒是如此美好。
+<p>
+8月3日，星期六。离开的时刻越来越近了。我们也思索着怎样给孩子们多留下一些东西。今天早上，四个队员去附近的镇上买了一些蔬菜，牛奶，电热水壶，杯子还有篮球。买电热水壶是因为我们发现孩子们平时喝的都是冷的自来水，这十分不卫生。另一部分队员则留在学校，擦墙面，打扫地面，擦窗户。傍晚的时候，我们和一些孩子还有学校的老师一起爬山，在山上看夕阳。在学校的最后几天，留下美好的回忆。  
+
+<a name="memberlog_lj"><h3>刘静</h3></a>
+<p>
+7月19日，今天是来学校的第三天了，孩子们都很热情，很懂事，很有礼貌，映像深刻的画面太多，上课时，刚一走进教室，孩子们马上站立起来，“老师好”。我教的班最多7个人，少的5个人。但却叫出了几十个人的感觉，从他们的喊声中透出孩子们对学习的渴望和对生活的热情。吃饭时，孩子们看见老师就会叫老师过来挨着坐，时刻关注老师们是否吃完了，快要吃完时，马上叫着要去給老师打饭，这么小的孩子，却这么懂事，特别让我感动。
+<p>
+就在刚刚，我已经躺在床上，一个小女孩，叫才旦卓玛，拿着她的作业本来问我白天上课教过的词语，我一一解释后，一会儿后她又来问题了，这的孩子真的很惹人爱。突然觉得支教时间太短了。
+<p>
+7月20日，今天是星期六，孩子们都不上课的，但让我了解到孩子们另一方面的生活，上午吃过饭后孩子们开始在歌声中跳起舞来，我们在旁边不由得也扭了起来。孩子们都很独立，从早上吃完饭自己洗碗，下午洗衣服洗鞋子都是靠自己的，当我蹲下想帮一个小女孩洗衣服得时候，她拒绝了。我站在旁边看着，虽然现在
+是夏天，但水冷得刺骨，想象不出冬天的情景。但是她满脸的笑容让我看到对生活热情，她很快乐，她让看到她的我很快乐。愿孩子们永远快了。
+
+<a name="memberlog_ll"><h3>刘丽</h3></a>
+<p>
+7月20日，今天晚上我们进行了我们红心支教队的第一次主题活动，介绍我们的祖国，各个队员介绍了各自的家乡，并教授小孩子们歌曲“爱我中华”活动过后我们讨论了我们的教学工作，并在教育孩子的过程中发现很多问题，决定了以后的教学方法。任重而道远，针对学习程度不同的学生，我们决定一对一教学，在支教期间争取把同一年级学生的成绩提高到同一程度，以方便我们走后以后老师的统一教学。
+ 
+<a name="memberlog_xlm"><h3>许岭木</h3></a>
+<p>
+7月18日，上午九点左右，支教队员将学习用品整理分类，并由各个班级的班主任领取，之后由临时班主任发给每个班的学生。当我领取完来到四年级的教室时，七个学生整整齐齐的坐在教室里，还没开口说话，7个学生齐刷刷地站起来，喊了声:老师好。"同学们好"在我示意他们坐下后便开始自我介绍。使我感触最 深的是:当我把每一件物品发到他们手里时，他们都会站起来说声谢谢老师。最让我感动的是，他们没人都发了一幅画给我，每幅话都非常精致，好看，上面还这些他们想对我说的话。             
+<p>
+虽然在在这里的条件都非常差，但孩子们真的很有礼貌，非常懂事，听话。他们热爱运动，活泼。他们特别勤劳，所有事情都自己动手。美丽的青海湖荡漾着，他们善良，淳朴。
+<p>
+7月19日今天上午迎来了自己的第一堂课，上课的时候确实有点紧张。在我让学生们做题时，即使课本上有答案，他们还是独立完成。在我给学生们讲题时，他们总是全神贯注的听着。黑板上的每一个字他们都会摘抄下来。他们热爱学习，渴望知识，充满求知欲。也许今天我布置的作业有点多了，几乎每次看到他们都是在做作业，也有好几个学生拿着作业来问我的。虽然他们的基础比较差，但是他们的学习非常刻苦，认真。眼睛是心灵的窗户，他们每个人的眼神都非常纯净，无邪，充满求知欲。每一次他们用纯净的眼神望着我的时候，我都会告诉自己:一定要尽最大的努力。在这里，他们教会我们的，比我们教会他们的更多，更宝贵。
+<p>
+7月21日今天活佛带我们去贵德参加一年一度的藏族集会，藏族的节目非常奔放，在现场欣赏跟电视上完全不一样，特别有感觉，藏族汉子的柔情和藏族姑娘的柔情，在节目中展现的淋漓尽致。最让我激动的是，我还亲自上台给一位女歌手献上哈达。学校的孩子也出了几个节目，两个女生唱的歌非常煽情，虽然我听不懂，但还是很感动。还有噶藏老师带学生跳的舞，特别新潮，特别酷，也很有民族特色，才旦他们几个小孩跳的奇葩舞，特别可爱，把全场都萌翻了。藏族同胞真的非常热情好客，请我们吃了许多羊肉，没想到我也能参加这么隆重的藏族集会，感觉就像做梦一样。今天晚上全校师生开会，感觉自己有点太严厉了一点，就像我跟学生说的一样，上课的时候我是比较严肃的，下课的时候大家都是朋友，一起开开玩笑，打打篮球。今天让我领略到了孩子的多才多艺，让我们望尘莫及。
+<p>
+7月22日今天下午帮他们搭帐篷，挺累的，听一个学生说，我们来了之后，学校的伙食好了许多，一下子不知道说什么，特别感动，一定要好好努力，让该子们取得最大的收获。明天开始便恢复正常上课，活佛给了我们很大的自主权，以后我们会在周末和晚上的时候给学生们补课。
+
+<hr class="newpage"/>
+
+<a name="activities"><h2>特色活动</h2></a>
+<a name="activities_chinadream"><h3>“中国梦，我的祖国”</h3></a>
+<p>
+你有一个梦想，我有一个梦想，他有一个梦想，让所有梦想汇聚，便是时代的梦想，便是中国的梦想。
+<p>
+7月17日，是我们刚到这所学校的第一天，孩子们将我们包围了。他们一个个都是那么稚嫩，他们凝视着我们，那些目光，有的欣喜，有的迷惑，有的茫然，有的期盼。其中，有个孩子的目光一直看着我，盯着我，恍然世界凝聚于我这一点。良久之后，他好似犹豫再三，终于鼓足勇气，“老师，给我说说外面的世界，好吗？”
+<p>
+这儿地处青藏高原，毗邻青海湖。四周多为高山草场，有种与世隔绝的感觉，孩子们的目光，犹如困顿的幼兽，拘泥其中。
+<p>
+在之后的几天中，我们有意无意在课堂上谈及孩子们的梦想。他们有的想做藏医，有的想做一个画家，有的希望平平淡淡过一辈子。有一个叫班马措的女孩告诉我们，她希望以后能做一个歌手。他们说起梦想的时候，都不约而同地将目光投向远方，又情不自禁地低下头来。远方是什么？远方的路什么样？对于孩子们而言，远方是未知，是希望，却也有着更多的茫然。因而，他们更多地想留在当地。对更多人而言，已知的现在比未知的未来更可靠。
+<p>
+孩子们的梦想是纯真的，也是脆弱的，需要我们呵护。
+<p>
+7月20日晚，我们红心支教队，举行了“中国梦，我的祖国”的主题班会。七个队员，一一走上讲台，向孩子们介绍自己的家乡，介绍美丽的祖国。孩子们全神贯注，一个个听得津津有味。当队员们说到四川，贵州，浙江等一个个孩子们陌生的省份，孩子们也激动不已。当队员们说到神舟系列飞船，讲到祖国的蓬勃发展，孩子们脸上是敬仰，是惊讶。很多孩子举起小手争先恐后地发言提问，渴望了解外部的世界。此时此刻，他们所处的好像已不是偏远的青藏高原，他们就和祖国别的地方的孩子一样，感受着时代的气息。
+<p>
+在主题班会的最后，队员们和孩子互相交流，孩子们纷纷吐露自己的心声。“我希望能去祖国别的地方看看。” “我想要做一个宇航员。”“我想让藏歌传遍祖国！”我们突然发觉，其实他们并不是那么闭塞，尽管偏远，但心中的梦想不会因此折断翅膀。只要给些呵护，就一样能展翅翱翔。
+<p>
+两天后，我们在每个教室贴了些祖国各地，世界各地的景观。下课的时候，一个叫多杰彭毛的孩子，笑呵呵地指着那幅巴黎埃菲尔铁塔的图片对我说，“老师，以后我想去这里看看。”
+<p>
+又是两天后，我们得知班马措，过几天将要去深圳的一所音乐学院了。
+<p>
+孩子们是民族的未来，孩子们是祖国的明天。孩子们要走出青海湖畔，走向祖国各地，乃至走向世界，去实现自己的梦想。我们的祖国也将昂首走向世界 ，去实现中国的梦想。
+<p>
+千万滴水终能汇聚成江河，乃至大海，千万个小小的梦想方能铸造时代的梦想乃至中国的梦想。
+<p>
+世界屋脊，青海湖畔，我们在守候，我们在呵护。相信孩子们稚嫩的梦想，终有一天能鹰击长空，而我们的中国梦也能扶摇而上九万里。   
+
+<a name="activities_classroom"><h3>美化教室</h3></a>
+<p>
+支教期间，我们几个支教老师帮学生们装扮教室。第一个帮助学生装扮教室的老师是二年级的临时班主任刘丽，刘丽用了一个中午的时间帮孩子们将二年级的教室装扮完成，教室的装扮简约大方。 后来两个四年级的学生来找我装扮教室，下午我便去学校的库房拿了所需物品。
+<p>
+第二天我和孩子们一起装扮教室，虽然装扮教室的大体框架是我定的，但落实到每一处都是学生们自己做的。他们每一个人都参与到装扮教室当中去，画画的画画，写字的写字，剪纸的剪纸，每一个学生都尽心尽力。教室的装扮大体分为四个版块。
+<p>
+第一个板块是许愿树，许愿树是学生自己画的，由我剪下后再贴到墙上，然后让每个学生和老师在上面写下自己的心愿。有个女生想当演员，有些学生想当画家，而最让我印象深刻的是一位学生在上面写上：我不要荣华富贵，富可敌国，我只要一个平平凡凡的人生。这句话让我感触很大。
+<p>
+第二个版块是学生才艺，下面贴着学生自己画的画和他们自己动手做的各国国旗，学生画得特别好，每幅画都非常生动，活灵活现。我给每个学生发了几张贴纸，叫他们把自己想说的话写上去，他们每个人都写了特别多，也有学生在上面画画，我将这些贴纸贴在第三版块上。
+<p>
+在第四版块上，我贴上了许多名胜古迹的风景。
+<p>
+装扮教室差不多用了一个上午的时间，学生积极参与，每一个都很有想象力和创意，看着我们自己装扮的教室，我们每个人都十分满意。后来的几天，三年级和五年级的临时班主任申元媛和冯可都帮学生们装扮教室，三年级装扮的教室特别有创意，简约美。五年级装扮的教室十分出色，有很强的个性。六年装扮的教室就显得比较简单，简单却不平凡，两个展示板贴满学生的手工作品和他们写的话，我们几个支教老师也在上面写上了对他们的寄语。两个简简单单的展示板确是六年级五个学生心血的结晶，在布置教室的时候，他们每一个人都尽心尽力，主动积极，虽然再过几天就要离开这个学校，却在离别之际留下了意义深刻的一笔佳作。
+
+<a name="activities_build"><h3>学校建设</h3></a>
+<p>
+在7月25日，学校要举行新校的开工典礼，对整个学校来说，这是一件极为重要的事情，全校都在为这一天做着充分的准备。
+<p>
+在开工典礼之前的四五天，学校组织老师和高年级的学生在学校工地上搭建帐篷。从早上九点开始到下午五点之间，只要哨音一响，所有人必须集合，去工地帮忙。我个人感觉这次搭帐篷困难有二：1.学校在青藏高原上，这里紫外线照射很强，在工作时会很热，长时间在外面工作的话，轻则会感到口干舌燥，重则会被太阳晒伤；2.搭这种帐篷是学校的第一次，所有人都毫无经验所谈，搭帐篷会是一件有难度的事情。
+<p>
+虽说万事开头难，但是还有一句话：“功夫不负有心人”。再搭第一个帐篷的时候，所有人都是那么茫然，但是在夏洛加和拉克加的指挥下，我们渐渐找到了帐篷的基本构架。花了近一个半小时，第一个帐篷的钢筋支架总算支起来了。但是问题又来了，帐篷的布顶好像比支架要小一点，搭起来的话好像有点难看，我们力气比较大的男老师，只好使劲地拽着帐篷布顶的四个角，让它尽可能地符合设计时的样子。最后虽然我们几人的收不成样子了，但是，帐篷总算完成了。在后来的几个帐篷，由于有了先前的经验，搭的时候就容易了好多，原本一件比较困难的事在我们大家的同心协力下，就显得简单了。再次证明，人多力量大！
+<p>
+帐篷打完了，接下来就要铺地了，在工地的一旁，挪着好多的砖，所以，我们只需要搬一部分过来，虽然是是一个轻活，但是在炎炎烈日下，也显得很重。只要老师一声令下，所有的孩子，不管大小，都尽自己所能地搬着砖。四年级的华旦多杰长得高，力气也大，但是在我看来，二十片砖对十四岁的孩子说太过勉强，出乎我的意料，他完成了，不过我不赞成这样的做法。还有一个一年级六岁的女孩子，叫南开卓玛，刚开始，孩子自己抱着三片砖慢慢的走着，刘静看到后，就帮她拿了一片过来，没想到，小孩子竟然不高兴了，好像是我们否定了她的一样。最后，在我们大家伙的共同努力下，砖搬完了，帐篷的地也铺了，只要铺上地毯，摆上桌子，一切就OK了。
+
+<a name="activities_wish"><h3>心愿认领</h3></a>
+<p>
+为了实现“爱暖童心”这个支教主旨，我们红心志愿者支教队在这二十几天的支教日子里，开展了“心愿认领”这一活动。青海湖慈善孤残学院位于青海湖边的藏族自治区，环境艰苦，学校的设施样式单一缺乏，孩子们的吃穿主要依靠外界爱心人士的捐赠，学生们的个人用品，学习用品几乎没有，我们支教队希望以这次的心愿认领活动给孩子们带去更多的物资，希望他们和我们一样能拥有一个美好的童年生活。
+<p>
+在临近支教结束的几天，我们开始准备这一次活动，决定将这次的活动分块进行，每个班级有班主任组织发给同学们每人一张纸，并向同学们讲解这次活动的目的。一年级的学生由于汉语水平比较差，不能书写汉字，由他们的老师代写。在活动结束后，每班班主任讲学生所写的心愿收集起来，当天晚上我们队员对这些心愿进行了整理。看了孩子们写的心愿后，所有的人都被这些孩子的心愿感动了。孩子们在写了他们想要的东西后，还写了很多想对老师说的话。。。。。。
+<p>
+四年级的华旦多杰：我不要什么，只想你们来看我们，希望你们来当我们的老师。
+<p>
+五年级的文昌：我什么都不想要，只要你们能找一份工作，希望明年 几个老师会来给我们讲课，玩游戏。我们一起等着你们。
+<p>
+三年级的才行吉：希望老师幸福快乐，明年还会回来。
+<p>
+三年级的旦正巷本：我没有心愿，但是你们一定回来。
+<p>
+五年级的希加卓玛：我衷心地感谢你们，我们会等你们回来。祝你们一路平安。
+<p>
+。。。。。。
+<p>
+看到这些，我们都沉默了，因为感动，这些可爱单纯的孩子们给了我们太多太多的感动。这二十几天的支教生活不仅仅是我们带给孩子们知识与快乐，更多的是孩子们教会了我们这个世界充满着爱，教会了我们用一颗感恩的心乐观地面对生活。不管生命给了我们多少，我们要做的是将这些我们所拥有的完整呈现，并且感谢生活中给予我们帮助的所有人。
+<p>
+一二年级的小朋友写了想要衣服，美术书，洋娃娃等，我们希望能够为这些孩子申请到这些物资，希望他们与其他小孩一样拥有一个美好的童年，对以后的生活充满憧憬，并怀着一颗感恩的心勇敢地走下去，创造美好的未来。
+<p>
+只要人人都献出一点爱去帮助实现孩子们的小小心愿，我相信我们携手能让这个物欲横流的世界变成充满爱，充满希望的乐园。每一个孩子都应该被宠爱，虽然我们力量渺小，但终有一天，无数小溪汇成大河，将会实现让每个孩子能拥有美好童年的梦想。
+
+ 
+<a name="touchmoment"><h2>感动瞬间</h2></a>
+<a name="touchmoment_syy"><h3>申元媛</h3></a>
+<p>
+在美丽的青海湖畔多待一天便多一份感动，每天都有那么多可爱的孩子告诉你生活的美好是什么，每天都会有动人的故事让你体味时光的静好。要说感动，便要说说对自己触动很深的草原聚会上的藏家儿女，无论男女老少我感受到的都是美丽的心灵。
+<p>
+在活佛的带领下，几名支教队员有幸同支教学校的所有成员一起参加他们村一年一度的草原聚会。带着一份好奇和激动，我们来到了向往已久，也是只在电视上看到过的草原会场。7月的草原虽没有狼毒花开的烂漫，却有格桑花开的静好，和风吹得我们所有人心里都暖暖的。我同很多孩子坐一辆车前往聚会地点，一路上晕车的孩子吐的吐，透风的透风，磕磕绊绊总算安全到达。对没见过这种盛大集会场面的支教队员们来说，这是我们认识草原的第一次——被邀请入帐篷品尝美味，看草地上的节目演出，听淳朴的藏语歌唱生活的美好——第一次被民族的气息所包围。我显然有些激动，尽管节目演出的中途下起了阵雨，可这并不影响我欣赏节目的心情。那飘扬的哈达载着祝福被献给了一位位上场表演的人，原来有一种喜欢和爱戴可以胜过手捧的鲜花。
+<p>
+一个个的节目表演，我在等待自己学校孩子们的上场。这种感觉如同自己是孩子们的父母一样期待看到他们的成长。终于，班玛措同学在大家的欢呼声中上场了，我不知道自己哪来的一股自豪感，带着祝福瞪大了眼睛望着这个站在人群中央的姑娘。班玛措有点紧张，我也同她一样紧张，生怕她出差错。就在这时候我看到了一名支教老师和学校的孩子上场给班玛措献哈达了，之后便是越来越多的哈达带来各方的祝福。虽然孩子们平日里少了自己父母的照顾，但在场的所有人都给了班玛措勇气和力量，觉得很多人都是关心孩子们的。我有些感动，心里轻轻颤动了一下，也就在这个时候我看到藏族爷爷颤颤巍巍地走上前来把自己手中的钱塞给了班玛措。而爷爷的身后，络绎不绝的村民走来给学校的孩子们献上自己的微薄之力。班玛措深深地鞠着躬，向着村里所有好心的人。直到演唱结束，她那头低下去的头都没机会抬起过。这是发自内心的祝福与感恩，这一刻有几百人倾听着班玛措歌唱的心声。也就是这一瞬间，我情感的最后一道防线崩塌了，来学校我一直以为最爱孩子们的是活佛，没想到我可爱的孩子们一直是被很多人关爱着的。原来村民们的爱心不需要太多冠冕堂皇的理由，原来善良没有那么多铺垫和修饰，原来关爱可以是这样直接地表达，原来学校的孩子同别的孩子一样可以幸福快乐着。在演出结束的时候，村长又将村里人捐助的一笔钱送到了学校孩子的手里，整个会场都是温暖的。
+<p>
+我努力地去记住这前所未遇过的节日盛况，我也静静地去融入藏家人特有的风土人情，这种感动是之前未有过的。这是藏族人特有的热情和豪放，这是我们这些支教队员所不能及的付出，他们祖祖辈辈都守在这片家园的热土上，用他们的双手创造明天，用他们的真诚为学校为孩子们筑梦。高原上的孩子并不孤单，即便生活是艰辛的，但所有的藏家儿女都是同心的，他们有自己的方式表达内心的祝福，他们有自己的心灵家园可以守护。
+<p>
+在回来的车上当小卓玛熟睡在我怀里的时候，我想我也是爱她的，就像爱孩子们的藏族人一样。我的心是明朗的，这是被一幕幕的感动洗涤过的心窗，能看到孩子们在高原阳光下幸福成长！
+<p> 
+
+<a name="touchmoment_tbg"><h3>唐邦国</h3></a>
+<p>
+1.在我刚到学校的第二天早上吃早餐的时候，因为我之前没有准备饭盒。所以在排队领早餐的时候我和队员说我没有餐具，待会儿和厨娘说一下，看厨娘能不能给我一个碗。我们还没领早餐的地方，一个二年级的小女孩就拿着一个碗走到我面前说：“老师，这个给你”。我接过碗，说了句谢谢。可是这两个字显得那么苍白，她应该是听到我说没有餐具的话，然后就跑去给我找餐具了，这两个字怎么能形容这里孩子的懂事和单纯呢！他们时刻在关注着老师，关心着老师。可是在他们的年纪，又有多少人关注他们，关心他们呢！
+<p>
+2.三年级有个叫班玛龙周的孩子，在我的数学课上，他都特别积极，作业也做的特别好！可是7月30号上午第三节数学课，今天班玛龙周比较反常，他成绩是不错的，一般在上课时我问的问题，他都不会答错，可是今天他一直出问题。感觉他一直想睡觉的样子。我问他是不是不舒服，可是他说没事。问他好几次，他都这么说，总感觉他有些不对劲，又不知道在什么地方。第四节课的时候，我去他们班转，他们是藏语课，由于没有老师，所以就上自习课，我发现龙周的座位是空的，就问了一下其他同学，他们说他头痛，回寝室休息了。我去寝室找他，遇到厨房的厨娘，我问她龙周怎么了。她和我说龙舟在7个月的时候头上做过手术，在温度特别高时，如果他不戴帽子的话，就会头痛。我才想起来，应该是今早第二节课下的时候，他在做课间操时没有戴帽子，这边的太阳有特别辣，所以才会这样。可是上课的时候，我问他，他总说没事没事，我不知道什么让他这么坚持。从来到这开始，队员就发现好多孩子们在上课的时候几乎不会因为身体的原因而缺课的，他们总在坚持。如果是我们呢？
+<p>
+3.八月五号，这是我们离开的时候。上午活佛有时去海南州了，他让我们子啊学校等他，他回来后就送我们去火车站。所以上午的时候我们按课表正常上课，我第三节是一年级的数学，第四节是三年级的数学，当我走进三年级的时候，我问大家，这节课讲什么。有些说唱歌，有些说做题。我就说用三十分钟做题，十分钟唱歌。大家都到黑板上做题，每个人都争先恐后的上来，还有那两个聋哑的孩子。每当我说他们作对时，他们会特别的高兴，赶快擦黑板，又让我写题给他们做。差不多半个小时过去了，才旦和李毛才忠就开始唱歌，很多歌是藏语，虽然我听不懂，但是能感受到那种美，李毛才忠还唱了一首《兄弟》。快要下课的时候，他们把门锁起来，不让我离开，让我再为他们上节课。看到这群可爱的孩子，我也舍不得离开，不是他们依赖我们，而是我们依赖上了他们。
+
+
+<a name="touchmoment_fk"><h3>冯可</h3></a>
+<p>
+说起感动瞬间，太多，但是，最感动的那次是我终生难以忘记的。那就是离别的时候，学校一个叫侃卓措的孩子说：世上最难受的就是离别。
+<p>
+的确是这样，那天晚上，当接我们去西宁的车到达学校，我们搬出行李时，原本平静的学校瞬间就嘈杂了起来，所有的孩子冲出了教室。当时，我的心里好难受，那是一种莫名的感觉，我知道这就是离别的味道。先是青浪，我们拥抱在了一起，他说明年他等着我们，当时，我只是说我尽量，很有可能会去继续支教。然后是侃卓措，班玛措，才让加，才增多杰，几个六年级即将毕业的孩子，他们让我明年再回来，我说我回来就见不到你们了，他们说无所谓，因为我们可以用手机继续保持联系，但是其他的孩子会想我们的。其中和拉忠的拥抱是最难受的，她哭了，我告诉她，在我眼里，她一直是一个勤奋的孩子，相信她会成功的。就连平时最闹的文昌才让那天都安静了下来，我们抱了好久，让他以后不要那么淘气了，多听校长、老师的话。和老大什么也没说，只是一个拥抱，足矣，有点遗憾，那天夏洛不在。上车后，摇下车窗，我看到了好多的哭脸，好多的悲伤。
+<p>
+车出发了，我把车窗开到最大，把音乐放到最大，试图让我脑子里那二十天的点滴片段不要再浮现了，但是，没有任何成效，那时，我就决定，明年我一定会回来的，孩子们，等我！
+
+<a name="touchmoment_hyf"><h3>黄逸帆</h3></a>
+<p>
+瞬间1：我在三年级上的第一节英语课，和孩子们都还不熟，很多孩子的名字都还不知道。当我在简陋的讲台前讲单词时，突然最前排那个矮矮的小男生，搬着自己坐的那把凳子走了上来。我第一反映，他是不是因为看不清。可他却用并不熟练的汉语，请我坐在凳子上。当时我的心便是一颤，全因为这孩子给我的，最淳朴的感动。
+<p>
+瞬间2：有一次，学校需要孩子们一起帮忙搬砖。搬的砖头有些多，孩子们并不像外面的孩子那样，干活做事挑轻松的来。几乎每个孩子都是抢着搬，争着多搬几块砖。八九岁的孩子体格都很小，但他们却要搬六七块砖。说实话，像我这个二十出头的小伙子，每次搬六七块砖头都觉得有些累，两次搬下来就气喘吁吁了。但他们搬着却从不说累，不叫苦，要是我们从他们搬的砖中减下两块。他们反倒会显得失望起来。
+<p>
+瞬间3：几乎每次我们任何一个支教老师从他们面前走过，孩子不管在做什么。他们总会立马停下手头的事情，站得笔直向我们打招呼问好。有些孩子比较腼腆，只是站着，也不说别的什么话，但我们的心里却觉得暖暖的。
+<p>
+瞬间4：每次去食堂吃饭，排队等饭，总有孩子让我们往前面站。每次打完饭，总有孩子热情地对我们说，老师，坐到这儿来。
+
+<a name="touchmoment_ljr"><h3>卢佳园</h3></a>
+<p>
+1.学校的孩子非常尊敬我们，无论是吃饭时看见我们还是在寝室休息时看到我们，一定会全体起立，我们让他们坐下才会坐下，非常听话。
+<p>
+2.每次排队吃饭孩子们都会让我们去最前面，我们吃饭时也会争着和我们坐在一起，看我们吃完了都会争着去给我们添饭加菜。
+<p>
+3.一年级有个叫才让卓玛的女生，智力上有些缺陷，但当她拿到漂亮的笔时，我们看见她马上拿去给夏洛加老师，夏洛加老师让她自己留着用，然后她又拿来找我们执意要给我们，虽然她不像同龄的孩子那样聪明，但她有颗善良无私的心灵。
+<p>
+4.有一次在寝室里六年级的侃卓措在和我们聊天，这时我们的队员冯可过来看我们，在我们和他开玩笑的时候，汉语不是很好的侃卓措表达意思不清楚，冯可就装作生气转身离开，没想到我们都在哈哈大笑时侃卓措十分紧张地从床上翻下来，追出去向冯可道歉，她非常自责并一直说自己做错了，让我们很心疼又感动。
+<p>
+5.有天下雨下得很大，地也很泥泞，我们要上厕所很容易滑倒，几个瘦小的孩子便过来帮我们撑伞，还扶着我们怕我们摔倒。
+<p>
+6.那天孩子们要搬砖到帐篷里去，要走200米远，四年级的男生华旦多杰一次要搬二十几块砖，那砖足足有一百多斤重。而最小的南夸卓玛，只有四岁多，她居然搬了三块砖，我们让她少搬点她还不愿意，这里的孩子都是这样勤快而又懂事。
+<p>
+7.有一天天气很炎热，孩子们被叫去搭帐篷，过了几个小时，五年级的拉忠措回来喝水，她是个腿有残疾的女生，我让她休息一下，我去替代她，她连声拒绝，说怎么能让老师去做怎样的事呢，然后又忍着脚痛坚持去干活了。
+<p>
+8.在我们走之前的一天，我们收到了孩子们亲手做的各种礼物，有他们编了很久的手链，有他们画的画，还有他们写给我们的信，真的很感动又舍不得。
+
+<a name="touchmoment_lj"><h3>刘静</h3></a>
+<p>
+1、 刚去青海湖慈善孤残学院的那几天，还不能习惯那边的气候，晚上和早上的气温太低，像极了成都的初冬，中午却直接由冬天进入盛夏，一天的温差特别大。在这样大的温差的折磨下，我患上了感冒，整天脑袋都晕沉沉的，晚上我监督完晚自习早早的上床休息。在迷迷糊糊中听见一个女生的声音“老师，你生病了？”，我半睁开眼，是斑马措。我说没事，睡一觉就好。她立马爬上床抱来她的毛毯盖在我身上，细心帮我盖好免得冷风吹进来，然后把放在枕头边的教科书和孩子们交上来的作业收拾整齐放在桌子上。我哽咽着说了声“谢谢你了”。这么懂事的孩子怎么能不让我感动。
+<p>
+2、初到学校的时候已经是晚上了，学校老师带我们去各自的寝室，第一次和孩子们见面，孩子们对我们也有些畏惧，在一个女生寝室，我看到了那感人的一幕，一个稍大一点孩子抱着一个稍小一点的孩子，怕是小妹妹被冷风吹到，她看样子只比小的大几岁。
+
+<a name="touchmoment_ll"><h3>刘丽</h3></a>
+<p>
+1. 今天我连上了两节课，在第一节课后，我针对那些没有掌握的学生进行了辅导，突然一直很害羞的多杰措将一只钢笔递给了我，说;“老师送给你”。我感觉很惊讶，问到，这是谁送给你的啊，她回答说：“是妈妈买给她的”，听到这里，我便不要她的礼物了，但是她还是很坚持地要送给我。这个小女孩是班里不爱说话的，但是学习很踏实，班里的其他学生都想和她成为同桌，这里的小孩总是让我们这一行人感动着，内心温暖着。
+<p>
+2. 最后，我还是给他们说了我马上要离开的事儿，孩子们脸上流露了不舍。但是我很高兴，他们没有哭，或许是经历多了这样的情况，已经习惯了。上午没有上课，我和二年级的学生在帐篷里唱歌，今天是学校围墙竣工的日子，举行了竣工仪式，按那里的习惯要发糖庆祝，孩子们抢了很多糖，都分了大半给我，我说老师不喜欢吃糖，你们放着自己吃吧。可是最后离开的时候，我的包里还是有很多的糖，这群可爱的孩子哟，走的时候很匆忙，上车了，夏道措赶紧给我塞了一张纸，原来是她画的画儿。回来后，最后离开的刘静又给了我一些孩子们写的信，很感动。
+
+<a name="touchmoment_xlm"><h3>许岭木</h3></a>
+<p>
+1、这一天我们做了一个心愿认领的活动，就是让他们在纸上写上自己的心愿和自己想要的东西，明年来的时候，我们会尽量带着他们所期盼的东西过来。但是让我们意外的是，他们很多人在纸上写的都是：“我什么都不想要，我只希望你们明年能再过来当我们的老师”。
+<p>
+2、最后一天上午我去六年级的教室上课，一个叫才让加的男生一直在下面哭，我走过去的时候发现他的本子已经湿了。他的同桌才增多杰呆呆地看着我，一直不说话，手里一直掰着铅笔。最后他们告诉我：“这几天我一看到你，我就想大哭”。下课后，活佛叫我们到他的办公室，学校为我们每个队员都准备了一份礼物和一条哈达，他还说：“这里永远是你们的家，任何时候都可以来”还说：“你们来这里教孩子们，吃不好，住不好……”我们听了他的话，觉得十分惭愧，学校为我们改善了伙食，改变了许多，可是我们除教孩子一点有限的知识，又为他们带去些什么呢！
+<p>
+3、离开那天的傍晚，孩子们和往常一样在学校后面草地上自习。我们全都在宿舍等车的到来，突然孩子们全跑到我们宿舍，高兴地说：“老师没走，他们行李还在……”。原来一个老师听到汽车的声音，以为我们走了，就和孩子们说，我们离开了，孩子们就放下书，全部一起跑到我们宿舍，还说老师走时为什么不和我们说……，看到他们高兴的样子，我们希望车一直别来，时间一直停留在这一刻。
+<p>
+4、离开的那天晚上，差不多九点半的时候，接我们的车来了，司机是工地上的老板。我们从宿舍拖着行李箱出来的时候，孩子们全从教室里冲出来，天很黑，但是还是能看到他们的泪光，他们和每一个老师拥抱，都说：“老师，你们一定要回来……”。这一刻，我们想对他们说很多话，但又说不了多少话。上车后，我们的手与拉科加老师的手，与学生们的手紧紧地握着。车子开动了，学生们想要跟着，却被工地上的工人拦着，看着他们，我们再也无法控制自己的情绪，眼泪不自觉地掉落。男儿有泪不轻弹，今夜我却泪千行。开车的赵老板告诉我们：”在你们跟那些娃儿拥抱的时候，我的眼泪也掉了下来“。是的，这些孩子实在是太懂事了，我们舍不得他们，舍不得这里的一切。
+<p>
+6、这几天，虽然课程在正常进行，但孩子好像已经知道我们要走了，离别的气氛笼罩着整个校园。在这离别之际，孩子都十分听话，课堂纪律出奇的好，但是在四年级的课堂上，有一个男生一直低着头，走近一看才发现他一直在用各种颜色的细线编织手链。我问他为什么上课不认真听讲，他回答说：“老师，我听说你们快要走了，我想给你们每个人编条手链”。后来他问我最喜欢什么颜色，我便指着学校后面的草原说：“我最喜欢的便是这大草原的颜色”。
+<p>
+7、有一天早上有许多学生拉肚子，有两个一年级的男生因为拉肚子弄脏了身体，就去洗澡间洗澡。而水温只有十几度，他们的袜子已经湿了，而他们却只有一双袜子。给他们擦身体、穿衣服的时候他们已经冷的动不了了。我本想跟说他们几句，但看着他们瑟瑟发抖的身体，我一句话也说不出来。后来他们又坚持回教室上课。一样的年龄，不一样的童年。
+<p>
+8.今天早上数学的时候，四年级的才旦卓玛一直在咳嗽。下课后我便带她回宿舍，给她吃了点药，就让卓玛上床休息。第三节下课后，我又去看她，她的脸色已经好转。想给她倒点开水，却发现他们寝室根本没有开水，甚至连个杯子都没有，我便去自己寝室到了开水过来。卓玛今年十三岁，但她给我第一感觉只有十岁左右，非常瘦弱，不爱说话，生了病之后也没有跟任何人讲，她的被子特别单薄，看到生病孤单的样子，不禁让我心痛。下午后两节课，我们跟孩子们一起去搬砖铺帐篷，每一个孩子都过去了，连一个五岁的小女孩也过去搬砖了。一个四年级的男生每一次都能搬二十多个砖头，每一孩子都特别勤劳。一样的年龄，不一样的童年。这里孩子们生活的艰辛，是我们无法想象的。
+
+<hr class="newpage"/>
+
+<a name="support"><h2>友情支持</h2></a>
+<a name="support_rxxz"><h3>热心学长</h3></a>
+<p>
+在申请学校暑期社会实践资金失利的时候，在全队人员想尽办法筹集资金无果的时候，在红心前期准备工作由于资金问题最困顿的时候，眼看期末考试结束后支教队就要启程去青海了，没有资金的红心就像风雨中的小舟没有依靠。负责资金筹集的我已经不仅仅是无助了，更多的是担心支教活动如何开展。队长告诉我，想到支教队没资金他整晚整晚的睡不着。其实我也睡不着，就连上课突然想起支教队缺乏启动资金，我都有些想哭的冲动。从来没有因为筹不到钱这么痛心绝望过，也从来没有因为钱不够而觉得支教活动这么困难过。在开过队内会议之后我们甚至决定，等考完了试就先出去打工挣钱来继续我们的支教，为了远方的孩子我们不能放弃。
+<p>
+或许是上天想给我们一次站起来的机会，就在学院拨下1000元实践资金的第三天，我收到了整个夏天最让人振奋的短信：“我在帮你们筹集资金，大概有几千元，希望能帮你们顺利成行。”短短一句话我读了一遍又一遍，有一种感动源于无助时伸来的援助之手，有一种快乐是多日来苦苦期盼的释放，没想到公交车上偶遇的学长竟给了我们支教队最大的帮助。
+<p>
+那是6月2日，我们队员去犀浦募捐，我们跑过了犀浦很多条街，举着海报抱着募捐箱到处募捐，尽管跑断了腿说得口干舌燥，募捐到的资金还是少之又少。到要回学校的时候我和刘静不甘心，于是我们两个又跑去中海国际那边找赞助。拿着策划跑了一家又一家的公司，连电影城都不放过，天都黑下来了，我们两个一点收获都没有，当时那种失落可能真写在了脸上，无奈下我们二人上了回校的公交车。由于那天我穿的是队服，没想到就因此遇到了支教队的福星，坐在我们对面的学长一眼就看出我们是电子科大的学生。就这样两个人拖着一丝倦意同学长聊起来。我们告诉学长我们是为支教队出来拉赞助的，由于经验不足，资金方面有一些困难。学长像是对我们的活动很感兴趣，说自己现在虽然工作了其实还是很想参加这些活动的。于是我们留下了联系方式，回校上课的那段时间里我也同学长保持着联系，偶尔跟他讲讲学校的事，也讲讲我们支教队的事，没想到就是这样学长看过了我们的支教策划后在QQ上对我说他愿意帮我们问问他所在的公司，看能不能在资金上帮到我们。能这样联系到学长的公司自然是好事，可后来学长说他公司方面像是没有这方面的先例，所以他说他愿意帮我们在他公司进行募捐，或许这种方式可以求助到更多愿意帮助我们的前辈们，至于能不能募捐到钱他只能尽力而为了。
+<p>
+也因为这样，学长成了我们支教队最后的希望，尤其是我们没有能力联系到公司，得到赞助的时候。多天的等待，学长告诉我他筹到资金了，这种兴奋和快乐是不能言表的。就如同在你已经绝望的时候，突然出现希望的曙光，当我把这一消息告诉队里成员的时候我们每个人都激动的不得了！感谢学长公司所有愿意为我们支教队伸出援助之手的前辈，也感谢他们能在工作之余抽空了解支教活动，我相信我们支教队此次青海之行是带着很多人的心愿和祝福去的，我们没有理由不尽最大努力去做好此次活动。带着所有人的祝福去拥抱青海湖慈善孤残学院的孩子！
+<p>
+4150元的资助金，这不是个小数目，学长给了我们支教队一次圆梦青海的机会，是他在我们快被缺乏资金的苦水淹没的时候给了我们复活的希望。真的感谢学长，感谢他为我们这些毛孩子所做的一切，感谢所有支持我们的人，在我们都怀疑自己没能力的时候给我们前行的力量。红心不会辜负你们的期望！
+<p>
+
+
+<a name="support_wjday"><h3>文具店阿姨</h3></a>
+<p>
+七月十七号的早上，我们一行人七点就起床了，我们准备了足够购买物资的资金以及一张详细的购物清单，并在申元媛家人的带领下，来到了西宁一处售卖文具体育用品的商店。这家店很大东西也很齐全，我们几人开始分头行动，各自寻找自己负责购买的东西，我们仔细地比较着商品，商量着价钱和数量，力求买到物美价廉的物资。商店的阿姨和叔叔非常热情地帮我们找各种我们需要的东西，对我们提出的各种问题都尽心尽力地回答。当得知我们购买这些东西是为了去支教后，阿姨便说一定要给我们最优惠的价钱，这也算是她对支教的一份热忱和支持。我们在阿姨的帮助下很快就选购好了物资，在柜台算账时，阿姨耐心地给我们说着每样东西的价钱，我们发现都比我们预想的少了很多，觉得真是惊喜又感动。然后阿姨用几个大纸箱帮我们仔细地打包好了物资，我们结完帐拿着东西给阿姨道谢后，正准备离开。阿姨拦住了我们，说她自己还想给孩子们一些东西。于是她又拿来了一个纸箱，往里面装了很多本子，十几盒铅笔，一大盒自动铅笔等东西，然后笑着把箱子拿给我们，箱子拿在我们的手上，感觉沉甸甸的，这里面不仅仅是东西的重量，更是阿姨这些善良的人对孩子们的浓浓爱心，是我们对帮助我们的人的感动和敬意。我们抬着这些物资，感觉像把孩子们读书的梦想与希望也捧在怀里一样，胸腔里满是要溢出来的激情与感动。我们相信，虽然这些物资并不是太多，但孩子们一定能从中感受到我们和那些善心人士对他们的喜爱与期待。
+
+ 
+<a name="support_kbhf"><h3>康巴活佛</h3></a>
+<p>
+小时候看过一部电影《25个孩子一个爹》，剧中男主角赵光因一句“愿为所有孤儿当爹”无心之话招来了一群孤儿‘认爹’，从而成为了25个孩子的父亲。青海湖慈善孤残学院校长康巴活佛就是这个电影在现实中的真实版,与剧中赵光不同之处在于那句话是他的真心话。在他无微不至的关怀和照顾下无数无依无靠的孩子找到了家的感觉，脆弱的心灵找到了如爸爸肩膀般坚实的依靠。
+<p>
+我跟活佛并没有多深的交集，我对活佛所有的了解都是从孩子们那儿知道的，都是孩子们怀着感激之情告诉我的。学校是由三个好心人筹资创办的，其中两位是活佛，康巴活佛、尖扎活佛，还有一位是村里的有志青年。在建校初期，学校各种事务，花钱的地方也多，康巴活佛为了给学校筹钱到处奔波，为给学校请志愿老师也是各种忙碌，不仅要照看着自己的寺庙，更要细心照顾这一群可爱的孩子们，康巴活佛每天都要忙到很晚。建校不久，另两位建校人实在不堪重负，先后退出学校的建设，整个建设学校的重担全落在了康巴活佛的肩上，但他并没有放弃，没有放弃那一群可爱的孩子们。到现在学校已经建校三年，期间学校因为租地原因搬迁过一次，现在正在筹资新建学校，为了筹集学校建校的资金，活佛也是想方设法，各处奔波，晚上经常都是三点多才睡。
+<p>
+学校大大小小事情活佛都在关心着，大到东奔西走筹资建校，小到那孩子们那冻裂的嘴唇。春天来了，学校有没有孩子感冒，学校的药还够不够；夏天来了，哪里有便宜实惠的西瓜好给孩子们每天饭后吃上一块；秋天来了，天凉起来了，御寒的衣物是不是已经准备好了；冬天来了，孩子们房间里的火炉是否还燃烧着，孩子们有没有被冻着；康巴活佛的爱无处不在。
+<p>
+康巴活佛平常总是笑嘻嘻的，从不让孩子们看出他眼中的疲惫。他对孩子们的关爱绝不少于孩子的父母，不管是学习还是行为习惯。对于犯错的小孩，康巴活佛是严厉的，记得一天，活佛刚回到学校，工地上的工人偷偷告诉活佛看到两个小孩捡地上的烟头躲在教室后面抽烟，晚上活佛通知全校参加例会，严厉批评了那两个小孩，狠狠地用钢尺抽打两个孩子，直到钢尺都变形弯曲，然后罚两个小孩磕2000个长头自思悔改。会后有人问活佛2000个长头得磕多长时间，活佛叹着气说得四个多小时吧！我们知道康巴活佛把他们都当是自己的孩子，希望他们健康快乐成长，不想他们沾上恶习。钢尺打在孩子们身上，可是却疼在活佛心里。
+<p>
+康巴活佛对孩子们的关心和疼爱我们看在眼里，孩子们自己也记在心里。在我快离开学校的前几天的一天，我像往常一样去每个教室看孩子们，走到六年级的窗口看到一个叫斑马措的女孩一边哭着，一边在本子上写着些什么。我进去搂着她的肩，问她发生了什么事，她只说了句“老师你不会理解的”。在我的追问下，她哭着告诉我康巴活佛出车祸了，现在正在医院。我愣住了，怎么会发生这种事，如果没有康巴活佛学校怎么办，孩子们怎么办，瞬间感觉康巴活佛为孩子们撑起来的那片蓝天变成了灰色。我怎么能不理解，怎么能不理解康巴活佛在孩子们心中是犹如父亲的角色，怎么能不理解孩子对康巴活佛的爱。
+<p>
+我诚心祈祷：愿好人一身平安！
+
+<a name="support_rdzh"><h3>柔旦智华</h3></a>
+<p>
+我们这次支教成功，我个人首先要感谢双方的联系人，尤其是校方的联系人——一个藏族的帅小伙，柔旦智华。
+<p>
+柔旦今年才刚满二十三，但是他是一个值得尊敬的人，因为在他读大学期间，他去青海湖畔（青海湖慈善孤残学校）支教了一假期。自从那时起，他每年在这个偏远的学校支教。毕业后，他忘不了学校的艰难条件和孩子们渴望知识的脸，所以他毅然决然地做了学校的志愿者，通过各种渠道传播学校的信息，其成效还是很显著的。每年联系到的支教老师都会在学校尽自己所能地教学，在他的帮助下，学校的教师资源得到了极大的缓解，正因为有好多的支教老师，学生们才会充满对外界的渴望。这一切全部要归功于柔旦，谢谢他为学校所做的一切。
+<p>
+我们红心支教队在中华支教网上见到了学校的信息，并且和柔旦取得了联系。我们通过柔旦对学校做出了更进一步的了解，根据柔旦的描述，我们支教队进行了前期准备。
+<p>
+在七月十六日到达西宁的时候，我们收到了柔旦的联系，并且在柔旦家的枸杞店里，我们一行第一次看到了学校的各种照片，第一次看到这群孩子，当时多么希望能一下子去学校亲眼看到他们。但是由于活佛的车没来，所以，我们一行只能呆在枸杞店里，慢慢地等着活佛的到来。在天渐渐黑下来时，我们从西宁出发了。到达学校时，当看到柔旦时，所有的孩子表现得那么高兴，因为柔旦帮助他们的太多，孩子们已经待柔旦如哥哥了，他们说说笑笑，（突然有点羡慕柔旦了）由于他们说着藏语，所以我们完全不懂他们在笑什么。学校都把柔旦当做主人之一，所以当晚柔旦和活佛一起为我们这些新老师做了一次全面的学校介绍，并为我们解决了住宿问题。
+<p>
+在我们支教期间，柔旦也是隔三差五地到学校来看望孩子们，当然还有我们。他来的时候，总会给我们带一点枸杞，说枸杞泡过的水对人很好，让我们常吃。他也会和孩子们一起打打篮球，聊聊天，时不时地为孩子带一些礼物过来。除了柔旦之外，在短短一个月之内，我们也见到了柔旦的姐姐不下五次，她总会带一些客人来学校，让客人们了解这个学校的艰难，为学校做宣传，让社会更多的爱心汇聚到这青海湖畔小小的学校里。
+<p>
+柔旦智华，一个我们的同龄人，但是做出了我们很多同龄人做不到的事。处处为那些孩子着想，为学校着想，尽自己的那份小小的力量，通过各种方法，召集社会上的爱心，希望学校的条件得到改善，希望孩子的未来是一片光明！
+
+<a name="support_lls"><h3>拉老师</h3></a>
+<p>
+和拉克加的友谊是这次支教的重大收获之一，在我眼中的拉克加是一个热爱运动的人。在刚到学校的那两天，正好赶上周末，所以我们没有上什么课。在那两天，我除了和学生们相互交流之外，我和这帮男老师的关系也处的极为不错，拉克加就是其中之一。
+<p>
+记得那是一个星期六的下午吧，一个叫满拉杰的学生问我会不会踢足球，答案是肯定的，于是，我就陪他们去踢足球，地点选在学校的工地上（学校正在修建教学楼，施工中）。在球场上，我见到了拉克加，其实起先我还以为他是学生，原因有二：拉克加的个子比较小，正应了那句老话“浓缩的就是精华”；最重要的是拉克加长着一张可爱的娃娃脸，把他的年龄生生地隐藏了起来。在踢球的时候，我们主要就是试了试孩子们的水平，和拉克加的交手比较少，但至少可以看出拉克加是那种身体强壮而且富有技巧型的足球爱好者。这也是我和拉克加的第一次接触。
+<p>
+随着时间的推进，我和拉克加的关系越来越好，我们在一起吃饭，一起备课，晚上一起玩游戏UNO。不知不觉间，发现了拉克加的好多特点，他的汉语说的很好，我们一般聊天基本没问题，他是一个外表安静其实内心火热的一个藏族汉子，而且喜欢开玩笑。最终敲定我们把他叫“老大”，他也很欣然地接受了这个叫法。
+<p>
+7月25日对于整个学校来说是一个特殊的日子，在这天，学校要举行新学校的开工典礼。在前一天晚上，我们收到活佛的通知，全校放假，所有的老师全部被分派的帐篷里招待客人。在抽签的时候，我和老大分到了一起。当时我就在问老大怎么招待客人，老大只说，你只要看到客人的茶杯中奶茶不满时，给他们加茶，让他们加通（“加通”在藏语中意为喝茶），其他的事全交给他。漫漫长夜之后，五点半，我们所有的老师被夏洛加准时地叫醒了，我们拖着疲惫的身子，晃着晕晕的脑子，跟在精神抖擞的老大背后，来到帐篷做好迎接客人的准备。在一切准备好之后，我们分在四号帐篷的几人在一起聊天，恭候客人的到来。早上起得早，没吃什么东西，在做准备的时候，基本没感觉到饿，倒是闲下来就饿了，老大很体贴的给我们拿来瓜子，让我们先充充饥。直到八点半，客人们陆陆续续的来了，我知道我们的工作要开始了。我们站在一旁，先为客人上茶，客人大多是藏民，我们几个也听不懂，所以只有老大在陪者客人聊天。不知不觉之间，到了午饭的时间，客人们都进了帐篷，作为主人，我们在积极努力的工作着，热情地为客人们服务，感觉自己很快乐，很幸福。老大则忙前忙后，突然有种感觉，老大个子虽小，却是一个很热情的人。
+<p>
+在短短的二十天中，和老大最交心的一次交谈是在一天晚上。那晚，活佛校长驾车出去了，我、刘静还有老大在他房里一边聊天，一边等着活佛。我们三个从山南聊到海北，各种聊。其实，有一个问题一直想问老大，并且不知何从问起，最后，我忍不住好奇，问了出来。因为这个学校条件比较艰苦，所以，大多数老师在学校只待几个月而已。老大的回答是“我应该会在这个学校待一辈子”，短短几个字，是如此的有分量，老大在我心中的形象顿时再一次高大起来了。问天下众人，有多少年青人愿意把自己的一生奉献在如此艰苦的高原上，但是，拉克加就是这样的。
+<p>
+说实话，认识拉克加是我的荣幸，在不知不觉间，我已经受到了他的影响。我们活着不光为了我们自己，还要想想那些艰苦地方的孩子，我们要尽自己所能去帮助他们 。这就是我们的老大——拉克加！                                                                                                                               
+
+<a name="support_xls"><h3>夏老师</h3></a>
+<p>
+在这个学校，我见到的第一个人是活佛校长，见到的第一个学生是希加卓玛，见到的第一个老师就是夏洛加。现在给大家讲讲我记忆中的夏洛加吧。
+<p>
+在七月十七日，我们一行到达学校，先在活佛的房间里待了一会，活佛回来之后，活佛为我们介绍了学校。可能活佛知道我将担任学生的美术老师，特意告诉我夏洛加也是教美术的，当时，我看了一眼夏洛加，他是一个高高瘦瘦黑黑的年轻人，头发是卷卷的，不知道是天生的还是烫的，给我一种很前卫的感觉。
+<p>
+一次在上完五年级的数学课时，看到夏洛加在宿舍门口一个人发呆。出于好奇，我走过去和他聊了几句，虽然他的汉语没有拉克加那么标准流利，但我才知道夏洛年方二十一，来到这个学校已经三年了，是这个学校的元老级人物。当然发现，他和我们大多男生一样，热爱篮球和游戏，但是他有着很好的画工。在看到他的画册时，我对夏洛加开始崇拜起来了。
+<p>
+再后来搭帐篷的时候，我和夏洛在一起搭 ，很快我们成了很要好的朋友，他还主动要教我藏语，给我取藏语名字，慢慢地我们变得无话不谈，我们一起打篮球，玩UNO，一起吃饭。因为学校比较偏僻，所以花钱买东西是一件比较奢侈的事。但是，在某个星期六的下午，我们支教队的六人在拉克、夏洛的陪同下，去青海湖旁的商店里买必需品。路途遥远，前路漫漫，在一个半小时之后，我们到了，不一会，在夏洛的提议下我们又去了青海湖，看着不远的一段路活生生要去了我的二十几分钟，但是，青海湖的美景却是壮观，美不胜收啊！归途上，夏洛抢了拉克的墨镜，配上他的黑衣服黑皮肤，简直就像一个误入社会的小流氓。
+<p>
+由于学校施工，再加上买东西的不便，所以学校临时为工地上的工人们开了一个小卖部，小卖部里缺一伙计，于是夏洛主动请缨，成了小卖部的第一任老板。之后，他就是享誉全校的“夏老板”了。
+<p>
+在我眼中，夏洛加是一个很不错的朋友，更准确的定位应该是兄弟。他是一个很好玩的人，和他在一起，你永远可以感到他的贪玩和会玩。但是，他却也是整个学校最严格的一个老师，基本上是百分之九十的孩子的克星。藏族是一个非常重感情的民族，夏洛显得更为突出。我俩一次在小卖部聊天时，他说，我们相识就是缘分，不管我们明年再去不去支教，他都会等着我们的！
+<p>
+这就是夏洛，一个豪爽的藏族汉子！
+
+<a name="support_gzls"><h3>尕藏老师</h3></a>
+<p>
+第一次见到尕臧老师的时候是在教师宿舍里。她给我的一感觉教师一个特别好说话的人，后来知道他一人承担了六个年级所有的数学和语文的教学工作，敬佩之情油然而生。她是一个多才多艺的人，是学生的编舞老师，跳舞跳得特别好。我教的是六年级的数学。而六年级的数学水平实在是太薄弱了，那天我找到她谈了这个问题，那次我们谈了很久也很多，她跟我说有时候她也想离开，但想想这边的孩子还是留了下来，她的一席话令我十分惭愧，深深体会到尕臧老师的无私和不容易，特别敬佩她。她特别忙，很多天都不在学校里。在8个支教队员里面，我跟她的接触算是最多的，她有什么是一般也都来找我。尕臧老师平时话不多，十分善良，是学校唯一的一位女老师，也是学校课程最重的老师。这里的老师都是没有一分钱工资的，他们任劳任怨，不求回报。他们每一个人都十分伟大，而我觉得尕臧老师是他们之中最耀眼的明星。
+ 
+<a name="support_qlls"><h3>青浪老师</h3></a>
+<p>
+其实最初我们并没有和青浪老师有太多的接触.我们更早熟悉的是拉克加老师和夏洛加老师，因为青浪最初给我们留下的印象是他比较沉默寡言、不苟言笑。我们都只知道他教二、四、六年级的英语，但后来我试着和他聊天，才发现其实他是一个极好相处的人，只是因为他是藏族人，汉语说得不够好，才没和我们有太多交流。
+<p>
+他曾在印度学习过几年英语，后来他回来了他的家乡青海。本来他是可以去外面找一个很好的学校当英语老师的。但他看到了这所孤残学校，看到了这所学校师资力量的缺乏，他也看到了孩子们对知识的渴求，看到了这群孩子们的乖巧懂事。于是他毅然决然地选择留下，目前已在学校教书两年多了。       
+<p>
+我曾看过他上课，他是一个上课严肃认真，负责仔细的老师，而在课下，他却能和孩子们打成一片。后面我们和他慢慢地熟悉起来，虽然他已经27岁了，但是给我的感觉很质朴单纯，是个羞涩腼腆但又很善良温柔的大男孩。我总是喜欢跟他开玩笑，但是他从不会生气，总是笑。有一天晚上我们去几个老师的房间里开会，结果青浪把他一抽屉的零食全拿出来给我们吃，非常大方慷慨。后来他又去吃厨师叔叔给我们做酸奶吃，真的是热情又体贴。
+<p>
+还记得有天晚上我们所有队员和青浪、拉克加老师以及两个学生一起去爬山，青浪和拉克加老师都非常照顾我们，一直拉着我们往上面走。等到回来的时候，天已经完全黑了，我们就手拉着手回来。当时天很黑，我看不清楚老是摔倒，青浪老师就一直帮我。而且他还要分神照顾和我们一起去的两个孩子文昌才让和才让东主。这样善良体贴的老师，怪不得孩子们能和他玩的那么开心。
+<p>
+虽然青浪还很年轻，但是在有次的谈心中，他告诉我他已经决定一直呆在这里教书了。因为他舍不得这里的孩子，舍不得这里的其他老师，也舍不得这里淳朴简单的生活，这让我很感动。因为在当今这个浮躁物质的社会，很少有年轻人能抵制外面灯红酒绿的诱惑，但是这几个二十几岁的老师却能这么早地定下心来，不得不让我们敬佩他们品德的高尚和无私。所以，在我问孩子们他们最喜欢的人是谁时，他们都会毫不犹豫地说是活佛和老师们。我想就算孩子们还小，但他们也一定能感受到青浪等老师对他们的奉献与帮助。虽然已经和青浪、拉克加和夏洛加老师分开了，但他们的笑容和人格魅力我们永不会忘。
+
+
+<a name="support_llls"><h3>南拉老师</h3></a>
+<p>
+南拉加是学校里唯一的藏医老师，平时不爱说话的他却是我在学校里认识的第一个老师，他不怎么说话，我对他的了解都来自学校其它老师。
+<p>
+今年27岁的南拉加，正在努力考取藏医学硕士学位，在学校的他一边教孩子们藏医学，一边自学考研。不爱说话的他说起话来其实也是个很风趣的人，下课后他喜欢跟孩子们疯打玩耍。
+<p>
+和学校其他老师比起来，南拉是一个更加成熟稳重的人，沉默寡言的他略显孤僻。但是当你真正和他相处时，你会觉得他是一个很随和的人。在我们支教一行中，我是第一个和南拉聊天交流的。那天，阳光明媚，南拉显得格外高兴，或许是闲的没事干吧，于是就叫我去他的办公室坐坐，一起闲谈。当时我也不知道该说些什么，心里有点忐忑，没想到南拉说要教我和糌粑，他取来原料，加上开水，让我学着他做，用手在一个小碗里把面和水和在一起，然后捏成团就可以了。但是这样简单的事，我却怎么也搞不定，南拉很无语地看了我一眼，然后就帮我弄好了，虽然糌粑看起来有点抽象，但是味道还是很不错的。我们俩一边吃着糌粑，一边说着自己的过往。这时才知道他今年27岁，刚从西宁的一所大学毕业，专攻藏医，由于考研没有成功，所以暂时在学校担任一段时间的藏医老师。他说他的梦想是去西藏学习更加系统的藏医，希望以后可以悬壶济世。那天，我俩聊了好久，从心底里，改变了以前对南拉的看法。
+<p>
+认识的人总会在危难之时给予我们及时的帮助。那天，我和孩子们在一起玩，不料“祸”从天降，一足球正好砸到我的手上，当时什么感觉都没有，随后，痛感来袭，我才发现我的小拇指错位了。当时在我脑海里只浮现出一个人，他就是身为藏医的南拉，找到南拉后，他看到我焦急的样子，拉着我受伤的手，安慰我说这些都是小事，没什么严重的。当他松开手时，我的关节已经复位了，有点肿，南拉告诉我，有十几天就消肿了，让我放心。从那时起，我打心底里对这个藏医感到了钦佩，谢谢！
+<p>
+每个有梦想，有理想，有追求的人不管在哪里总是那么耀眼。
+
+<a name="support_cnygj"><h3>厨娘与管家</h3></a>
+<p>
+学生在学校里学习生活,当然不能缺少做饭的厨娘和分配生活物质的管家了。他们是孩子们能安心认真学习的生活帮手，是慈善孤残学院强有力的后备力量，为了孩子们能够没有生活上的担忧，他们尽心尽力地做好本职工作，让孩子们尽可能地吃好穿暖，在这所慈善孤残学院李奉献自己的力量去帮助活佛照顾好这些孤残儿童。
+<p>
+在支教的一个月里，我们与厨娘和管家的接触并不多，大多时间只有在打饭时看到厨娘为学生们盛饭，其余时间厨娘或在厨房里做饭，或者在自己的房间里，厨娘的丈夫是活佛的弟弟，从建校至今，他们夫妻两一直在学校里为孩子们做饭。由于现在学校是临时盖得板房，房间很少，除去孩子们上课用的教室，住的寝室，老师的寝室，活佛的办公室兼卧室和一间简陋的小图书馆外，厨娘和厨师就只住进了一间很狭窄的房间，并且他们的房间被分成了两间更小的卧室，外面一间住着一位老人以及厨娘的侄女李毛才忠，他们两个就住在最里面的屋子里了。
+<p>
+因为每天早上吃早餐的时间是八点，厨娘每天都会和孩子们一起在六点起床，然后开始准备早餐，等孩子们跑了早操，上完晚自习后就打铃吃早餐了。每天的早餐都是不一样的，但是在学校里，主要是三种早餐的轮流供应，糌粑，馍馍与奶茶，稀饭。在我们支教队来了后，由于我们不习惯吃那里的糌粑，所以厨娘特地每天早上都给我们准备了馍馍与奶茶。吃过早餐后，八点半学生们准时上课了，这时厨娘把简陋的厨房收拾一下，然后就可以休息两三个小时了。一般在第三节课时，他们又开始准备午餐了，偶尔在教室里可以闻到从厨房传来的香味。在孤残学院里，学生们上课的时间表和我们不一样，孩子们在上完第四节课后海需要自习半小时，在十二点半时，吃饭的铃声打响了，孩子们便下课吃饭了。午饭的供应也只有简单的四种，面片，面条，饭菜，饭和糖。但是吃饭菜的时间是很少的，在我们支教队来到学校后次数才有所增加。在我们来之前，我们从孩子们口中了解到，大多数时候，午餐都是以面片为主。晚饭几乎都是吃面食了。但是厨娘做的面片挺好吃的，每一次打饭的时候，厨娘都会打很多给我们。
+<p>
+在我们来到学校的几天后，厨娘的两个小亲戚也来到学校，大概只有两三岁的样子，每天厨娘不仅要为学生们做饭还要照顾两个小孩和老人。私下我们和厨娘交流得并不多，因为他们的汉语说得不是很好。偶尔到活佛的办公室聊天时才看到他们在与活佛闲聊，但是我们都能感受他们对我们的热情。
+<p>
+管家在学校的重要性无可取代，他的地位就相当于学校的行政管理。活佛每天的工作很忙，他不仅要管理学校而且他还是寺庙的方丈，所以大部分时间都在外面。学校里孩子们的生活就落在了管家的肩上。管家是跟随在活佛身边的僧人，在活佛离开学校去办事后，管家便矗立着学校里有关孩子生活得各种大小事，孩子们的衣物生活用品等都是由他管理。我们刚来到学校的时候，正好遇上了贵德县一年一度的藏族节日，活佛便带着我们去参加，在集会上学校的孩子们表演了歌舞，
+<p>
+在表演的时候，很多藏族爱心人士捐了现金，孩子们表演回来，便会把收到的钱交给管家，这些钱将会被用来购买孩子们的生活用品，如牙刷，牙膏，毛巾等等。在空闲时间里，管家也会与孩子们一起玩耍，某段时间里，他也会回到寺庙里修行。
+<p>
+慈善孤残学院在孩子们的眼里不仅仅是一所学习知识的学校，这里更像一个大家庭，不管是厨娘管家还是这里的老师，他们都用心爱护着这些孩子们，希望他们能有一个美好的童年，能成为祖国的有用之才。我们被他们奉献的精神深深打动，为他们几年如一日的坚持所敬佩。
+
+<hr class="newpage"/>
+
+<a name="children"><h2>孩子们的身影——记草原上的儿女</h2></a>
+<a name="children_lmcz"><h3>李毛才忠</h3></a>
+<p>
+她叫李毛才忠，现在在一年级，来到学校的时间并不长。就在我们支教前两周她才到这里。虽然在一年级学习，其实她已经有了三年级的水平。我第一次到一年级上课，就发现这个孩子很聪明，全班就她一个反应特别快。后来才听老师说她原本该上三年级的，因为学校规定进来的孩子首先进一年级学习，看看成绩以后才能去其他年级。所以从那以后，每次三年级的数学课我都叫她到三年级听课。她到三年级后学习还是一样好，她是一个特别认真，努力,有礼貌的孩子。
+<p>
+无论是每天傍晚在学校后面的草坪上的自习，还是清晨操场上的晨读，她都特别认真，早上和傍晚这里温度都特别低，我们都得裹紧外套，可是她每次都穿得比较单薄，她弱小的身体似乎忽略了外界的体温，时时都在专心地学习。
+<p>
+她特别喜欢唱歌，而且唱歌唱得特别好。在我们将要离开学校的前一天，我到一年级上最后一次课，这节课我叫大家都到黑板上做题，李毛才忠以前比较喜欢笑，在上课时也是，时常面带笑容。可是今天，她脸上没有一点笑容。只是一直让我写题给她做。快下课的时候，我坐在她桌子旁边给其他孩子写作业题。她突然问我：“老师，你们什么时候走，还会回来吗？”然后我就看到她流眼泪了，我不知道该怎么说，我也非常舍不得大家。这时孩子们全围过来，我也很难过，但是我不想孩子们看到我流泪，我就说，你们说能唱首歌给老师听吗。这时李毛才忠走到黑板前，唱了两首歌，一首是藏语的，一首叫兄弟。这是我之前没听过的版本，非常好听，我不知道她瘦小的身体里面怎会有如此大的能量。她唱得那么入迷，那么投入。她唱完后，其他孩子都说：“老师，我们都会唱，‘一闪一闪亮晶晶，漫天都是小星星’，我们一起唱吧！”他们一起唱了这首歌，我不知道是怎么下课，怎么离开教室的，那个场景我一辈子都不会忘记，他们留给我的感动。
+
+ 
+<a name="children_crzm"><h3>才让卓玛</h3></a>
+<p>
+初次见到才让卓玛的时候我只记住了她的微笑，后来才发现不管是谁，不管对方对她的态度如何她都会笑得那么灿烂。也是在以后给她上课的过程中我才知道这位“微笑女孩”其实智力方面是有缺陷的。她有些不会表达，加之她汉语不好，从始至终才让卓玛都没好好跟我说过几句话，可这并不影响我对她的喜爱。
+<p>
+起初我感到很好奇，为什么才让卓玛总喜欢围在我身边？她帮我拿饭碗，帮我提水龙头，帮我擦黑板，她会在你不经意的时候出现在你面前，对着你温暖地微笑，也会不经意地来帮助你做她力所能及的事。我记得有次出去搭帐篷天有些冷，没过多久我的手已经冷得不行了，才让卓玛突然跑过来拉着我的手便放在了她的腋窝下，我有点惊讶于她的举动。后来我才明白，在小姑娘心中,她的腋窝下是最温暖的地方。还有一次我在水龙头边上洗衣服，才让卓玛就跑我来帮我提水龙头，好几次她都伸手示意想帮我洗衣服，我都笑着拒绝了，她不说话，只是蹲在边上给我提水龙头对着我不停的微笑，即便水再冷我的心总是暖的。后来的后来，才让卓玛上课听讲也变得认真了，而她要记住一点知识是要花一般孩子几倍的精力才可以做到的，即便这个样子她都没放弃自己这种对学习的渴望。她总喜欢拿着书来向我问汉字、背课文，起初我有些不解，为什么她这么喜欢背课文，连那些我没要求她们背诵的她的来向我背。后来我清楚了，其实孩子现阶段所能做到的就是照着老师交给她的东西继续学习，也就是说我教她生字教她课文，而她理解到的只有朗诵课文。她每天花费很大的功夫来完成这些，先不说她掌握的程度如何，一天天过去，我看到的是她的进步！而我所能做到的就是静下心慢慢地教她知识，这个世界上没有不能学会的知识，只有学会早晚的问题。我相信只要才让卓玛保证自己对学习的热情，未来的未来，她就会和别的孩子一样优秀！
+<p>
+细想她同我亲密的原因，其实我只是做了一个支教老师该做的事，我只不过是多了一些与才让卓玛交流的时间和机会，只不过是在她对我微笑的时候挽起了她的手，没想到这些在我看来都是微不足道的小事的时候，小姑娘都把它们看成了我对她全心全意的关怀。在支教结束同孩子们分别的时候，才让卓玛送给我一个编制的挂件，我拥抱她时没想到她在我怀里泣不成声了。也是在这一刻我才发现孩子真的把她的心寄存在了我这里，可我马上就要离开了，这一种心痛让我有想留下来的冲动，真想就这样一直陪她走下去。才让卓玛虽不是孩子当中最突出的孩子，也不是与别人交流最积极的孩子，可她存在于我们每个人的身边。或许她是躲在你身后，默默地关注着你，悄悄地送上温暖。我也很感谢她能用她自己方式照顾着我，也是她第一个出现帮助我，能在有个陌生的地方遇见这样一个可爱的姑娘，我想，我是幸福的。
+<p>
+才让卓玛，草原上微笑最灿烂的女孩，在她身上我看到了风雨后迎接彩虹的美丽，她就是一朵美丽的格桑花!
+
+ 
+<a name="children_xjzm"><h3>希加卓玛</h3></a>
+<p>
+我们红心志愿者一行第一次到学校时，时间已是晚上八九点的样子，天空一片好厚好厚的乌云，那时在想，这里和成都一样晚上看星星都是一种奢望，但是与成都不同的是这里的温度，温度较低，再加上肆掠的寒风，对于我这种穿衣比较少的人来说，真心是一种考验，当时就在想，是否可以幸存到支教结束的那一天，心里打着退堂鼓。
+<p>
+这时，希加卓玛出现在了我们一行人的面前，连忙招待我们到货佛的办公室，房子里因为放着火炉的原因，感到心里顿时温暖了起来。在活佛的办公室里，我看到了一大堆给孩子们准备的鞋子，还有各种零食，果然在学校，活佛扮演着这些孩子父母的角色，对活佛的感情从尊敬转变到了崇敬。在活佛的办公室里，希加卓玛为我们端上暖暖的奶茶，在一旁静静地看着我们，当我们问到她叫什么名字时，她傻笑了一下，用不太标准的汉语回答了我们，说她今年已经十四岁了。给我的第一感觉就是那种比较文静的淑女形象，但是后来发生的一切让我不得不改变这种看法。
+<p>
+YP20130725075559177.jpg   在第二天的自我介绍时，我竟然发现希加是我五年级的学生，在我的自我介绍上，我要求他们叫我哥哥，但是希加就直接喊我可可老师，并且把“可”竟然发了一声（我在此只能笑一笑表明我的态度）。在我的数学课上，我是那种比较喜欢提问的老师，当我把要提问的问题提出来时 ，总会有一个声音率先打破课堂的宁静，抢着回答我的问题，尽管我提问的是其他人。每次遇到这种情况，既是我希望的，又是我不希望的，因为在课堂上，我希望我的学生积极的配合我，但是希加太过积极了，有时让其他的孩子直接听到了答案，这点就不太好了。
+<p>
+五年级的美术课有点不一样，原因在于孩子的兴趣，喜欢刺绣的女生可以去六年级的教室和其他女生一起去学习刺绣，而男生比较喜欢画画，所以他们会学习唐卡——一种藏族的特色绘画，主要以佛教形象为主。希加既喜欢刺绣，但她也有喜欢画画，所以在下课时，她总喜欢自己按照我手机里的动漫图片一个人静静地画（很遗憾此处没有她的佳作照片）。
+<p>
+在我的印象中，希加卓玛是一个集文静和淘气于一身的孩子。她有着淑女那般的安静，喜欢一个人安静的学习，所以她是我的五年级的第一名，；但是在内心的另一面却有着男生一样的顽皮，喜欢捣乱，和班上的男生打成一片，一起玩闹，一起分享着自己的青春。同时她也会藏族传统的舞蹈，能歌善舞。
+<p>
+总之，在这二十天的相处中，希加卓玛让你感觉到藏族姑娘的热情，她是一个很不错的朋友！
+
+<a name="children_bmlz"><h3>班马龙周</h3></a>
+<p>
+班马龙周是一名三年级的学生。他个子比较矮小，坐在第一排，一双眼睛大大的，显得格外炯炯有神。我第一次给他们上课的时候，上到一半时，突然搬着一把凳子上来让我坐的人，就是这孩子。
+<p>
+虽然汉语表达能力不是很好，有时候我们交流需要年纪较大的孩子做翻译，但班马龙周是个蛮聪明的孩子。每次我抄单词让他们记忆，一般跟着我读几遍后，他就记在心中了。三年级的孩子们起先都比较内向腼腆，但和我熟悉了之后就不知不觉中，活跃了起来。上课的时候，他们也会偶尔比较调皮。班马龙周也是如此，他有时候上课会走神，有时候会把橡皮什么的放嘴里嚼，有的时候，又会偷偷写语文作业。我先是和他们耐心解释，让他们上课一定要认真听讲，但效果微乎其微。于是我就开始收他们的本子，有一次我收了他的本子。他就在一边一直扯着我的衣服不肯放，直到我吓唬他：“要是你再不放手，老师下课就把你本子撕掉了。”这时候，他才立马坐端正，做出很认真听讲的样子来。
+<p>
+有天上课，我发现班马龙周，趴在桌子上显得格外沉默，问他怎么了，他告诉我他头痛（事后我才知道龙周在他小时候头部动过手术，只要晒太阳就容易头痛）。我让他回宿舍休息，他说不用了。我让他就在桌子上睡觉，他也摇摇头。他虽然很累，却一定要坚持把课听完。
+<p>
+又有一次，是在傍晚，有段时间孩子们都在草地上上晚自习。虽说是七八点钟，但那时候的太阳也有些猛烈，龙周那次又头痛，我发现他没带帽子，就和他一起回宿舍找帽子（起先他还不肯离开）。找到帽子后，他还是头痛，我让他去宿舍休息，他却不肯，最后，我遍让他在教室里自习。
+<p>
+我离开青海也有很久了，不知道，略显内向腼腆的班马龙周，现在过得如何呢。
+
+<a name="children_hddj"><h3>华旦多杰</h3></a>
+<p>
+我印象最深的孩子是四年级的华旦多杰，他是个很听话懂事又活泼开朗的17岁男孩子。虽然我没有教他，但在日常的生活中，他有很多地方都让我既感动又心疼。最开始认识他是他来寝室检查卫生，很认真负责对我们也很有礼貌，然后就知道了他的名字。
+<p>
+有一天我们有幸和学校一起去参加藏族的节日。在观看节目时，我和他聊起天来，他很喜欢看动画片，因为学校只允许孩子们在周六看电视，一年又只能回家一次，他看过的动画片很少。当时得知我和冯可看过很多动画片，便非常感兴趣地听我们给他讲。他听得津津有味，他开心的告诉我他最喜欢哆啦A梦和皮卡丘。他用并不熟练的汉语和我们聊着天，脸上全是单纯简单的兴奋，其实在外面像他这个年龄的男生早都不会看动画片了，看的东西都也不会那么健康。而他们这些孩子虽然过的生活并不如外面的孩子丰富精彩，但他们都很质朴健康，心理年龄还很小，着实可爱。
+<p>
+还有一次，在搭帐篷的休息时间里，我和他们玩小鸡小鸭的游戏。这其实是很小的孩子才会玩的简单游戏，但是华旦多杰他们并没见过。然后他们就一直叫我和他们玩这个游戏。其实现在很多男生都沉迷于各种网络游戏，但这里的孩子生活简单，一点小游戏便可以让他们开心很久。我看着华旦多杰这个比我还高半头的大男生玩这样一个小游戏都那么满足，内心由衷希望他们的单纯和知足常乐能持续更久。
+<p>
+后来便是搬砖的那一天，他是搬砖最卖力的一个孩子，每次都会搬二十几块砖。我们试着搬四块砖，等到帐篷时就会大汗淋漓，气喘吁吁。我问他累吗，他告诉我他很累，但是当听到我们表扬他勤快和懂事时，他就更卖力地搬砖，连休息也不愿意了。这里的孩子和外面的孩子真的很不一样，他们不攀比吃穿，不拼爹不比电子产品。他们更愿意比谁干活多，谁学习更好，谁得到的表扬多，他们就是这样可爱。
+<p>
+在我们走前的一天，华旦多杰给我们每人编织了一条手链。听说那几天他在休息时间里一直在做给我们的手链，甚至在和他们班主任爬山的时候也在做，他就是这样一个温柔细腻的男孩子。他很刚强，很单纯，很勤快，很听话，也很善良和懂事。其实很多孩子都很好很乖，他们比外面很多的人都要优秀。
+
+<a name="children_wc"><h3>文昌</h3></a>
+<p>
+我并不知道文昌的全名，可能他就叫文昌吧。我担任的是二年级的班主任，对于这个五年级瘦瘦的小孩并非了解，队员走后，我在学校多待了几天，才接受了五年级的数学，但是在支教的前二十几天与学生的接触中，也时常看到他，文昌爱穿一件橘红的衬衣，自他的头发剃了后更显得精瘦了。
+<p>
+我们支教队来了后，文昌很快便与负责他们班的冯可熟悉了，接着和我们队员打成一片了。这个小鬼精灵得很，对老师也很尊敬，但他与我们的相处显得很自然，似乎很早就与我们熟悉了。还时常和我开玩笑，因为我戴着牙套，他们几个大一点的学生都叫我“不锈钢”。我也不气，小朋友们对我们敞开心扉是一件让我开心的事。
+<p>
+文昌很瘦，但是很有体力，一次星期天，我们全体队员准备去爬山，因为担心小孩子，所以不让他们和我们一起，但是他与另一个小伙执意要与我们一起去，我们几个远远被他们两甩在后面，还主动帮我们几个女生拿外套，真为这些小孩佩服。文昌很喜欢跟我们一起玩耍，学习也十分认真，二十几天的支教生活结束后，队友们返回了家，课程重新安排后，我开始教五年级的数学，刚开始我是有些担心的，对于高年级的同学我的信心并不大，但是学生们还是很认真的听课，我发现文昌的作业做得很好，有不懂的也会在第一时间问我。我经常待在他们教室里，队员走后，学生一天的课减少了，有好几次我都注意到文昌在那里涂涂画画一下东西，一天下午我便问他，想不想冯可老师们啊，你可以写封信，我带回去给他。他迟疑了一会说，不想，我不写。接着便离开了教师。我心里是很难受的，因为看了他写的心愿。他希望老师们以后能找份好的工作，幸福快乐，明年再来和他们一起做游戏。我想，这个小孩子的心里是明白的，老师们也要回家与家人团聚，也许他是不愿老师担心吧。我不了解为什么他来到这个学校，对他的家庭情况也一无所知，他那敏感细腻的心思，直到现在我想起他的表情，便觉得揪心。我们始终要离开的，孩子们都知道，或许也都习惯了。不仅我们关心着他们，他们也关心着我们，我想这就是人性的美吧，或许我们都只是他们人生的过客，但是这些孩子却给我们留下了美好的回忆。
+
+<a name="children_lmc"><h3>拉毛措</h3></a>
+<p>
+对她最深最深的印象是这是个爱拥抱的姑娘。我没有教过四年级，但是拉毛措是我们寝室的一员，已经不记得我们是什么时候熟络起来的了。只知道每次她看到我时总是要首先给我一个拥抱，还喜欢一直抱着我。
+<p>
+我很喜欢这样的方式，一直觉得拥抱是能治愈人内心伤痛最好的一种方法，通过拥抱不仅让人感觉亲切又会让人安心。但是拉毛措却不是一个让人安心的姑娘。
+<p>
+在我离开的最后几天里，我们遇到了一件措手不及的事就是这姑娘弄出来的。这一天我起得比较晚，孩子们都上早自习了，我一起床便看到拉克加老师匆忙的样子，便问发生了什么事，原来拉毛措悄悄的跑出学校了，细问之下才知，有个人给她打了一个电话说她妈妈生病了在医院躺着，于是她啥也不考虑便跑到路边去找车去看妈妈，幸好她身上没带什么钱，所以没有能够离开。尕臧吉老师知道后气的把全寝室的学生都打了一通，好几个孩子都哭哭啼啼的，我只好安慰这些哭泣的小孩们。第四节课下了，老师们才把她找了回来，那小姑娘还不知道这件事的严重性，回来就给我一个拥抱，我问她下次还乱跑不，她还很倔强的说下次我还要 ，我想去看我妈妈。后来我本想去看活佛的时候顺道带她一起去看妈妈的，但却不了了之了，对她十分抱歉呢。
+<p>
+拉毛措这个热情但冲动的小姑娘，让我拿她没法子，但是她的拥抱却让我心里暖暖的。我应该也要像她一样时时给朋友们一个大大的拥抱。
+
+ 
+<a name="children_xdc"><h3>夏道措</h3></a>
+<p>
+夏道措是我所负责二年级的学生，她是班里年龄最大的，也是班长。在我所支教的一个月里，夏道措的乖巧懂事让我省了不少心。她的学习成绩也是班里最好的。
+<p>
+我刚接手二年级的时候对这个女生的印象便是笑得很甜。过了几天后我才知道她是班里的班长，班里有几个很调皮的学生，上课不爱听话，学习也不认真，夏道措是以前老师任命，让她管教这几个调皮的小孩子的。虽然她很温柔的样子，但是这几个不听话的小孩却也是怕她的。上课吵闹的时候，夏道措便会帮我处置喧闹的小孩们。我在二年级教的数学，但是这些小孩的数学的基础知识不是很牢靠，所以对于讲的内容，小孩们的理解能力有限，再加上年龄小的孩子注意力不集中，对于所教内容更是不能完全掌握了。但是这一个月来，我很欣慰的是这些小孩的数学成绩都明显提高了。临走前的一次考试中，夏道措考了94分，这对于他们来说已经让我非常高兴了。我知道这个女孩会取得好成绩的，每一次的讲课我都注意到她在很认真的听课，甚至是下课时候她也在看书。
+<p>
+夏道措不仅在学业上十分认真，在学校里也经常帮助厨房提水，打扫。她与一年级的周毛牙是很好的朋友，两人除了上课外几乎天天在一起，没事的时候，我总看到她们在草地上一起看看书，聊聊天什么的。她们两都是班里最勤奋的孩子，又很懂事，夏道措的眼睛受过伤，但是我还是觉得她很漂亮，她见到我总是很开心得笑，向我问好。在走之前，我给她写了很长很长的一封信，不知道她能否看懂，我希望她能继续当好班长，和小朋友们一起努力，创造美好的未来。
+
+ 
+<a name="children_gzdj"><h3>尕臧多杰</h3></a>
+<p>
+尕臧多杰是四年级的一个男生，一个特别调皮、活泼好动的学生。经常上课的时候跑座位，时不时站起来讲一大堆藏语，他的汉语特别差，藏语说得特别溜。同时他也是一个特别懂事，懂礼貌，尊敬师长的孩子。他的哥哥夏洛加与我同岁，是学校的老师，也是尕臧多杰的班主任，但这并没有让他享受到任何特权。他和每个学生一样，吃一样的饭，住一样宿舍，天天跑去水龙头那边喝生水。尕臧多杰很爱玩，话特别多，对待生活积极乐观。让我印象最深刻的是 ，一次他和几个男生带我去爬山，从后山下去的时候，坡特别陡，他一直在为我打气，叫我注意安全。有一次，我从坡上滑下来十几米，他马上跑过来扶着我，后来一直是他牵着我下去。要走的那几天，他时不时都来找我们聊天。说真心话，他真的是一个特别懂事的孩子。记得他和吉先家在心愿认领上写的都是：我什么都不要，只希望你们能在回当我们的老师。
+
+<a name="children_bmc"><h3>班玛措</h3></a>
+
+
+<p>
+班玛措是六年级的一个女生 ，比我小一岁。我跟她特别谈得来。她喜欢跳舞，唱歌，唱歌唱得特别好。梦想当一名歌唱家，她曾经说过：为了实现自己的梦想，我什么苦都愿意受。再过几天她就要去深圳的一所音乐学院上学，三年之内都不能回来，说到这里她的眼里流露出掩藏不住的不舍。她是学校的大姐大，热爱学习，每天都会主动找我补习，经常来问我问题。她一直都叫我哥哥，感觉特别亲切，离开的前一天晚上，她特地找我聊天，还送个我一本书，上面写了许多她想对我说的话。离开的那天晚上，她第一个冲出教室，我紧紧地抱住她，她一直在哭。
+<p>
+现在特别想念她，她在书上写着：歌声便是我的翅膀，我要用它来实现梦想。今后很长的时间再也见不到她，听不到她的那句：“喔呀，哥哥”。但我相信总有一天，我们会再见面，相信那时的她已经实现自己的梦想。
+
+<a name="children_crj"><h3>才让加、才增多杰</h3></a>
+<p>
+才让加和才增多杰这对难兄难弟是六年级的的两个男生。这对欢喜兄弟可以说是当之无愧的校霸，但这两个校霸却从来不欺负学生，不刁难学生。相反，他们特别照顾其他学生，十分听老师的话，为人踏实。
+<p>
+才让加上课的时候老走神，而才增多杰上课十分活跃，两个在一起可以闹翻天。他们都喜欢画画，打篮球，很爱表现自己，积极乐观的生活态度。低年级的学生哭的时候，才增多杰都会去安慰他们。刚刚见到这两个学生的时候，就觉得他们应该会非常难管，但结果恰恰相反。
+<p>
+才让加高高大大，他说以后要找一个会做包子的女生当老婆，这样就可以每天吃包子。而才增多杰长得比较文艺，汉语特别差，但说起话却有点老气横秋的感觉。和他们相处的时间特别多，平时他们特别活跃，但我们要走的那几天，他们特别安静。
+<p>
+最后一天上午我去六年级的教室上课，才让加一直在下面哭，我走过去的时候发现他的本子已经湿了。才增多杰呆呆地看着我，一直不说话，手里一直掰着铅笔。最后他们告诉我：“这几天我一看到你们，我就想大哭”。那天，才增多杰一直都没说话，那天就听到他说过一句话：“老师你们明天再走好不好”。再过几天他们也要毕业，希望再见到他们的时候，他们变得更成熟。
+
+<hr class="newpage"/>
+<a name="toteacher"><h2>老师，我想对你说</h2></a>
+<div style="padding: 2px 20px; background: lightgray;">
+<a name="toteacher_bmc">  </a>
+<p>
+我心目中许铃木老师非常严格，负责，认真。他为我们上数学课，他第一节课就和我们说在课上要非常严肃，但是在课后我们就是朋友。 我们都叫他阿木老师，他关心我们每一个学生，特别是对我们六年级的学生。因为我们即将毕业的缘故，所以我们的语文课上，刘静老师有时会叫他给我们讲一些为人处世的道理，希望我们离开学校后能走得更远。
+<p>
+上课的时候阿木老师比较严肃，每一个问题他都讲得非常清楚。下课后他又比较亲切，会和我们一起游戏，一起爬山。阿木老师也时常发火，有一次，一年级有个叫才旦的孩子和一个高年级的孩子打闹，不小心受了伤，但是一年级的班主任不知道这事，所以阿木老师找到一年级班主任就发火了。我们知道，阿木老师是希望老师们能关心到我们每一个学生。
+<p>
+阿木老师才大一，他答应过我们，他说他明年还会回来教我们。我们等着他。</p>
+<p style="text-align: right; color: navy; font-weight: bold;">
+----- 班马措
+</p>
+</div>
+<br/>
+<div style="padding: 2px 20px; background: lightgray;">
+<a name="toteacher_wc">  </a>
+<p>
+冯可老师是所有老师里面最爱开玩笑的一个，任何时候都和我们打成一片。在唐邦国老师没来之前，他课程特别重，要上五年级和三年级的数学还有所有的美术课，他还是五年级的班主任。冯可老师画画特别好，我们和他一起学到了很多东西。他任何时候都特别开心，不过我听其他老师聊天，他们说到冯可老师最近心情不好。我不知道老师怎么了，但是我希望他一直都像在学校一样，过得开心，快乐。在老师们将要离开的时候，冯可老师给我们五年级的每个同学都写了一封信，肯定了我们的一些优点，但是希望我们能改掉我们的缺点。真的还舍不得冯可老师。</p>
+<p style="text-align: right; color: navy; font-weight: bold;">
+----- 文昌
+</p>
+</div>
+<br/>
+<div style="padding: 2px 20px; background: lightgray;">
+<a name="toteacher_lszx">  </a>
+<p>
+三年级和四年级的英语课都是黄逸帆老师上，黄逸帆老师是所有老师里面最温柔的一个，他不是一个很严肃的人。在三年级还好，因为三年级的孩子是全校最乖的了，课堂纪律特别好，但是四年级就不一样了，时常有几个捣乱的家伙。有时课都不能正常进行，温柔的黄老师变得严肃了，大家上课也不敢再捣乱。黄逸帆老师在教学上面特别严格，每次我们单词听写不过关的话，都要罚写20遍，直到我们全部背下来。黄逸帆老师和卢佳园老师教一二三年级的同学唱歌，不过我就学会了一首《捉泥鳅》。黄逸帆老师就要走了，好希望他能留下来，我们一定好好学英语。</p>
+<p style="text-align: right; color: navy; font-weight: bold;">
+----- 拉松扎西
+</p>
+</div>
+<br/>
+<div style="padding: 2px 20px; background: lightgray;">
+<a name="toteacher_crdz">  </a>
+<p>
+来支教的老师里面，有一位特别的老师，其他老师都叫她元妈，我们不知道为什么大家叫她元妈，但是她真的是一位特别负责，特别认真，特别勤劳的老师。她教一二年级的语文，还在上课的时候叫大家唱歌，还教大家手工课，这样我们都可以自己动手做些小物品。申元媛老师特别关心小孩子，她还老去厨房帮忙，还有她包包子特别好特别好。每天早上课间操时间跳锅庄，她都会和我们一起跳。有一天傍晚，老师们去爬山，然后我和文昌也和他们一起去了，回来的时候差不多晚上十点了，我们在山上啥都看不见，风特别大，那是山上温度也特别低，风吹来时更冷。申元媛老师穿了件厚的外套，但是她在回来时就把外套给我穿上了，一直拉着我，我感觉特别温暖，特别幸福。申元媛老师家就在西宁，她说她会常常来看我们，我们会一直等着她。
+</p>
+<p style="text-align: right; color: navy; font-weight: bold;">
+----- 才让东主
+</p>
+</div>
+<br/>
+<div style="padding: 2px 20px; background: lightgray;">
+<a name="toteacher_lmc">  </a>
+<p>
+刘静老师是和我们呆得最久的一位老师，本来她是和其他老师一起离开的，就因为她在四年级和同学们打赌，她说了一个谜语，说如果有人能猜出来，她就留下来，开学的时候她才离开。刚好有一个同学猜出来了，所以她留下来了。后来我们和她说，我们是开玩笑的，虽然我们舍不得老师离开，但是我们不希望是这样的原因老师才留下来。但刘静老师说，本来我就舍不得你们，想多陪你们几天，现在你们什么都不要说了，难道不想老师留下来吗？后来刘丽老师也留下来了，其他老师离开后，全校的老师就刘静老师，刘丽老师，尕藏老师，拉科加老师了，每天她们都要负责好多班级，真的好辛苦，但是她们还是每天早晚自习都和我们一起，我们不懂的她们就细心教我们，真的非常感谢她们。
+</p>
+<p style="text-align: right; color: navy; font-weight: bold;">
+----- 拉毛措
+</p>
+</div>
+<br/>
+<div style="padding: 2px 20px; background: lightgray;">
+<a name="toteacher_xjzm">  </a>
+<p>
+刘丽老师最爱卖萌了，老师们这么说，活佛也这么说，但是我不知道卖萌是什么意思。刘丽老师为我们留下了，她说我们二年级还有几个孩子乘法口诀没背，所以她要让我们全都背熟了才离开。老师们刚刚来的时候，刘丽老师负责一二年级的数学，还是二年级的班主任，所以没有很多时间来管我们二年级的。当唐邦国老师来后，一年级的数学就是唐邦国老师教了，所以她就时常在我们教室，监督我们写作业，早自习就教我们汉语，傍晚时就教我们背乘法口诀，刘丽老师特别严格。我们知道老师是希望我们能学到更多东西，希望我们以后有出息，老师真的为我们做了很多，老师你辛苦了，我们会努力的。
+</p>
+<p style="text-align: right; color: navy; font-weight: bold;">
+----- 希加卓玛
+</p>
+</div>
+<br/>
+<div style="padding: 2px 20px; background: lightgray;">
+<a name="toteacher_kzc">  </a>
+<p>
+我们的汉语特别差，很多故事书也看不懂，可是卢佳园老师会给我们讲故事。所以我们可以听到很多有趣的故事，不过这是我们作业完成优秀的前提下。卢佳园老师老爱说四川话，还说一些笑话，但是我们都听不懂，她还说那个笑话要四川话才有味道。她老爱讲动漫，吃饭放很多辣椒。老师让我们背了一首诗，叫《游子吟》，她给我们讲解这首诗的真正意思，这首诗的主旨，什么叫孝顺。我们吐字不清，老师就一个一个的教，直到我们全都读正确。老师还与黄逸帆老师一起教我们音乐，好像一直和老师在一起，唱歌，背诗，听故事。
+</p>
+<p style="text-align: right; color: navy; font-weight: bold;">
+----- 侃卓措
+</p>
+</div>
+<br/>
+<div style="padding: 2px 20px; background: lightgray;">
+<a name="toteacher_cxj">  </a>
+<p>
+唐老师是在二十六号才到我们学校的，之前就爱听其他老师说过，还有一位老师没到，但是过几天就来了。来之后唐老师就上我们三年级和二年级的数学，老师上课有时严格有时搞笑，他还叫一年级的李毛才忠来我们三年级上数学课，老师说李毛才忠本来应该上三年级了。老师第一节课来我们三年级的第一句话就是，以后你们必须要诚信，所有的作业必须自己做，哪怕是错的也不能抄别人的。上课时回答问题必须要自己主动思考，不能别人说什么自己就说什么。我们听老师的话，没有再抄作业。明天早晚自习，老师都会在我们身边转来转去，听到或者看到我们读错和写错的话，他会马上和我们讲。刘静老师还专门找唐老师去上六年级的课，就是给他们讲一些老师自己的经历，一些走出社会需要保持和拥有的东西。老师快要离开的时候，晚上给我们补课，补到10点多，中午老师也不休息，就在我们教室给我们讲我们不会做的题，每节课老师都会提前来，下课后还要延时很久，我们知道，老师是想在有限的时间里面给我们讲更多的东西。唐老师还会打篮球，而且打得很好，他时常和才旦，龙周一起打球，跟他们讲一些打球的技巧。老师，我们想你了。
+</p>
+<p style="text-align: right; color: navy; font-weight: bold;">
+----- 才项吉
+</p>
+</div>
+<br/>
+
+<hr class="newpage"/>
+<a name="teachsum"><h2>教学总结</h2></a>
+<a name="teachsum_tbg"><h3>唐邦国</h3></a>
+<p>
+我主要负责一年级和三年级的数学教学工作，由于学校的教师特别少，所以这里的孩子的数学和汉语基础都普遍薄弱。
+<p>
+一年级情况比较特殊，由于学校规定，刚刚进校的学生都要从一年级开始上学，所以一年级的孩子各个基础都不一样，有的基本数数都不会，有些会一位数加法，有些会多位数加法，有一个还会乘除法，可是还有两个聋哑的孩子，我无法和他们交流，所以我都不知道他们到底知道多少。还有一些孩子，他们只会藏语，不会说普通话，所以我要找其他同学来为我翻译。不过在支教这段时间，我针对不同孩子布置不同作业，像李毛才忠都会乘除法，我叫她到三年级上数学。这段时间的学习，大家基本掌握了加法，基本的减法。
+<p>
+三年级的孩子比较人真，之前他们学习了除法，但是掌握情况不太理想，我为他们讲完乘法后，重新为他们温习了除法。经过大量的练习，多位数的乘除法他们都基本掌握了。
+<p>
+由于孩子基础都比较薄弱，所以我并没有讲难的东西，主要是为他们夯实基础，讲解基本的运算法则，并通过大量练习来巩固知识。通过最近的学习，他们的基础都有很大提高。
+
+
+<a name="teachsum_syy"><h3>申元媛</h3></a>
+<p>
+20多天的支教生活转眼便结束了。时间总是匆匆，回想当初满带期望的来到青海湖孤残学校，现如今已经带着美好的记忆离开了。这多天来的支教生活会成为我一生的宝贵记忆，让我从中收获,从中思考。
+<p>
+我担任的是一二年级的语文课程以及三年级的班主任，除主要课程外我和刘丽也在上5个班的手工课。三年级有5名同学，5个都是很听话的孩子，平日里很少监督他们早读自习，打扫教室，可这些方面他们都做得很好。我一年级的孩子年龄是最参差不齐的，因为班里有几个聋哑儿童和有智力缺陷的孩子。在别的孩子升级上课的时候，这些个孩子只能一直留在一年级里好好学习。而我二年级的班学生整体情况就好多了，除了孩子们调皮一点外其他方面还是不错的。
+<p>
+在没来支教学校之前我还信心满满的，觉得教自己担任的课程应该没有什么大问题，可真的站在讲台上给孩子们讲课的时候我才真正意识到做一名合格的老师有多困难。虽在上课之前看过一些怎么教好学生的文章，自己也曾在高三毕业的时候给小学生上过课，可当这次自己带着班，计划着上课的时候我便发现困难重重了。所以这次支教我不得不谨慎对待每一堂课、每一个学生，除做好备课之外，还得加强对孩子们的课后辅导和作业批改。我花了三天的时间才记住了所有学生的名字，同样也是花了一周的时间我才了解到了每个人的学习状况，等到我们彼此都熟悉了以后，我的很多工作也能顺利开展了。不管是课余给孩子们上几趟英语课，还是课下带领孩子们嬉戏玩耍我都能感觉到孩子们把我当成了他们的老师甚至是朋友。每次作业改完以后我都会一个个地当面发给孩子，指正他作业中的问题。在最后支教结束的时候，我在每个孩子的作业本上留下了对他们今后生活学习上的寄语，只希望在孩子们读到我写给他们的话是能感受到关心他们的力量，只希望他们能想我期望的那样做得越来越好。
+<p>
+而对于学生来说，我也是陌生的，我的教学方式对于他们来说也是很难适应的。于是在和班主任以及学生沟通后，自己在不断地调整，尽量以学生为主，改变自己的方式，同时也在慢慢地帮助孩子们养成一些好的学习习惯和方法，具体方法如下： 
+<p>
+1、孩子们的肯定对老师有多重要。只有在学生认可老师的情况下，老师才能更好地给孩子们上课。同时作为老师，教会孩子们知识的同时要注重孩子们的品德教育，品德教育应该在知识教育之前。虽然学校的孩子都很懂事，但在看到孩子们一些不好的生活习惯和不好的毛病的时候，老师有义务去照顾他们，也有义务为学生做品德教育工作。一日为师就要做到像父母一样照顾孩子们的成长。
+<p>
+2、“师者传道授业解惑”，要用一颗谦卑的心来教育孩子。认真备好每一节课，遇到没有把握讲好的课时立即提出，请其他语文老师一起考虑；多将教材、教法、学法尽可能完美地结合，积极、认真备好每一个教案，上好每一节课。在支教期间我给家里打电话，母亲就对我说“你要好好教人家的孩子……”，就因这一句话我也应该为我的孩子们负责，认认真真地做他们的老师，虽然只是几天的老师，我也应该做好一个老师该做的。
+<p>
+3、积极参加学校的各类活动。积极参加学校的活动有助于支教老师拉近与学生之间的关系，同时作为老师，只有在与学生亲近的时候才能全面地了解一个学生，很多时候老师与孩子们沟通不好就是因为老师对学生不够了解，才致使老师与学生之间矛盾重重。当融入孩子们的时候，你会发现所有的孩子都是可爱懂事的好学生。 
+<p>
+4、组织好课堂教学，活跃课堂气氛，针对课堂沉闷的现象，创造良好的课堂气氛，关注全体学生，课堂提问面向全体学生，不单一地只叫几个学生，让所有的学生都参与到课堂上来；注意引发学生学语文的兴趣，让他们感受到学习语文的乐趣。 
+<p>
+5、注重学生语文基础知识的的培养，培养他们的语文素质，例如向孩子们推荐一些适合他们阅读的书籍以及鼓励他们多写作等，这些都有助于他们提升对语文的兴趣。对于我教的学生来说他们日常交流用的都是藏语，在学校藏语课也是重要课程，所以加强他们普通话的练习以及交流能力也十分重要。这是他们了解语文，运用语文的必要工具，不管以后孩子们走到哪里，我希望他们都能和别的孩子一样自信满满地与人交流。
+<p>
+6、注重培养学生自主学习的习惯和自主学习的能力。刚接触自己带的两个班级时，发现孩子们的自己学习的意识十分得差，自我思考问题的意识也和薄弱，都是等待老师的答案，还记得刚去上课的时候，提问二年级的学生都没有一个人主动举手回答问题后来又有同学告诉我，要是老师不主动叫名字的话，是没有人起来回答的。
+<p>
+支教生活结束了，岁月无痕，但我知道自己20天的时光不会是没有痕迹的。那些留在支教学校的身影将是我记忆中永恒的片段，因为它真实地在我生命中，成为了我大学生活的一部分。或许自己的这份总结，会和其他的几十份一样，在几年后成为一堆废纸，变得泛黄，也没有人翻阅过，但这段美好的历程，无论这中间，我有过什么样的情绪，我都想认真的把它们写下来。这一切都会鼓舞着青海湖畔的孩子们和我一同走向明天！
+
+<a name="teachsum_fk"><h3>冯可</h3></a>
+<p>
+在学校，我的主要教学任务是三五年级的数学、一至五年级的美术,(三年级的数学后来被其他人接替了)。先说说我的五年级数学，在短短二十天中，我只教他们分数一章，虽说内容不是很多，但是我相信他们一定懂了，因为除了上课给他们讲知识之外，在课下，我在给他们阅作业时，把所有的错误全都提出来并做修改后，有时给他们课下给他们讲解错误的原因。渐渐地我们之间的关系也变得更好了。再说说三年级的数学，我只教了三年级的孩子一周，教了他们除法，可能是时间有点短，所以可能教他们的只是可能不太牢靠，但是我相信接替我的老师一定会帮他们的。美术的话，因为一到三年级的所有学生在一起上美术课，并且每天下午的第三节都是美术课，所以教这帮孩子的比较多，主要给他们教简单的简笔画，例如喜洋洋和灰太狼的动漫形象，在他们画完之后，我会给他们做一些修改。在四五年级，这些高年级的孩子已经开始学习唐卡了，所以我会叫他们比较难的动漫形象，比如皮卡丘，龙猫等等。
+
+<a name="teachsum_hyf"><h3>黄逸帆</h3></a>
+<p> 
+主要负责三四年级的英语教学工作，另外兼有一二三年级的音乐课辅助工作。三年级英语主要教学一些生词，以及一些简单的句子，四年级英语主要教学生词以及一些基本的英语语法。支教期间主要教学了孩子们一些日常英语交流用语，如：How do you do?, How are You ? 等，以及分类的英语生词，包括：月份、星期、自然景观、常见食物、基本交通工具等。音乐课中，教孩子们唱儿歌，包括《捉泥鳅》、《数鸭子》等。
+
+ 
+<a name="teachsum_ljy"><h3>卢佳园</h3></a>
+<p> 
+
+我负责的是三年级和五年级的语文，三年级有五个孩子，五年级有七个孩子。我总共教了三年级十二篇课文，课后学习园地三篇，作文一篇，古诗一首。五年级十篇课文，课后总结两篇，作文一篇，诗词两首。而在我最开始教孩子时，发现他们的基础不是很扎实，很多教过的生字还是记不住。于是从第二节课开始我就要求孩子们单个上黑板听写，听写不对不仅是罚抄，还要来我这里听写到全对为止。虽然方法有些笨，但是效果却很好，渐渐地孩子们的听写正确率越来越高，最后基本每个孩子都能全对。我告诉孩子们基础的重要性。因为他们乖巧踏实，所以课下他们也是很努力的。
+<p> 
+最开始我布置作业只是简单的抄写，但我发现这样没什么用，而且有些孩子在作业中抄写还会出错。所以在改完作业后我总结一下，在第二天的课上专门针对出现的问题来考问他们，不管拼音还是字词，我都要求他们完全掌握。而且在发现有些学生写字是倒笔画后，我在课堂上也会注重让他们看我写字的笔画顺序，争取让他们学习更正确的东西。上过几节课后，我开始给孩子们增加作业难度。在我课上对一些重要词语或是好词佳句解释后，我会让孩子们摘抄并且造句，这样我就可以看出他们是否对这些有一定理解，我认为这样理解后去记背比单纯的死记硬背要好得多。果然后面发现有些孩子并不懂那些词语的意思，我就又给他们解释清楚，让他们能更加明白。我每次批改作业也会给孩子们写评语，有表扬也有批评，上课会将有些孩子造句造的好的跟其他孩子分享，我觉得这样会让孩子们学到更多。
+<p> 
+我分别给三年级和五年级的孩子布置过一次作文，题目是写你身边的人，很多孩子都选择写我们这群去支教的人或是他们的老师，或者是对他们奉献最多的活佛。虽然孩子们的笔触都很稚嫩甚至有一些病句和错别字。但是能在他们的字里行间看出他们的感恩和懂事，我觉得作文不一定要有华丽的辞藻或是磅礴的气势，只要中间有真情实意就是最好的，而孩子们都做到了，所以就已经比很多人都好了。
+<p> 
+在我的教学中，发现孩子们有个很大的问题就是拼音很差，他们声母韵母不清楚，音调也分不清。于是我借来了一年级的拼音卡，挨个教他们拼音，因为在我看来拼音是最基础的东西，是必须掌握的。于是我学了很多种小方法来教他们，孩子们都学得很认真，因为这个是我最后一节课教的内容，后面两天没课的时候我就让孩子们单独来我面前，我出一些拼音或是汉字来让他们做，大家都进步了很多，基本上都掌握全了，这让我很是自豪。
+<p> 
+我在每节课最后几分钟或是晚自习的时候，都会给孩子们讲讲故事童话那些，孩子们每次都很专心致志地听我讲。我讲完后会让他们发言说自己的感受和从故事中学到的道理，我觉得这才是听故事的意义所在。最后几天我还让他们学习了《游子吟》这首诗，想让他们在学会一首诗的同时，也能更好地学会感恩，学会奉献，学会报答。而最后，孩子们告诉我他们最想感恩的人不是别人，正是活佛和教他们的老师时，我觉得很感动。我们并没有为他们做太多 ，但是他们却会记着你的每一份好，并且加倍对你好。
+<p> 
+虽然这次的支教行比较短，我们并没有教给孩子太多知识，但我教了孩子们很多道理，要学会独立，要学会坚强，要学会感恩，要学会无私，要学会拼搏，要学会忍耐，要学会坚持，要学会很多很多，我相信孩子们一定会做到的，这也才是我们支教的真正意义所在。
+
+<a name="teachsum_lj"><h3>刘静</h3></a>
+<p> 
+在支教期间，我主要负责四年级的语文和六年级的语文。对于四年级我主要在汉字的发音，书写和意义，刚来上课时就发现大多数孩子只知道背读音却不知道哪个读音对应哪个声母韵母。每周就抽两节课来给孩子们讲拼音，抽孩子们上黑板练拼音。由于六年级还有一个月就要毕业，离开学校面临社会关系相对复杂的城市生活，在学习课本知识的同时还给孩子们普及了一下基本常识和道德规范，也请其它支教老师轮流来给六年级的孩子们讲自身经历和感想，丰富孩子们的社会经验。
+
+<a name="teachsum_ll"><h3>刘丽</h3></a>
+<p> 
+我担任的是二年级的班主任，负责二年级学生的学习生活以及二年级数学教学。
+<p> 
+对于二年级是我支教一个月来连续教学的主要班级。刚开始时，我询问了以前老师所教的进度，第一节课检验了一下学生对以前的知识掌握程度，结果不太好，学生对以前所学的内容掌握得很不好，于是我花了一个星期复习了以前的内容，然后开始讲课本剩下的内容，对于还未掌握的学生，我课后进行辅导。上课我就讲新的内容，课后我便对还未掌握好的学生进行一对一辅导，效果还是很不错。
+<p>
+在八月十号左右，我便把课本上剩下的内容讲完了，于是开始了第一轮的复习，仍然发现对于前面的内容有些学生掌握得还不是很牢靠，但是另一些学生又掌握得比较好，我只有单独下来进行辅导了。教材复习完一遍后，我开始给孩子们出一张试卷进行这本教材里知识的考核，然后接着的两天里又粗略地复习了一下。在我离开的最后两天，我在班里进行了一次考试，改卷的结果还是比较满意，夏道措小朋友考了最高分数94.班里最低分是22，我分析了一下考差的原因，主要是他们的汉语水平较低，课上不能很好的吸收知识。但是对于这里的学生来说，这样的数学成绩已经让我很满意了。
+<p>
+我总结了一下这里的学习情况。主要有几个方面的原因。汉语水平是比较主要的原因。学生们上课大多比较认真，上课走神的原因，主要是因为听不懂一些未学过的汉语。第二，学校的教育资源缺乏，学生不能很好地得到复习巩固的机会，所以基础掌握得不好。第三，学生对学习数学的热情不高，没有深刻理解数学给他们生活带来的方便以及对他们以后的生活产生的影响。
+<p>
+反复复习和巩固是二年级学生学习数学的主要有效方法，也是其他年级学生应该实施的主要方法。这一次的支教活动，相信对于学生的基础知识的掌握有了很大的提高。
+
+<a name="teachsum_xlm"><h3>许岭木</h3></a>
+<p>
+许岭木
+<p>
+我的主要教学内容是四年级和六年级的数学。四年级每周有四节课数学，主要以复习为主，上课的时候主要以讲题的形式帮助学生们复习。四年级的学生基础都比较好，在这20几天的过程中，我将四年级下册的数学复习了一遍，感觉学生的基础都有所提高。六年级每周有五节数学课，因为六年级的学生基础较差，跟不上教材的进度，所以在支教的那些天里，给他们上课的内容都是我自己课前准备的。教学的内容主要是整数、小数、分数、百分数的四则运算。在教完这些内容后，又给他们上了几节课，主要内容为单位的换算和几何体体积的运算。无论是四年级的学生还是六年级的学生，他们的课后作业都完成得挺不错，他们的基础虽然比较薄弱，但他们学习十分认真，特别刻苦。没课的时候我一般都会去找六年级的学生，给他们补习。另外我还是四年级的临时班主任，担任四年级每周一节自然科学课的教学任务。
+
+<hr class="newpage"/>
+<a name="learned"><h2>心得体会</h2></a>
+<a name="learned_tbg"><h3>唐邦国</h3></a>
+<p>
+今年假期，红心支教队联系了青海的一所孤残学校，计划假期到这所学校支教。最后确定下来到学校支教的共有八个队员，红心出发的时间是7月14号。那时因为我在都江堰参加一个科技展的活动，所以没能和其他队员一起出发。我是7月23号出发的。
+<p>
+买了票后一天，甘肃定西就发生了地震，成都到西宁的列车都停运了，我只能先到达兰州，在从兰州转到西宁。列车晚点差不多3个小时后，我终于踏上了去兰州的列车，走向了去青海的旅途。顺利到达兰州后，本来计划当晚就去西宁，因兰州到西宁的列车停运又耽搁了一天，第二天才到西宁。各种转车，堵车，问路，我终于达到了目的地，看到了我的队员，看到了这所学校，看到了这里的孩子们。
+<p>
+达到这里后，让我感到意外的是，学校条件和它周围环境的反差。周围有辽阔的草原，与天相接的群山，还有不远处碧绿的青海湖，一望无际的金银滩。可是学校的呢！一个篮球架，地面凹凸不平，因为学校施工，整个操场在一片泥泞之中。这里温差大，早晚就像冬天，可是孩子们没有热水，洗脸，洗脚，洗碗，洗衣服全是冰水，这里的水冰的刺骨。孩子们住的房子就是临时房，寝室除了床只有几张桌子，再无其他。
+<p>
+孩子们的懂礼貌更让我汗颜，每当老师走过他们身边时，他们都会立刻站起立，无论何时何地；吃饭时，当他们看见老师快吃完，他们会马上跑到你身边说：“老师，我帮你加饭”；在上课时，只要你提到他的名字，他会马上起立，无论你是批评还是表扬，而且没有你允许，他们都不会坐下；每当他们进老师宿舍时，每次他们都会说报告，无论是交作业还是来和老师们聊天；每次上课前，他们都会把粉笔准备好，还会在讲桌处放一张凳子，有时没有凳子时，他们会把自己的凳子给老师……
+<p>
+他们爱好运动，虽然操场凹凸不平，但是他们依旧爱在这打篮球，踢足球。他们更爱好艺术，他们都会画画，而且画得特别好，他们更能歌善舞，很多舞蹈都是他们自己编的。有一个叫班玛措的六年级学生，活佛将送她去深圳学音乐，我祝福她，希望她早日实现自己的梦想。
+<p>
+我想，对他们来说，他们最爱的应该是学习。这里老师严重缺乏，一个叫尕藏的女老师，她要教一年级到六年级的语文和数学。可想而知，她怎么可能忙得过来，所以这里的孩子汉语个数学都特别差，六年级的同学乘法口诀都不是特别熟，乘法除法运算也不熟练。他们基础比较弱，可是他们对学习的欲望却远远超出我的想象。每次我布置作业后，说晚上交，可是中午的时候他们就会把作业交上了来。三年级一个叫才让东主的孩子，有一天因为头疼还拉肚子，他却在坚持上课，是队员听其他同学说他身体不舒服，我们才知道。当队员带他到宿舍休息时他哭了，他说他想上课。
+<p>
+还有一个叫班玛龙周的孩子，那天我在三年级上数学，之前上课时，他表现都比较活跃，而且回答问题都是正确的。而那天他总心不在焉，而且好像很困的样子。我问他是不是身体不舒服，问了很多次，他都说没事。下课后我总觉得不对劲，就去教室找他。发现他没在教室，其他同学说他头疼，回去休息了，等我找到他时，他已睡着了。后来厨娘和我说，说他7个月的时候，在脑部做了一个手术，如果长时间被太阳晒的话，就会头晕。我无法想象，上课时他是怎么坚持的，他那种学习的态度令我们这些所谓的大学生汗颜。还有两个一年级同学，一个叫多杰彭措，一个叫旦之才旦，一天早上队员发现他们在用10几度的水洗澡。原来因为之前的学校开工典礼留下很多食物，他们吃得比较多，所以就拉肚子了。当弄脏衣物后，他们就去用冷水洗澡。队员发现他们的时候，他们差不多洗完了，他们全身发抖。衣服都不能自己换上。队员为他们换好衣服后，把他们带到我们宿舍，我们倒上开水给他们喝时，他们几乎拿不稳杯子，两张手一直在颤抖，后来夏老师带他们去了他的宿舍，因为他那儿有炉子。在他们缓过来后，多杰彭错气色比较好一点，就直接去上课了。可是才旦，气色不好，还头疼，队员就带他回宿舍休息。刚到宿舍他就哭了，他说他想去上课。这些孩子给我们带来的是一幕又一幕的触动，一份又一份的感动。
+<p>
+每天的上课依旧正常进行，离我们离开的日子也越来越近了。孩子们好像知道我们快要离开了，上课更认真了，一天我们在搬砖的时候，班玛措和我说老师你们走后，我们就没老师了。当听到这句话的时候，我不知道我还能说什么，我喜欢这里，喜欢这里的孩子，如果没有外界的牵挂和责任我希望一直留在这里。我在一年级上课时，让大家到黑板上做题，大家争先恐后的上去，两个聋哑的女孩也是，他们特别积极，大家都说，老师写题给我做吧……。我知道他们知道我们要离开了，一次上课的时候，我给一个孩子写题，李毛才忠问我：“老师，你们什么时候走”，然后她就哭了，我不知道我还能说什么，他们是那么的懂事，那么的让人舍不得。
+<p>
+离开之前，我们去倒淌河为孩子们买了一些生活用品，为厨房买了一些菜。同时也在每个班做了一个心愿认领的活动，就是大家写下自己的心愿，我们在回来后将尽力帮他们实现。可是很多孩子就写了一句“老师，我们什么都不要，只要你们明年回来”。在最后一次学校会议上，我们每个队员都说了很多，会议结束时，队员为孩子们表演了《最好的未来》手语。
+<p>
+8.5日，这是我们离开的日子，有两个支教队员坚持留下来，她们准备20号再走。上午我和活佛签关于建立社会实践基地和请活佛为队员们的实践表盖章的事。过了一会儿，活佛叫我们到他的办公室，学校为我们每个队员都准备了一份礼物和一条哈达，他还说：“这里永远是你们的家，任何时候都可以来”还说：“你们来这里教孩子们，吃不好，住不好……”我们听了他的话，觉得十分惭愧，学校为我们改善了伙食，改变了许多，可是我们除了教孩子一点有限的知识，又为他们带去些什么呢！活佛为我们安排了车，他有点急事去了海南州，我们就一直在学校等待车的到来。
+<p>
+傍晚时，孩子们和往常一样在学校后面草地上自习，我们全都在宿舍等车的到来，突然孩子们全跑到我们宿舍，高兴地说：“老师没走，他们行李还在……”,原来一个老师听到汽车的声音，以为我们走了，就和孩子们说，我们离开了，孩子们就放下书，全部一起跑到我们宿舍，还说老师走时为什么不和我们说……,看到他们高兴的样子，我们希望车一直别来，时间一直停留在这一刻。晚上车还没到，拉科加老师叫所有孩子在教室里开会，教室就在我们宿舍旁边。差不多九点半的时候，接我们的车来了，司机是工地上的老板。我们从宿舍拖着行李箱出来的时候，孩子们全从教室里冲出来，天很黑，但是还是能看到他们的泪光，他们和每一个老师拥抱，都说：“老师，你们一定要回来……”。这一刻，我们想对他们说很多话，但又说不了多少话。上车后，我们的手与拉科加老师的手，与学生们的手紧紧地握着。车子开动了，学生们想要跟着，却被工地上的工人拦着，看着他们，我们再也无法控制自己的情绪，眼泪不自觉地掉落。男儿有泪不轻弹，今夜我却泪千行。开车的赵老板告诉我们：”在你们跟那些娃儿拥抱的时候，我的眼泪也掉了下来“。是的，这些孩子实在是太懂事了，我们舍不得他们，舍不得这里的一切。短短的20天，也许是我们人生中最宝贵的20天，在这里，没有任何烦恼。无论是活佛，还是老师，还有学生都特别待见我们，照顾我们。我们仅仅教会了孩子们课本上的知识，但他们教会我们的东西更多，更宝贵,“懂礼貌，吃苦耐劳，还有那积极乐观的人生态度……”。这里的每一人，每一件事都在感动着我们，同时也让我们肃然起敬。
+<p>
+深夜，车在公路上疾驰，我们坐在车里，望着车窗外那后退的草原，渐行渐远的几点星光，渐渐模糊的校园，没有人说话。我们知道，这里将是我们永远的牵挂，明年红心一定还会回来。
+
+<a name="learned_syy"><h3>申元媛</h3></a>
+
+
+<p>
+近20天的支教历程结束了，现回想在青海湖畔和孩子们在一起的时光，幸福感随之而来。我很荣幸能够成为此次支教活动中的一员，与队员们一同分享这段美好时光，对我们每个人来说，此次青海之行将是我们人生中一次不可忽略的美好经历。
+<p>
+7月17日下午，我们8名红心支教队队员到达位于青海省海南州共和县倒淌河镇甲乙村的青海湖慈善孤残学校。首先映入眼帘的是一排低矮的破旧板房，板房已经黯然失色，校园里唯独有个简陋的篮球架子，连个像样的平地都没有。教室非常简陋，甚至有些教室的桌椅都不全。他们两个人睡一张床，条件特别差。他们所有事情都自己动手，每天要提很多水，小小年纪便要做很多重活。这边的水温特别低，因为条件限制，他们每天只能用冷水洗碗，洗漱，甚至用冷水洗头，每个孩子的手上都长满冻疮。这里的孩子特别有礼貌，非常懂事。第一天给他们发文具的时候，他们送给我们几张他们自己画的画。这里每一个孩子都多才多艺，他们所有的节目都是自己编排，所有的舞蹈都是自己设计。他们热爱学习，渴望知识。每一次我们上课的时候，他们都会全神贯注的听着，黑板上的每一字他们都会摘抄下来，几乎每一次看到他们都在做作业，也有很多学生带着作业来问我们问题。虽然他们基础很薄弱，但他们真的非常勤奋。在教学的过程中，我们也发现了许多问题，有时候我们也觉得很累，很迷茫，不知道该怎么教，该教些什么，但每次看到孩子们纯真的笑容和他们期盼的眼神，我们每个人都会在心中告诉自己：一定要尽最大努力，教好这些孩子。
+<p>
+从踏上去青海湖的列车到支教活动；从作为支教老师的上课教学到同孩子们一起为美丽校园的建设劳动；再从未有联系的陌生人到畅谈未来的好朋友，一天天，支教队员的心与孩子们的心拉近着。虽然支教的日子是短暂的，可几日来的收获并不少，现将几日来支教的收获和心得总结如下：
+<p>
+1. 作为负责人，面对任何混乱或平静的局面要帮队员认清做事正确的方向和意义，一定要统观大局大处着眼，小处着手。
+<p>
+此次的支教活动，从前的策划准备到后期的总结处理，都充分考验了我们的策划和实践能力，这是我们在学校无法学到的。每一项内容都要我们自己去布置，每一次小型活动的举行都要经过一系列的策划安排，很大程度上力求思路清晰、有条有序，这也增强了自身的动脑能力。支教期间总会遇到一些突发状况，总会有一些很棘手的事需要去解决，而在大学日常的学习生活中，我们这方面的能力锻炼和经验分享太少，以至于实践活动中会出现一些不如意的地方和难以全面考虑的问题。在经过一些突发情况的历练后，加之与支教学校老师的交流，总体来说在处理队内事务方面的成效还是不错的。
+<p>
+2.支教的意义不单是教会孩子们课本上的知识，更重要的是要教会孩子们认识外面的世界，教会他们表达自己，教他们如何生活如何面对困难。支教队员应该做到一个老师该有的责任和担当。
+<p>
+起初我只单纯地认为作为支教老师，我的责任就是教会孩子们课本上的知识，尽自己的努力告诉孩子们想要知道的知识。但在几天的教学过程中我便意识到：作为老师更重要的是要引导孩子们怎么成长，怎么做个合格的人，怎么生活。牧区里的孩子与外界很少有联系，孩子们告诉我，他们有些人都没去过西宁，有些人也只是去过一两次。所以他们的生活如同与世隔绝一样，都不了解外面的世界是什么样子的。因而，老师应该是孩子们认识世界，学着交流沟通的桥梁，是孩子们成长历程中指引方向的启明灯。“一日为师，终生为父”每个老师都应该为自己的学生负责。
+<p>
+3.在教导孩子们的同时，孩子们也在教会我们成长。孩子们有的经历我们这些支教老师没有，孩子们懂得的东西或许我们并不知道，孩子们能干的活儿我们不会干，孩子们能承担的生活重担我们却担负不起。与孩子们相处的时光总是愉快的，他们没有我预想的课堂坏习惯也没有不懂事的坏想法，更没有一些同龄孩子惯有的坏毛病。他们有的只是一双双渴望知识的眼睛和满带憧憬的微笑。孩子们面对生活的态度比我们更坦然。其实是孩子们在教会我们怎么做一个合格的个人。
+<p>
+4.支教是一次良好的机会来让我们反省自己。每晚躺下来休息的时候我总会想想今天都干了些什么？明天又该干些什么？还有什么是我没做到的？想想当初来支教的目的和今天一步步走过来的支教历程，我敢说我们红心来支教并不是因为孩子们穷，支教队想来体验生活，来支教是因为中国有13亿人，哪怕只是百万分之一的人被认为是落后的，我们就是个落后的民族；来支教是想告诉那些在抱怨的人，为什么抱怨而不去尝试着改变；来支教是要告诉自己不要以为自己有多么了不起，或许自己能做的事情还不如别人优秀。来支教我们每个人是想让自己以一种成熟的心态面对今后的生活。
+<p>
+5.此次支教锻炼了我们自身的实践能力、创造能力和沟通能力。在与学校领导和孩子们的交流中提升了自身素质，增强了团体协作精神和团队意识，我想这次活动对我们红心以后的发展会有很大的推动作用。
+<p>
+作为当代大学生，我们应该清楚地认识到自己肩上的重担，对当今的社会有一个全面的认识，还有很多挣扎在生活边缘的人，还有很多像青海湖慈善孤残学院一样的学校需要得到社会的关注，还有很多孩子像牧区里的娃一样迷茫自己未来。我们没有理由享乐，没有理由不奋发图强，我们该做的是继承发扬艰苦奋斗的优良传统，保持勤俭节约的生活习惯，并用这些天的经历来鞭策自己，从现在开始做好自己，着想他人，为那些可爱的孩子筑梦，也为自己的祖国贡献一份力量，千千万万的梦想汇聚起我们的中国梦！
+
+<a name="learned_fk"><h3>冯可</h3></a>
+
+<p>
+七月十五日，我们红心一行七人已做好了充分的前期准备，在成都整装待发。作为我们志愿者队的第一次支教活动，我们每个人心中不免有点激动和疑虑。在此有必要说明一下，激动源于我们可以去西宁藏区支教，去体验藏族同胞真正的生活，并且我们可以尽自己最大的努力去教学；但是那一丝疑虑的原因是：本次支教队的成员全部是汉族，我们虽然在前期准备时已经了解了当地人民的习俗，但是怕不经意之间触犯到他们的习惯。所以我们怀着这样的心态踏上了我们的征程！
+<p>
+经过了漫长的路途，我们终于在八月十七日晚上到达了我们的目的地——青海湖慈善孤残学校。记得那晚，天是灰蒙蒙的一片，寒风凛凛，绝对是下雨的前兆。学校的教室和宿舍全是活动板房，学校的操场坑坑洼洼，一个篮球架毅然竖立着，孩子们学习的环境就是这般艰苦。房子的里外，暖和和寒冷形成了鲜明的对比。刚下车的一瞬间，我有这样一种错觉，这里的夏天好像成都的冬天，进了活佛的房间，我认识了第一个孩子——希加卓玛，一个十四岁的姑娘，她羞涩极了，在为我们一群支教老师端上暖暖的奶茶之后，她站在一旁，除了我们问问题之外，她总是一言不发，但是笑容却挂在脸上，静静地为我们加茶。在一段交流之后，活佛，也就是校长，为我们介绍了学校，安排了我们一行的起居问题。晚上躺在床上，我一直在想怎样教学，辗转反侧……
+<p>
+或许，我们从这时就开始被改变了。
+<p>
+次日，我还睡意朦胧时，一阵阵跑操的口号和整齐的脚步声彻底地粉碎了我的睡意，孩子已是如此，作为老师，也应该做出榜样，我这次破天荒地六点多一点起床了。八点早餐，吃的是糌粑，一种藏族的食物，作为第一次，可能是奶茶加多了，很遗憾地没有尝到它最好的味道。我本人是五年级的班主任，第一节课，当然是互相认识了。个人感觉，我是这七人中最放松的一个老师，所以在第一节课上，我讲的比较少，但是笑的一定是最多的，很快和我班上的七个人打成了一片，他们平均年龄是十四岁，当他们听说我十八岁时，一片震惊，他们问我学什么，我的回答是机械，也可以理解为修机器的，他们笑了。当问到他们的梦想时，男生们的回答惊人的一致——乔丹，科比等等的职业篮球运动员；而女生的梦想较男生的要现实一些，医生，女警，她们说要为社会尽自己的一份力，我也相信她们一定可以实现自己的梦想！
+<p>
+之后的几节课，他们为我们表演了藏族传统的舞蹈——锅庄，我再一次地被这群孩子震惊，虽然他们的舞蹈不够华丽，不够完美，但是在我这个舞盲看来，这些舞蹈绝不是在朝夕就能炼成的，这些孩子一定在空闲时下了不少的功夫，否则绝不会有现在的成果。同时，我也暗暗地在心里感叹到藏族果然是一个能歌善舞的民族。
+<p>
+其实在支教刚开始的前两天，我们上的课并不多，因为到了周末，全校放假，也正因如此，我们才和学生们有了充足的时间交流、嬉戏玩耍。我们一起打篮球、踢足球、跳绳、下象棋，我们和老师、孩子的感情也在不断的升着温。我们教孩子们叫我们这些支教老师XX哥哥、XX姐姐，但是成效甚微，他们一如往前地叫我们老师；每次到了吃饭时间，我们为了更了解学生，我们会和他们一起吃饭，当我们吃完时，他们总是抢着为我们打饭，让我们感到很不好意思；每次去教室，这些孩子总会立马站起来，就算你不是他们的任课老师。从这些小事中，我感受到的是他们浓浓的敬意，他们这群孩子真的是格外懂事，格外懂礼貌。有时候我也在不断的思考，在我们小的时候，和他们一样大小时，我们也难以做到这点，更何况现在生活在父母娇惯下的城市孩子，因而他们的美好品质显得弥足珍贵！
+<p>
+到了新的一周，我们开始了每个人自己的课程，我负责五年级的数学和一至五年级的美术，每天有两节至三节的课。虽然每天会很累，有时嗓子会很干，并出现四肢发力的现象，但是在我的心中，这些全是小事。因为在我的数学课上，有着聪明的希加和文昌在积极地回答着问题，有着刻苦的拉忠和巴桑在静静地听着我讲课，并且还有桑杰、曼拉和旦正让整堂课轻松起来，让我们五年级整个班活跃起来。在美术课上，所有的小朋友都会全神贯注地画下他们心中喜欢的卡通，并且要我给他们修改。课下，我在心中很感谢他们，因为他们，我才可以在痛苦的大学生活中找到别样的欢笑，因为他们，我才可以在漫长的暑假中体验到异常的充实，因为他们，我才可以在我的人生中画下独有的一笔，感谢他们，使我拥有了别人不曾拥有过的经历。
+<p>
+当你投入一件事时，你一定会发现时间是多么的快，转眼间，二十天已经过去了，在这段时间里，我熟悉了所有的高年级的学生，他们或许年纪要比同级的孩子大，但是他们的心要比同级的孩子纯净太多太多；在这段日子里，我熟悉了所有的老师，其中，拉克加和夏洛加是我的好兄弟，他们的年纪仅仅才比我大几岁，但是他们已经有了在这个学校教书一辈子的决心和信心，这是大多年轻人难以做到的一件事，所以在我的心中对他们肃然起敬，这才是我们要学习的榜样。
+<p>
+在不长不短的二十天之后，我们的支教即将告一段落了，在这个学校最后的十分钟里，我真真切切地体会到了那种不舍，那种异样难言的感受。八月六日晚上九点半，当司机师傅的车停到操场时，当我们的行李被放到车上时，所有的孩子从晚自习的教室冲出来，在此时，我们能做的只有和每个孩子拥抱，告诉他们以后要他们应该注意的地方，告诉他们以后要靠自己，告诉他们我明年很有可能会继续去支教，告诉他们不要哭，要坚强！
+<p>
+从学校驶向西宁市的路上，我把车窗达到最大，把音乐放到最大，试图把那压心的难受随风吹走，但是根本上无济于事，直到现在，我在电脑前写着这篇稿子，心中的想念在翻滚着，但是，我能做的事只有把他们的事告诉更多的人，去感动更多的人！
+
+<a name="learned_hyf"><h3>黄逸帆</h3></a>
+<p>
+今年暑假的社会实践，我是以支教的形式度过的。自7月15日由成都出发，至8月5日由青海湖畔返回，历时20天有余。这是我第一次参加支教活动，在整个支教过程中，也可谓是收获颇丰。
+<p>
+我们支教的学校是一所由当地活佛资助创办的孤残职业技术学院。说是职业技术学院，其实相当于小学。学校位于青海湖畔，地理位置较为偏僻。没去之前，我心中暗自猜测：青藏高原，该是一片荒芜，类似于大戈壁的地方，估计学校周围也会是很多荒原。然而去了之后，我才发觉，自己的猜测完全是错误的。学校位于山脚下，这儿的山上长满了草，一片片草场，一群群牛羊，完全是一幅高山草原的美妙景象。由于离青海湖很近，只需稍稍爬上山坡向远处眺望，便能够望见湛蓝湛蓝的青海湖。
+<p>
+初到学校的那一晚，下车后。只觉得一阵寒意，虽说正值夏日，别的地方正是高温酷暑，然而这儿的风却很大，吹得人简直要发抖。学校的条件显得略为艰苦，厕所是露天的粪坑，教室是临时的板房，床铺会剧烈摇动，饮食极缺蔬菜……初到孤残学校的日子，令我略感不适。
+<p>
+我教的是三四年级英语。第一次站在讲台前上课，我也是有些紧张，中间有几次都突然停住了不知道讲些什么。但我当我看到孩子们一个个纯真的眼神，我心中的紧张便慢慢风轻云淡。如果是在外面的大城市，老师上课出现问题，学生们可能会不耐烦，甚至会鄙夷；但我看到孩子们的眼神，就知道他们和外面的孩子不一样。他们都很有耐心，他们的眼神中透露的是对老师的尊敬，是对知识的敬畏。和外面的同龄人相比，他们少了一份圆滑老练，更多地保留了属于孩子的天真质朴。因此，我之后的上课，便显得格外轻松起来，原有的紧张感也消失得无影无踪。更多的时候，我觉得自己不是他们的老师，而是他们的朋友。我们之间也不是师生关系，而是互相学习的朋友关系。他们从我身上学到一些知识，而我从他们身上，感受到更多关于人生，关于社会的想法和观点。
+<p>
+在学校支教的日子，物质生活显得比较贫困。由于资金有限，孩子们的衣食住行，和外面的同龄人相比都显得很是匮乏。当外面的同龄人缠着爸爸妈妈买玩具，买零食的时候，他们更多的时间是在挑水、搬砖、搭帐篷。当外面的孩子，在考虑是去玩玩具，还是打电脑的时候，他们是在选择是去做作业还是去参加体力劳动。
+<p>
+每次，看到两个瘦小的孩子，一起合力搬起一桶满满的水的时候，我的内心总是有些犹豫，该是去帮他们搬，还是不帮。最终，我还是没有帮他们提水。生活的担子，似乎是与生俱来的一种东西，它加在每个人身上，而其他人不管怎么想，都无法帮别人承担。我不能称之为使命，使命这个词语显得过于厚重，但它的确是极其类似的一种东西。我们每个人，都应该明白，自己需要担负起一些什么。就像这些孩子提着的水，是他们成长所必须经历的历练。上帝给我们每个人不同的生活，出生时代、家庭、社会环境，这些我们都无法选择。然而，我们对生活的态度，却是可以选择的。用积极的态度去面对我们各自的人生，是极为重要的事情。
+<p>
+孩子们虽然生活条件艰苦，但他们的笑容绝不因此而黯淡。相反，他们的笑容在我看来，比很多外面的孩子，显得更加淳朴，更加自然。我觉得，他们是幸福的，他们的内心是阳光的。以至于和他们在一起的时候，我觉得自己的内心也是放松的，自己的内心仿佛得到了某种净化。幸福，并不只是物质层面的东西，它更多的是精神层面的东西。如何看待我们的生活，怎样面对它，这是我们每个人应该思考的东西。而孩子们给我的是一种心态，是一种对待人生的态度。其实学校的人们，不止孩子们。包括活佛，当地的老师，乃至食堂的厨娘。我觉得每个人都和外面的人是大相径庭的。虽然物质并不富裕，但他们面对生活，确都是充满希望，他们多的是认可，少的是抱怨。或许也正是因为这样，在学校的几天，我仿佛觉得自己置身于世外桃源一般。
+<p>
+人处在那样的环境，也潜移默化中受到其影响。仿佛一时间，很多平时看不透，想不通，烦恼的事情，都一下子变得不是问题了。生命本身带给我们的，就应该是种美好，而我们只需遵循着它的轨迹而去。何必庸人自扰呢？
+<p>
+由于师资很薄弱，孩子们的知识基础不牢固，和外面的孩子有着较大的差距。但他们对待老师，却很有礼貌。几乎每次我走过他们身边，他们不管是在干什么，都会立马停下手上的事情，起立，站得笔直，向我问好。这令我也很是感动。教育，是传授人们知识的，但其实更重要的是传授人们做人的道理（虽然这点在当今教育中被忽略已久）。一个人，只有首先懂得如何做人，方能成长为真正的人，如果只有知识，那顶多只是有用的机器人。知识的缺失不可怕，知识的缺失尚容易弥补，可是道德文明礼貌的缺失，想要弥补却是很困难。所以，对于我们支教队员也是一样。传授孩子们知识固然重要，教会孩子们做人的道理，显得更为有实际意义。因此，在支教期间，我们也有意无意地向孩子们讲述外面的世界，讲述些浅显易懂的做人道理。
+<p>
+离开青海，已经有一段时间了。但这段支教的经历，在我脑海中挥之不去。我们教给了孩子们一些知识，但孩子们教给我们更多。这段经历，或许将是我一辈子值得珍惜的宝贵财富。
+
+<a name="learned_lj"><h3>刘静</h3></a>
+<p>
+这天是7月15号，早上我们在学校里拍完照片就正式上路了。兴奋地踏上火车，我们有说有笑，期待着即将到来的一切，但25个小时的火车是漫长的，不久我们就很是疲惫早已失去刚上车时的兴奋劲。白天在火车上的日子还可以接受，应该说还挺好的，晚上真是各种折腾，整个身体蜷缩在一个狭小的空间。别说睡了，就是伸展一下都是非常困难的，突然对即将到来的感觉些许迷茫，不知道会面对怎样的状况，不知道会出现什么意想不到的事故，但对于我们一切只有等待。 在半睡半醒的状态下，我们艰难地度过了一晚上，早上醒来太阳光正好照在脸上，看看外面的风景，应该是已经到甘肃了。下午接近两点的时候我们终于到站了，我们就这样开启了支教生活。
+<p>
+    7.17号，我们才到达了支教学校，到的时候已经是晚上了，应该是快要下雨了，厚重的云压得特低，就好像我第一眼看到这所学校时的心情。孩子们的教室和寝室就是几间破旧的板房。房顶压着大石块，说是怕风大的时候会把房顶掀飞，厨房更是破旧不堪，屋顶全是用横七竖八的木板搭起来的，已经发黄的墙壁上还有被雨水浸湿的痕迹。操场坑坑洼洼，满是泥，学校唯一的体育器材就是一个篮球架，孩子们告诉我这个篮球架是一个阿姨捐款才修建的，以前的篮球架的篮框是吊在篮板上的。
+<p>
+    我们的支教老师生活正式开始了。从刚开始来到这里的不习惯，到最后的舍不得离开；从第一次讲课略有些紧张，到后来嫌一节课的时间太短而不够讲。一个月的时间真的太短了，害怕孩子们该背的文章还没有背，不会做的数学题还没学会，没解决的问题还没有解决。总觉得在这儿的生活才刚开始怎么就结束了，支教是结束了，但生活还得继续，我们只有化思念为动力,努力生活，期待下次的相遇。
+<p>
+    8月18号的早上我坐在床边收拾行李，看着那些眼眶湿润的孩子们，谁也不说话，整齐地站成一排，投来一种不舍与难过的眼神，我开玩笑地说：“想赶我走啊？”转过头眼泪已在眼眶里打转。我的内心又是何其得不舍，舍不得这群单纯可爱的孩子，只希望我的孩子们能好好成长，等过些年我一定要再回来看看他们。记得去青海湖边写下的那句话“愿孩子们都幸福”，这是我的愿望。愿这句话望融在青海湖的湖水里代替我去守护这群孩子，愿孩子们都幸福。
+<p>
+在火车上我翻着手机里的照片，回顾这一个月的支教生活的点点滴滴，那些发生的事，那些认识人，那些去过的地方，一切都太清晰，我不愿忘记。记得曾经有人告诉过我说：支教收获最大的是我们自己。是的，是这样的。我们到底给孩子带来了什么，而我们自己又收获了什么。短短的一个月，所能传授给学生的知识也极为有限。而通过这一个月的难忘经历不仅赐予我一辈子受用的收获，也给我的心灵带来触动。我不知道给孩子带来了什么，但是希望孩子们在我们的陪伴下，学到的不只是书本知识，更多的是如何面对生活，面对未来。通过一个月的接触，学生在我们的不懈努力下取得的进步也是可见的。很多学生从内向孤僻变得活泼开朗，从上课不敢回答问题到积极踊跃地举手发言，从对外面的世界一无所知，到最后了解百科，还有的学生从没有自己的人生理想到立志成为对祖国做贡献的人，更有的学生从连唱国歌都不会，到后来却变成小小的爱国主义少年，正是孩子们这种渴望走出草原的欲望在不断地激励他们努力学习。这短短的一个月让我真正明白有一种生活就算饭有多难吃，但心是饱饱的；不管天气多么寒冷，但心是暖暖的；不管周边环境有多不方便，但心想去哪儿就能去哪儿。这种感觉让我就算回到了城市，面对发生的事，面对遇到的人，心都多了一份宁静。我应该给孩子们说声谢谢，谢谢你们让我知道怎么面对未来的生活，谢谢你们让相信这世界还有爱。谢谢，老师谢谢你们！
+
+ 
+<a name="learned_ll"><h3>刘丽</h3></a>
+<p>
+是我第一次的支教活动，刚开始，我们对这所慈善孤残学院了解得并不多，校方也不远透露太多消息给我们，只知道它的位置以及她是藏族地区的一所小学，其余的一无所知，所以心里曾感到害怕，甚至出现了想要放弃的念头，但是后来还是决定去看一看。从准备时期到到达学校的时候，内心充满矛盾，但是来到学校后，看到孩子们，心里的石头总算落地啦，慢慢地熟悉了周围的环境以及学校的孩子们，生活比我所想象中的要好一些，至少每天还是可以吃饱的，有时还有肉吃。
+<p>
+我们的住处时与孩子们一起住寝室，每天和孩子们一起早起，上课，吃饭，这些都是我感觉最幸福的时光。那里的小孩子很懂得尊敬老师，每一次不论他们在干嘛都会站起来向我们问好，也非常懂事，帮助学校的建设，提水，添火等。我想我们给孩子们的知识是很少的，但是这里的孩子们教会了我生活。
+<p>
+生活，这两个字对我们来说很简单，却又很难。以前因为犯了一些错，遇到了一些挫折，我总是无法安慰自己开导自己，有时候甚至把一个问题想到了绝境，无法自拔。参与了这次的支教活动，孩子们在很艰苦的环境中，不放弃对知识的渴望，不放弃对理想的追求，就像六年级的班玛措所写到：为了实现自己的梦想，我愿意付出不管多大的努力。回想自己所经历的，不过是人生的一点小挫折而已，在这个世界上，比你更辛苦的大有人在，在生活的一次一次磨练下，他们不放弃不抛弃，努力地迎接生活给他们的挑战，以一种积极向上的精神感动着无数人。孤残学院的孩子们更懂得感恩，学校里的孩子几乎都是单亲家庭以及孤儿，但是我很少在他们脸上看到悲伤，或许他们将这些情绪藏在心底。他们知道自己能在这里学习，是活佛为他们操劳着他们的吃穿住，所以他们都很感激活佛，他们尊称活佛为他们的爸爸。学校的一切事务，孩子们都会帮忙，接待客人，厨房的打扫，校园的大扫除等。在我们来到后，甚至有学生主动要求帮我们洗衣服。看到这些孩子这么勤快，不经惭愧，仔细想来，在家里我也只是偶尔帮父母洗衣服。在支教的一个月里，我与孩子们一起洗衣服，一起打扫校园，一起帮忙搭帐篷，拆帐篷，内心真正的感觉充实。
+<p>
+以后的路，我要踏实地走好每一步，至少让自己的所作所为是问心无愧的，我会由衷的感到幸福。我相信，上天给每个人都是公平的，每一个成功的人都会经历一些挫折，或是在身体上，或是在精神上，熬过去这些艰苦的日子，总会有属于自己的一片蓝天，努力了，坚持了，对自己的人生也就没有遗憾了。
+<p>
+第二个感动我的地方是在这所慈善孤残学院里的孩子们对待学习的态度，学校的老师很少，学生一天中有几节课时没有老师的，但是孩子们不会出来玩耍，他们认真的完成老师布置的作业，做完后就在教室里看书。每天晚自习时间就会有很多学生跑来问我题，我要求二年级的背乘法表，他们也会在很短的时间完成背诵，有事他们还会主动叫我出题给他们做，做好后就给我检查。这种好学的劲头给我印象很深。在城市的小学里，很多学生不愿做作业，上课不认真，甚至在大学里这样的情况都能看到，有些学生花很多的时间在游戏上，我也经常上课不爱听讲，学习没有尽自己最大的努力，真心羞愧。这次的支教活动让我感触很多，我想从今以后，我要努力获取更多的知识，不虚度光阴，去帮助更多需要帮助的人。我想几年后，我有了足够的能力，要尽可能帮助这里的小孩实现他们的梦想，支教结束的时候，我与学生们约好，不管我们在那里我们都要一起努力实现自己的梦想！
+<p>
+“每一个梦想都应该被灌溉，每一个孩子都应该被宠爱”这次的支教活动，收获很多，孩子们给了我精神上很大的鼓舞，我相信在以后的生活中，我会更加努力，追求自己想要的生活，我也相信孩子们能够实现他们的梦想。
+
+<a name="learned_xlm"><h3>许岭木</h3></a>
+<p>
+经过几个月的前期准备，7月15号，我们几位支教队员终于登上去青海的火车。7月17号下午，我们到达了青海湖慈善孤残学校。自此，我们开始了这段只有二十天的支教之旅。虽然只有短短的二十天，但却是我最宝贵的经历。
+<p>
+7月17日下午，我们几名电子科技大学机械电子工程学院红心支教队队员到达位于青海省海南州共和县倒淌河镇甲乙村的青海湖慈善孤残学校。首先映入眼帘的是一排低矮的破旧板房，板房已经黯然失色，校园里唯独有个简陋的篮球架子，连个像样的平地都没有。教室非常简陋，甚至有些教室的桌椅都不全。他们两个人睡一张床，条件特别差。
+<p>
+这里的学生太懂事了，特别乖。他们所有事情都自己动手，每天要提很多水，小小年纪便要做很多重活。这边的水温特别低，因为条件限制，他们每天只能用冷水洗碗，洗漱，甚至用冷水洗头，每个孩子的手上都长满冻疮。这里的孩子特别有礼貌，非常懂事。第一天给他们发文具的时候，他们送给我们几张他们自己画的画，这里每一个孩子都多才多艺，他们所有的节目都是自己编排，所有的舞蹈都是自己设计。
+<p>
+他们热爱学习，渴望知识。每一次我们上课的时候，他们都会全神贯注的听着，黑板上的每一字他们都会摘抄下来，几乎每一次看到他们都在做作业，也有很多学生带着作业来问我们问题。虽然他们基础很薄弱，但他们真的非常勤奋。在教学的过程中，我们也发现了许多问题，有时候我们也觉得很累，很迷茫，不知道该怎么教，该教些什么，但每次看到孩子们纯真的笑容和他们期盼的眼神，我们每个人都会在心中告诉自己：一定要尽最大努力，教好这些孩子。支教的日子是短暂的，我们相信我们可以在这些短暂的日子里让他们取得最大收获。
+<p>
+我的主要教学内容是四年级和六年级的数学。四年级每周有四节课数学，主要以复习为主，上课的时候主要以讲题的形式帮助学生们复习。四年级的学生基础都比较好，在这20几天的过程中，我将四年级下册的数学复习了一遍，感觉学生的基础都有所提高。六年级每周有五节数学课，因为六年级的学生基础较差，跟不上教材的进度，所以在支教的那些天里，给他们上课的内容都是我自己课前准备的。教学的内容主要是整数、小数、分数、百分数的四则运算。在教完这些内容后，又给他们上了几节课，主要内容为单位的换算和几何体体积的运算。无论是四年级的学生还是六年级的学生，他们的课后作业都完成得挺不错，他们的基础虽然基础比较薄弱，但他们学习十分认真，特别刻苦。没课的时候我一般都会去找六年级的学生，给他们补习。另外我还是四年级的临时班主任，担任四年级每周一节自然科学课的教学任务。
+<p>
+他们生活的艰辛，是我们无法想像的。他们的一点一滴都在感动着我们，同时也让我们心痛。教育资源分配不均匀普遍存在，在这里却更加明显，这里只有6位教师，而其中一个女老师担起了全校的语文和数学的教学任务，他们大部分的教学都是依靠支教老师完成的，因此这里的孩子的知识缺乏体系。他们的生活虽然艰辛，但他们却深爱着自己的祖国，他们每个人都有自己的梦想，有个孩子告诉我说他的梦想是成为一名出色的藏医，而有些孩子的梦想是为祖国出力，建设好青海省。或许他们之前根本不知道什么是中国梦，也不知道实现中华民族的伟大复兴是什么意思，中国梦是每一个民族的梦，也是他们每一个人的梦。在现在的中国有许许多多的学校跟这个学校的情况差不多，这些孩子只是其中的一部分，孩子是祖国的花朵，是祖国的未来，要实现中国梦，实现中华民族的伟大复兴，我们就应该先把教育抓好，关注到这些不能接受正常教育的孩子，为他们的教育多出一份力，也许他们的人生会因此而改变。
+<p>
+短短的20天，也许是我们人生中最宝贵的20天，在这里，没有任何烦恼。无论是活佛，还是老师，还有学生都特别待见我们，照顾我们。我们仅仅教会了孩子们课本上的知识，但他们教会我们的东西更多，更宝贵,“懂礼貌，吃苦耐劳，还有那积极乐观的人生态度……”。这里的每一人，每一件事都在感动着我们，同时也让我们肃然起敬......8月3号我们做了一个心愿认领的活动，就是让他们在纸上写上自己的心愿和自己想要的东西，明年来的时候，我们会尽量带着他们所期盼的东西过来。但是让我们意外的是，他们很多人在纸上写的都是：“我什么都不想要，我只希望你们明年能再过来当我们的老师”。最后一天上午我去六年级的教室上课，一个叫才让加的男生一直在下面哭，我走过去的时候发现他的本子已经湿了。他的同桌才增多杰呆呆的看着我，一直不说话，手里一直掰着铅笔。最后他们告诉我：“这几天我一看到你们，我就想大哭”。下课后，活佛叫我们到他的办公室，学校为我们每个队员都准备了一份礼物和一条哈达，他还说：“这里永远是你们的家，任何时候都可以来”还说：“你们来这里教孩子们，吃不好，住不好……”我们听了他的话，觉得十分惭愧，学校为我们改善了伙食，改变了许多，可是我们除教孩子一点有限的知识，又为他们带去些什么呢！那天的傍晚，孩子们和往常一样在学校后面草地上自习。我们全都在宿舍等车的到来，突然孩子们全跑到我们宿舍，高兴地说：“老师没走，他们行李还在……”。原来一个老师听到汽车的声音，以为我们走了，就和孩子们说，我们离开了，孩子们就放下书，全部一起跑到我们宿舍，还说老师走时为什么不和我们说……，看到他们高兴的样子，我们希望车一直别来，时间一直停留在这一刻。差不多九点半的时候，接我们的车来了，司机是工地上的老板。我们从宿舍拖着行李箱出来的时候，孩子们全从教室里冲出来，天很黑，但是还是能看到他们的泪光，他们和每一个老师拥抱，都说：“老师，你们一定要回来……”。这一刻，我们想对他们说很多话，但又说不了多少话。上车后，我们的手与拉科加老师的手，与学生们的手紧紧地握着。车子开动了，学生们想要跟着，却被工地上的工人拦着，看着他们，我们再也无法控制自己的情绪，眼泪不自觉地掉落。男儿有泪不轻弹，今夜我却泪千行。这些孩子实在是开车的赵老板告诉我们：”在你们跟那些娃儿拥抱的时候，我的眼泪也掉了下来“。是的，这些孩子实在是太懂事了，我们舍不得他们，舍不得这里的一切。
+<p>
+支教的这段期间，我学会了很多很多。在这个学校，每天都有新的体会和收获。无论是活佛，还是这里的老师，他们都让我特别敬佩。和蔼可亲的院长康巴活佛，踏实真诚的拉科加老师，任劳任怨的尕臧老师，大大咧咧的夏洛加，还有一个个可爱懂事的学生，淘气好动的尕臧多杰，老实懂事华旦多杰，乐观积极又爱唱歌的班玛错，喜欢画画和跳舞才让加和才增多杰，有点怕事却又特别乖的吉先加，学习优秀有主见的多杰彭毛，年纪最小最可爱的南卡卓玛......太多太的人和事让我感动。在这二十多天，感觉自己什么烦恼也没有，再也没有俗世的牵挂。我们与学生互相学习，共同进步。当然自己在很多方面都都没有做好，回来的这些天我一直在反思。希望自己明年可以做得更好。
+
+
+<hr class="newpage"/>
+<a name="end"><h2>后序</h2></a>
+<p>
+青海湖畔的孩子们，不知你们现在还好吗？
+<p>
+每个梦想都值得灌溉，每个孩子都应该被宠爱。青海湖畔，我们来了，我们又走了。可我们的孩子们还在那儿，他们怀揣着自己小小的希望，在那里等待着，期盼着。
+<p>
+他们尚年幼，他们尚娇弱，他们理应得到更多的关心和关怀。需要我们，需要社会向他们投注更多的目光。
+<p>
+红心虽然走了，但红心一定会再来。红心希望能告诉孩子们，你们从未被这个世界遗忘。在不久的明年，红心一定会带去更多的关爱，更多的温暖。
+<p>
+最后，由衷感谢社会各界爱心人士对红心支教的支持，感谢热心的学长、捐善款的同学们、善良的康巴活佛、柔旦智华，还有驻守在孤残学校第一线的老师们。
+
+<p style="text-align: right; font-weight: bold;">
+红心支教队<br/>二0一三年九月
+</p>
+
+<hr class="newpage"/>
+</div>
+</body>
+</html>

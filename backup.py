@@ -84,7 +84,7 @@ def backup():
 		+"git commit -m \""+str(datetime.datetime.utcnow()).split(".")[0]+"\";"
 		+"git push origin master;"
 		+"cd - ;"
-		+"rm -rf blog* ;"
+		+"rm -rf blog.tar.* ;"
 		+"rm -rf backup;")
 
 def restore():
@@ -100,7 +100,7 @@ def restore():
 
 	os.system("cp .db.py .db.bak.py")
 	ret = os.system("tar xJvf blog.tar.xz")
-	os.system("rm -rf blog*")
+	os.system("rm -rf blog.tar.*")
 	os.system("rm -rf backup")
 
 

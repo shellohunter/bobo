@@ -7,10 +7,9 @@ import tornado.ioloop
 import tornado.options
 
 class TestHandler(tornado.web.RequestHandler):
-	def get(self):
-		result = self.get_argument("r", None)
-		if result is not None:
-			result="{0:9x}".format(int(result, 16))
+	def get(self, result = ""):
+		if result:
+			result="{0:09x}".format(int(result, 16))
 			t1 = int(result[0], 16)
 			t2 = int(result[1], 16)
 			t3 = int(result[2], 16)
@@ -32,7 +31,7 @@ class TestHandler(tornado.web.RequestHandler):
 class T9x(object):
     def handlers(self):
         return [
-			(r'/9x', TestHandler),
+			(r'/9x/*(.*)', TestHandler),
         ]
 
 
@@ -42,7 +41,7 @@ if __name__ == "__main__":
 	tornado.options.parse_command_line()
 	app = tornado.web.Application(
 		handlers=[
-			(r'/9x', TestHandler),
+			(r'/9x/*(.*)', TestHandler),
 		],
 		debug = True,
 		template_path = os.path.join(os.path.dirname(__file__), "templates/t9x"),

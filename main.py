@@ -147,6 +147,7 @@ if __name__ == "__main__":
         ]
 
     from blog import blog
+    from t9x import t9x
     #from wx import wx
     #from wifigod import wifigod
     #from movies import movies
@@ -154,6 +155,7 @@ if __name__ == "__main__":
     #from blog import blog
     #from mysky import mysky
     webhandlers.extend(blog.Blog().handlers())
+    webhandlers.extend(t9x.T9x().handlers())
     #webhandlers.extend(wx.WX().handlers())
     #webhandlers.extend(club.Club().handlers())
     #webhandlers.extend(wifigod.WifiGod().handlers())

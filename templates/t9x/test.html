@@ -1,0 +1,159 @@
+{% extends template.html %}
+{% block body %}
+	<script type="text/javascript">
+	var quiz  = new Array();
+	quiz[0]   = new Array("我很容易迷惑", 9);
+	quiz[1]   = new Array("我不想成为一个喜欢批评的人,但很难做到", 1);
+	quiz[2]   = new Array("我喜欢研究宇宙的道理,哲理", 5);
+	quiz[3]   = new Array("我很注意自己是否年轻,因为那是找乐子的本钱", 7);
+	quiz[4]   = new Array("我喜欢独自自主,一切都靠自己", 8);
+	quiz[5]   = new Array("当我有困难时，我会试着不让人知道", 2);
+	quiz[6]   = new Array("被人误解对我而言是一件十分痛苦的事。", 4);
+	quiz[7]   = new Array("施比受会给我更大的满足感", 2);
+	quiz[8]   = new Array("我常常设想最糟的结果而使自己陷入苦恼中", 6);
+	quiz[9]   = new Array("我常常试探或考验朋友,伴侣的忠诚", 6);
+	quiz[10]  = new Array("我看不起那些不像我一样坚强的人,有时我会用种种方式羞辱他们", 8);
+	quiz[11]  = new Array("身体上的舒适对我非常重要", 9);
+	quiz[12]  = new Array("我能触碰生活中的悲伤和不幸", 4);
+	quiz[13]  = new Array("别人不能完成他的分内事,会令我失望和愤怒", 1);
+	quiz[14]  = new Array("我时常拖延问题,不去解决", 9);
+	quiz[15]  = new Array("我喜欢戏剧性,多彩多姿的生活", 7);
+	quiz[16]  = new Array("我认为自己非常不完善", 4);
+	quiz[17]  = new Array("我对感官的需求特别强烈,喜欢美食,服装,身体的触觉刺激,并纵情享乐", 7);
+	quiz[18]  = new Array("当别人请教我一些问题,我会巨细无遗地分析得很清楚", 5);
+	quiz[19]  = new Array("我习惯推销自己,从不觉得难为情", 3);
+	quiz[20]  = new Array("有时我会放纵和做出僭越的事", 7);
+	quiz[21]  = new Array("帮助不到别人会让我觉得痛苦", 2);
+	quiz[22]  = new Array("我不喜欢人家问我广泛,笼统的问题", 5);
+	quiz[23]  = new Array("在某方面我有放纵的倾向(例如食物,药物等)", 8);
+	quiz[24]  = new Array("我宁愿适应别人,包括我的伴侣,而不会反抗他们", 9);
+	quiz[25]  = new Array("我最不喜欢的一件事就是虚伪", 6);
+	quiz[26]  = new Array("我知错能改,但由于执著好强,周围的人还是感觉到压力", 8);
+	quiz[27]  = new Array("我常觉得很多事情都很好玩,很有趣,人生真是快乐", 7);
+	quiz[28]  = new Array("我有时很欣赏自己充满权威,有时又优柔寡断,依赖别人", 6);
+	quiz[29]  = new Array("我习惯付出多于接受", 2);
+	quiz[30]  = new Array("面对威胁时,我一是变得焦虑,一是对抗迎面而来的危险", 6);
+	quiz[31]  = new Array("我通常是等别人来接近我,而不是我去就接近他们", 5);
+	quiz[32]  = new Array("我喜欢当主角,希望得到大家的注意", 3);
+	quiz[33]  = new Array("别人批评我,我也不会回应和辩解,因为我不想发生任何争执与冲突", 9);
+	quiz[34]  = new Array("我有时期待别人的指导,有时却忽略别人的忠告径直去做我想做的事", 6);
+	quiz[35]  = new Array("我经常忘记自己的需要", 9);
+	quiz[36]  = new Array("在重大危机中,我通常能克服我对自己的质疑与内心的焦虑", 6);
+	quiz[37]  = new Array("我是一个天生的推销员,说服别人对我来说是一件轻易的事", 3);
+	quiz[38]  = new Array("我不相信一个我一直都无法了解的的人", 9);
+	quiz[39]  = new Array("我爱依惯例行事,不大喜欢改变", 8);
+	quiz[40]  = new Array("我很在乎家人,在家中表现得忠诚和包容", 9);
+	quiz[41]  = new Array("我被动而优柔寡断", 5);
+	quiz[42]  = new Array("我很有包容力,彬彬有礼,但跟人的感情互动不深", 5);
+	quiz[43]  = new Array("我沉默寡言,好象不会关心别人似的", 8);
+	quiz[44]  = new Array("当沉浸在工作或我擅长的领域时,别人会觉得我冷酷无情", 6);
+	quiz[45]  = new Array("我常常保持警觉", 6);
+	quiz[46]  = new Array("我不喜欢要对人尽义务的感觉", 5);
+	quiz[47]  = new Array("如果不能完美的表态,我宁愿不说", 5);
+	quiz[48]  = new Array("我的计划比我实际完成的还要多", 7);
+	quiz[49]  = new Array("我野心勃勃,喜欢挑战和登上高峰的经验", 8);
+	quiz[50]  = new Array("我倾向于独断专行并自己解决问题", 5);
+	quiz[51]  = new Array("我很多时候感到被遗弃", 4);
+	quiz[52]  = new Array("我常常表现得十分忧郁的样子,充满痛苦而且内向", 4);
+	quiz[53]  = new Array("初见陌生人时,我会表现得很冷漠,高傲", 4);
+	quiz[54]  = new Array("我的面部表情严肃而生硬", 1);
+	quiz[55]  = new Array("我很飘忽,常常不知自己下一刻想要什么", 4);
+	quiz[56]  = new Array("我常对自己挑剔,期望不断改善自己的缺点,以成为一个完美的人", 1);
+	quiz[57]  = new Array("我感受特别深刻,并怀疑那些总是很快乐的人", 4);
+	quiz[58]  = new Array("我做事有效率,也会找捷径,模仿力特强", 3);
+	quiz[59]  = new Array("我讲理,重实用", 1);
+	quiz[60]  = new Array("我有很强的创造天分和想象力,喜欢将事情重新整合", 4);
+	quiz[61]  = new Array("我不要求得到太多的注意力", 9);
+	quiz[62]  = new Array("我喜欢每件事都井然有序,但别人会认为我过分执著", 1);
+	quiz[63]  = new Array("我渴望拥有完美的心灵伴侣", 4);
+	quiz[64]  = new Array("我常夸耀自己,对自己的能力十分有信心", 3);
+	quiz[65]  = new Array("如果周遭的人行为太过分时,我准会让他难堪", 8);
+	quiz[66]  = new Array("我外向,精力充沛,喜欢不断追求成就,这使我的自我感觉十分良好", 3);
+	quiz[67]  = new Array("我是一位忠实的朋友和伙伴", 6);
+	quiz[68]  = new Array("我知道如何让别人喜欢我", 2);
+	quiz[69]  = new Array("我很少看到别人的功劳和好处", 3);
+	quiz[70]  = new Array("我很容易知道别人的功劳和好处", 2);
+	quiz[71]  = new Array("我嫉妒心强,喜欢跟别人比较", 3);
+	quiz[72]  = new Array("我对别人做的事总是不放心,批评一番后,自己会动手再做", 1);
+	quiz[73]  = new Array("别人会说我常常带着面具做人", 3);
+	quiz[74]  = new Array("有时我会激怒对方,引来莫名其妙的吵架,其实我是想试探对方爱不爱我", 6);
+	quiz[75]  = new Array("我会极力保护我所爱的人", 8);
+	quiz[76]  = new Array("我常常可以保持兴奋的情绪", 3);
+	quiz[77]  = new Array("我只喜欢与有趣的人交友,对一些闷蛋却懒得交往,即使他们看来很有深度", 7);
+	quiz[78]  = new Array("我常往外跑,四处帮助别人", 2);
+	quiz[79]  = new Array("有时我会讲求效率而牺牲完美和原则", 3);
+	quiz[80]  = new Array("我似乎不太懂得幽默,没有弹性", 1);
+	quiz[81]  = new Array("我待人热情而有耐性", 2);
+	quiz[82]  = new Array("在人群中我时常感到害羞和不安", 5);
+	quiz[83]  = new Array("我喜欢效率,讨厌拖泥带水", 8);
+	quiz[84]  = new Array("帮助别人达致快乐和成功是我重要的成就", 2);
+	quiz[85]  = new Array("付出时,别人若不欣然接纳,我便会有挫折感", 2);
+	quiz[86]  = new Array("我的肢体硬邦邦的,不习惯别人热情的付出", 1);
+	quiz[87]  = new Array("我对大部分的社交集会不太有兴趣,除非那是我熟识的和喜爱的人", 5);
+	quiz[88]  = new Array("很多时候我会有强烈的寂寞感", 2);
+	quiz[89]  = new Array("人们很乐意向我表白他们所遭遇的问题", 2);
+	quiz[90]  = new Array("我不但不会说甜言蜜语,而且别人会觉得我唠叨不停", 1);
+	quiz[91]  = new Array("我常担心自由被剥夺,因此不爱作承诺", 7);
+	quiz[92]  = new Array("我喜欢告诉别人我所做的事和所知的一切", 3);
+	quiz[93]  = new Array("我很容易认同别人为我所做的事和所知的一切", 9);
+	quiz[94]  = new Array("我要求光明正大,为此不惜与人发生冲突", 8);
+	quiz[95]  = new Array("我很有正义感,有时会支持不利的一方", 8);
+	quiz[96]  = new Array("我注重小节而效率不高", 1);
+	quiz[97]  = new Array("我容易感到沮丧和麻木更多于愤怒", 9);
+	quiz[98]  = new Array("我不喜欢那些侵略性或过度情绪化的人", 5);
+	quiz[99]  = new Array("我非常情绪化,一天的喜怒哀乐多变", 4);
+	quiz[100] = new Array("我不想别人知道我的感受与想法,除非我告诉他们", 1);
+	quiz[101] = new Array("我喜欢刺激和紧张的关系,而不是稳定和依赖的关系", 7);
+	quiz[102] = new Array("我很少用心去听别人的心情,只喜欢说说俏皮话和笑话", 1);
+	quiz[103] = new Array("我是循规蹈矩的人,秩序对我十分有意义", 4);
+	quiz[104] = new Array("我很难找到一种我真正感到被爱的关系", 1);
+	quiz[105] = new Array("假如我想要结束一段关系,我不是直接告诉对方就是激怒他来让他离开我", 1);
+	quiz[106] = new Array("我温和平静,不自夸,不爱与人竞争", 9);
+	quiz[107] = new Array("我有时善良可爱,有时又粗野暴躁,很难捉摸", 9);
+	/*
+	*/
+	var i = 0;
+	var SCORE = 0;
+
+	function next(v) {
+	   	if (v == 1) {
+	   		SCORE += Math.pow(16, 9-quiz[i][1]);
+			console.log(SCORE);
+		}
+		i = i + 1;
+		if (i >= quiz.length) {
+			document.location.href = "/9x?r="+SCORE.toString(16);
+			return false;
+		}
+		if (v>=0) {
+			document.getElementById('idx').innerHTML = (i+1)+"/"+quiz.length;
+			document.getElementById('quest').innerHTML = quiz[i][0];
+			return false;
+		}
+		return false;
+	}
+
+	function start(e) {
+		document.getElementById('splash').style.display='none';
+		document.getElementById('wrapper').style.display='';
+		document.getElementById('idx').innerHTML = (i+1)+"/"+quiz.length;
+		document.getElementById('quest').innerHTML = quiz[i][0];
+		return false;
+	}
+	</script>
+		<div id="splash" class="splash">
+			<div id="mask" class="mask">
+				<div id="game-name" class="game-name text-center">九型性格测试(108题)</div>
+				<div id="start" unselectable="on" class="start" onclick="return start(this);">开始</div>
+			</div>
+		</div>
+
+		<div id="wrapper" style="display: none;">
+			<div id="idx"></div>
+			<div id="quest"></div>
+			<label class="text-center" onclick="return next(1);">是的</label>
+			<label class="text-center" onclick="return next(0);
+">不是</label>
+			<label class="text-center" onclick="return next(0);">跳过</label>
+		</div>
+{% end %}

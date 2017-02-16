@@ -1,0 +1,131 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #eee;
+}
+
+#wrapper {
+    padding: 0;
+    margin: 0;
+}
+
+#idx {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: red;
+    padding: 0.2em;
+}
+
+
+#chartdiv {
+    width: 400px;
+    height: 400px;
+}
+
+#myChart {
+    margin: auto;
+}
+
+h3 {
+    border-left: solid 0.2em green;
+    padding-left: 1em;
+}
+
+.keyw {
+    font-weight: bold;
+    color: green;
+}
+
+#btns {
+}
+
+.splash {
+    height: 100%;
+    z-index: 1000;
+    text-align: center;
+}
+
+.splash .mask {
+    height: 100%;
+    width: 100%;
+    background: #209e85;
+    opacity: 1;
+}
+
+.splash .game-name {
+    position: absolute;
+    top: 40px;
+    width: 100%;
+    font-size: 28px;
+    color: #fff;
+}
+
+
+.splash .game-desc {
+    position: absolute;
+    top: 100px;
+    width: 100%;
+    font-size: 18px;
+    color: #fff;
+}
+
+.splash .start {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    margin: -50px 0 0 -50px;
+    border-radius: 50%;
+    background: #fff;
+    line-height: 100px;
+    font-size: 30px;
+    color: #209e85;
+}
+
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+
+label {
+    display: block;
+    margin: 0.2em;
+    padding: 0.8em 1.2em;
+    border: 1px solid #ccc;
+    font-size: 1.2em;
+    line-height: 1.5em;
+    font-weight: 400;
+    cursor: pointer;
+    color: 888583;
+    background: #fff;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-bottom: 1px dotted silver;
+    line-height: 28px;
+
+}
+
+#quest {
+    background: #fff;
+    padding: 10px;
+    text-align: center;
+    font-size: 30px;
+    color: #209e85;
+    border-bottom: 1px dotted #209e85;
+    line-height: 40px;
+}
+
+
+.white {
+    background: white;
+}

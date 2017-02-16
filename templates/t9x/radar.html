@@ -1,4 +1,5 @@
 {% extends template.html %} {% block body %}
+
 <div class="white">
 <div id="chartdiv">
 	<canvas id="myChart"></canvas>
@@ -7,7 +8,7 @@
 <script>
 var ctx = document.getElementById("myChart");
 var data = {
-	labels: ["完美型", "助人型", "成就型", "自我型", "理智型", "疑惑型", "活跃型", "领袖型", "和平型"],
+	labels: ["完美型", "助人型", "成就型", "自我型", "理智型", "疑惑型", "活跃型", "领袖型", "平和型"],
 	datasets: [{
 		label: "你的性格分析结果",
 		backgroundColor: "rgba(255,99,132,0.2)",
@@ -37,6 +38,16 @@ new Chart(ctx, {
 //  and the Radar chart defaults but this particular instance's scale will be reversed as
 // well as the ticks beginning at zero.
 </script>
+{% set T=t1+t2+t3+t4+t5+t6+t7+t8+t9 %}
+<a href="#t1"><button>完美型({{"{0:.2f}".format(t1/T*100)}}%)</button></a>
+<a href="#t2"><button>助人型({{"{0:.2f}".format(t2/T*100)}}%)</button></a>
+<a href="#t3"><button>成就型({{"{0:.2f}".format(t3/T*100)}}%)</button></a>
+<a href="#t4"><button>自我型({{"{0:.2f}".format(t4/T*100)}}%)</button></a>
+<a href="#t5"><button>理智型({{"{0:.2f}".format(t5/T*100)}}%)</button></a>
+<a href="#t6"><button>疑惑型({{"{0:.2f}".format(t6/T*100)}}%)</button></a>
+<a href="#t7"><button>活跃型({{"{0:.2f}".format(t7/T*100)}}%)</button></a>
+<a href="#t8"><button>领袖型({{"{0:.2f}".format(t8/T*100)}}%)</button></a>
+<a href="#t9"><button>平和型({{"{0:.2f}".format(t9/T*100)}}%)</button></a>
 
 <hr>
 
@@ -177,14 +188,14 @@ new Chart(ctx, {
 
 <hr>
 
-<h3><a name="t9">和平型</a></h3>
-<div><span class="keyw">欲望特质</span>：追求和平</div>
+<h3><a name="t9">平和型</a></h3>
+<div><span class="keyw">欲望特质</span>：追求平和</div>
 <div><span class="keyw">基本困思</span>：我若不和善，就没有人会爱我。</div>
 <div><span class="keyw">主要特征</span>：须花长时间作决定，难于拒绝他人，不懂宣泄愤怒；显得十分温和，不喜欢与人起冲突，不自夸、不爱出风头，个性淡薄。想要和人和谐相处，避开所有的冲突与紧张，希望事物能维持美好的现状。忽视会让自己不愉快的事物，并尽可能让自己保持平稳、平静。</div>
 <div><span class="keyw">主要特质</span>：温和友善、忍耐、随和、怕竞争、无法集中注意力，有时像梦游、不到最后一分钟不会完工、非常倚赖别人的提醒、注意力集中在细节、次要的事、对大多数事物没有多大的兴趣、不喜欢被人支配、绝不直接表达不满，只是阳奉阴违。</div>
 <div><span class="keyw">生活风格</span>：爱调和，做事缓慢，易懒惰、压抑，生活追寻舒服。</div>
-<div><span class="keyw">人际关系</span>：和平型（Peacemaker）在很多情况，你们都是和平使者，善解人意，随和。你们很容易了解别人，却不是太清楚自己想要什么，会显得优柔寡断。相对地说，你们的主见会比较少，宁愿配合其他人的安排，做一个很好的支持者，所以你是比较被动的。</div>
-<div><span class="keyw">怕羞、怕事、懒惰</span>：和平型的你与世无争，渴望人人能和平共处，很怕引起冲突，是不显眼的一个。由于从不试图突出自己，你们会比较怕羞、怕事，也很容易有懒惰的意欲，因为你喜爱和平，不喜爱辛劳，所以你也不会PUSH自己！若你心想干一番大事，则要好好鞭策自己啦！</div>
+<div><span class="keyw">人际关系</span>：平和型（Peacemaker）在很多情况，你们都是平和使者，善解人意，随和。你们很容易了解别人，却不是太清楚自己想要什么，会显得优柔寡断。相对地说，你们的主见会比较少，宁愿配合其他人的安排，做一个很好的支持者，所以你是比较被动的。</div>
+<div><span class="keyw">怕羞、怕事、懒惰</span>：平和型的你与世无争，渴望人人能平和共处，很怕引起冲突，是不显眼的一个。由于从不试图突出自己，你们会比较怕羞、怕事，也很容易有懒惰的意欲，因为你喜爱平和，不喜爱辛劳，所以你也不会PUSH自己！若你心想干一番大事，则要好好鞭策自己啦！</div>
 <div><span class="keyw">基本恐惧</span>：转变与压力，失去平衡</div>
 <div><span class="keyw">基本欲望</span>：维系内在的平静及安稳</div>
 <div>家庭背景：9号性格童年生活的一个共同特点是：没有人听取他们自己的意见，而且他们发现即便是直接表示愤怒，也不会让自己的想法得到重视。</div>

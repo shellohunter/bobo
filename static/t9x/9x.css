@@ -4,6 +4,11 @@ body {
     background-color: #eee;
 }
 
+
+a {
+    text-decoration: none;
+}
+
 #wrapper {
     padding: 0;
     margin: 0;
@@ -18,8 +23,7 @@ body {
 
 
 #chartdiv {
-    width: 400px;
-    height: 400px;
+    width: 100%;
 }
 
 #myChart {
@@ -36,7 +40,16 @@ h3 {
     color: green;
 }
 
-#btns {
+button {
+    background: white;
+    border: 1px solid black;
+    font-size: 1em;
+    min-width: 10em;
+    display: block;
+}
+
+button:hover {
+    background: yellow;
 }
 
 .splash {
@@ -128,4 +141,5 @@ label {
 
 .white {
     background: white;
+    padding: 1em;
 }

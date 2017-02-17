@@ -22,31 +22,16 @@ class WXDB():
         if path != None:
             self.dbconn = sqlite3.connect(path)
         else:
-            self.dbconn = sqlite3.connect("wx.sqlite3")
+            self.dbconn = sqlite3.connect(".wx.sqlite3.py")
 
         self.dbcusor = self.dbconn.cursor()
         self.dbcusor.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
         tables = self.dbcusor.fetchall()
         print(tables)
         for each in tables:
-            if "auth" == each[0]:
+            if "log" == each[0]:
                 return
-        tmp = """
-            create table auth (
-                openid text,
-                fans text,
-                token text,
-                maclist text,
-                subscribe text,
-                unsubscribe text,
-                lastactive text,
-                lastauth text,
-                comment text
-                )
-        """
-        self.dbcusor.execute(tmp)
-        tmp = """
-            create table log (
+        tmp = """CREATE TABLE log (
                 time text,
                 who text,
                 type text,
@@ -59,15 +44,6 @@ class WXDB():
     def __del__(self):
         self.dbconn.commit()
         self.dbconn.close()
-
-    def isfan(self, openid):
-        self.dbcusor.execute("select fans from auth where openid='"+openid+"'")
-        fan = self.dbcusor.fetchone()
-        if fan == None or fan[0] == 0:
-            return False
-        else:
-            return True
-
 
     def addauth(self, openid, fans=None, token=None, maclist=None, subscribe=None,
                 unsubscribe=None, lastactive=None, lastauth=None, comment = None):
@@ -139,9 +115,12 @@ class WXDB():
         print(ret.fetchone())
 
 
-class HandleWX(tornado.web.RequestHandler):
+class WXEntrance(tornado.web.RequestHandler):
     def verify(self):
-        token = "mytoken"
+        """
+        Check if a message is sent from WeChat server.
+        """
+        token = "mytoken" # set from wx server
         ll = []
         signature = self.get_argument("signature", "<none>")
         ll.append(self.get_argument("timestamp", "<none>"))
@@ -165,11 +144,69 @@ class HandleWX(tornado.web.RequestHandler):
         else:
             db.addlog(msg["FromUserName"], msg["MsgType"], ",".join(args))
 
-    def getField(self, req, key):
-        if req.find(key) != None:
-            return req.find(key).text
+    def sendMenu(self, menu, msg):
+        """
+        Send a menu to subscriber.
+        A menu entry should be like:
+            [(text, detail=None, pic=None, url=None)]
+        """
+        rspxml = et.Element("xml")
+        e = et.SubElement(rspxml, "ToUserName")
+        e.text = msg["FromUserName"]
+        e = et.SubElement(rspxml, "FromUserName")
+        e.text = msg["ToUserName"]
+        e = et.SubElement(rspxml, "CreateTime")
+        e.text = str(int(time.time()))
+        e = et.SubElement(rspxml, "MsgType")
+        e.text = "news"
+        e = et.SubElement(rspxml, "ArticleCount")
+        e.text = str(len(menu))
+        articles = et.SubElement(rspxml, "Articles")
+        idx = 0
+        for entry in menu:
+            text, detail, pic, url, cb, auth = entry
+            item = et.SubElement(articles, "item")
+            e = et.SubElement(item, "Title")
+            if idx > 0:
+                e.text = str(idx)+". "+text
+            else:
+                e.text = text
+            e = et.SubElement(item, "Description")
+            e.text = detail
+            e = et.SubElement(item, "PicUrl")
+            e.text = pic
+            e = et.SubElement(item, "Url")
+            if len(url) == 0:
+                e.text = ""
+            else:
+                e.text = url
+            idx = idx + 1
 
-    def sendnews(self, msg):
+        rsp = et.tostring(rspxml, encoding="utf-8")
+        print("Response:\n"+rsp.decode("utf-8"))
+        self.write(rsp.decode("utf-8"))
+
+    def sendText(self, text, msg):
+        """
+        Send a text to subscriber.
+        """
+        rspxml = et.Element("xml")
+        e = et.SubElement(rspxml, "ToUserName")
+        e.text = msg["FromUserName"]
+        e = et.SubElement(rspxml, "FromUserName")
+        e.text = msg["ToUserName"]
+        e = et.SubElement(rspxml, "CreateTime")
+        e.text = str(int(time.time()))
+        e = et.SubElement(rspxml, "MsgType")
+        e.text = "text"
+        e = et.SubElement(rspxml, "Content")
+        e.text = text
+        rsp = et.tostring(rspxml, encoding="utf-8")
+        print("Response:\n"+rsp.decode("utf-8"))
+        self.write(rsp.decode("utf-8"))
+
+
+    def sendNews(self, msg):
         rspxml = et.Element("xml")
         e = et.SubElement(rspxml, "ToUserName")
         e.text = msg["FromUserName"]
@@ -188,7 +225,7 @@ class HandleWX(tornado.web.RequestHandler):
         e = et.SubElement(item, "Description")
         e.text = "Hollywood fades away in China!"
         e = et.SubElement(item, "PicUrl")
-        e.text = "http://www.shello.name/static/images/360-200.jpg"
+        e.text = "http://www.nossiac.com/static/images/360-200.jpg"
         e = et.SubElement(item, "Url")
         e.text = "http://www.163.com"
         item = et.SubElement(articles, "item")
@@ -197,7 +234,7 @@ class HandleWX(tornado.web.RequestHandler):
         e = et.SubElement(item, "Description")
         e.text = "Are you ready for the comming challeng!"
         e = et.SubElement(item, "PicUrl")
-        e.text = "http://www.shello.name/static/images/200-200.jpg"
+        e.text = "http://www.nossiac.com/static/images/200-200.jpg"
         e = et.SubElement(item, "Url")
         e.text = ""
         item = et.SubElement(articles, "item")
@@ -208,16 +245,15 @@ class HandleWX(tornado.web.RequestHandler):
         e = et.SubElement(item, "PicUrl")
         e.text = ""
         e = et.SubElement(item, "Url")
-        e.text = "http://www.shello.name/wx/dump"
+        e.text = "http://www.nossiac.com/wx/dump"
 
         rsp = et.tostring(rspxml, encoding="utf-8")
         print("Response:\n"+rsp.decode("utf-8"))
         self.write(rsp.decode("utf-8"))
 
-
     def handleText(self, msg):
         if msg["Content"].find("tuwen") != -1:
-            return self.sendnews(msg)
+            return self.sendNews(msg)
 
         rspxml = et.Element("xml")
         e = et.SubElement(rspxml, "ToUserName")
@@ -239,50 +275,13 @@ class HandleWX(tornado.web.RequestHandler):
         print("Response:\n"+rsp.decode("utf-8"))
         self.write(rsp.decode("utf-8"))
 
-    def post(self):
-        print(self.request.body)
-        if not self.verify():
-            self.write("no,no,no")
-            return
-
-        msg = {}
-        req = et.fromstring(self.request.body.decode("utf-8"))
-
-        # These 4 elements are always present
-        msg["ToUserName"] = self.getField(req, "ToUserName")
-        msg["FromUserName"] = self.getField(req, "FromUserName")
-        msg["CreateTime"] = self.getField(req, "CreateTime")
-        msg["MsgType"] = self.getField(req, "MsgType")
-
-        # Following elements depends on MsgType
-        msg["MsgId"] = self.getField(req, "MsgId")
-        msg["Content"] = self.getField(req, "Content")
-        msg["MediaId"] = self.getField(req, "MediaId")
-        msg["PicUrl"] = self.getField(req, "PicUrl")
-        msg["Format"] = self.getField(req, "Format")
-        msg["ThumbMediaId"] = self.getField(req, "ThumbMediaId")
-        msg["Location_X"] = self.getField(req, "Location_X")
-        msg["Location_Y"] = self.getField(req, "Location_Y")
-        msg["Scale"] = self.getField(req, "Scale")
-        msg["Label"] = self.getField(req, "Label")
-        msg["Title"] = self.getField(req, "Title")
-        msg["Description"] = self.getField(req, "Description")
-        msg["Url"] = self.getField(req, "Url")
-        msg["Event"] = self.getField(req, "Event")
-        msg["EventKey"] = self.getField(req, "EventKey")
-        msg["Ticket"] = self.getField(req, "Ticket")
-        msg["Latitude"] = self.getField(req, "Latitude")
-        msg["Longitude"] = self.getField(req, "Longitude")
-        msg["Precision"] = self.getField(req, "Precision")
-        msg["Recognition"] = self.getField(req, "Recognition")
-
+    def dumpMsg(self, msg):
+        print(len(msg),type(msg))
         for k,v in msg.items():
             if v != None:
-                print("<%s> = <%s>"%(k,v))
+                print("dump req: <%s> = <%s>"%(k,v))
 
-        # handle messages
         if msg["MsgType"] == "text":
-            self.handleText(msg)
             self.addlog(msg, msg["Content"])
         elif msg["MsgType"] == "image":
             print("Got image from <%s>."%(msg["FromUserName"]))
@@ -324,10 +323,124 @@ class HandleWX(tornado.web.RequestHandler):
                 print("Got VIEW event from <%s>."%(msg["FromUserName"]))
                 self.addlog(msg, msg["EventKey"])
             else:
-                print("Invalid Event! %s"%(msg["Event"]))
+                print("Unsupported Event! %s"%(msg["Event"]))
                 self.addlog(msg, msg["EventKey"])
         else:
-            print("Invalid MsgType! %s"%(msg["MsgType"]))
+            print("Unsupported MsgType! %s"%(msg["MsgType"]))
+
+
+    def parseMsg(self):
+        """
+        Transform XML msg into dict.
+        """
+        # These 4 elements are always present
+        #     "ToUserName"
+        #     "FromUserName"
+        #     "CreateTime"
+        #     "MsgType"
+
+        # Following elements depends on MsgType
+        #     "MsgId"
+        #     "Content"
+        #     "MediaId"
+        #     "PicUrl"
+        #     "Format"
+        #     "ThumbMediaId"
+        #     "Location_X"
+        #     "Location_Y"
+        #     "Scale"
+        #     "Label"
+        #     "Title"
+        #     "Description"
+        #     "Url"
+        #     "Event"
+        #     "EventKey"
+        #     "Ticket"
+        #     "Latitude"
+        #     "Longitude"
+        #     "Precision"
+        #     "Recognition"
+
+        def getField(req, key):
+            if req.find(key) != None:
+                return req.find(key).text
+
+
+        msg = {}
+        req = et.fromstring(self.request.body.decode("utf-8"))
+
+        # These 4 elements are always present
+        msg["ToUserName"] = getField(req, "ToUserName")
+        msg["FromUserName"] = getField(req, "FromUserName")
+        msg["CreateTime"] = getField(req, "CreateTime")
+        msg["MsgType"] = getField(req, "MsgType")
+
+        # Following elements depends on MsgType
+        msg["MsgId"] = getField(req, "MsgId")
+        msg["Content"] = getField(req, "Content")
+        msg["MediaId"] = getField(req, "MediaId")
+        msg["PicUrl"] = getField(req, "PicUrl")
+        msg["Format"] = getField(req, "Format")
+        msg["ThumbMediaId"] = getField(req, "ThumbMediaId")
+        msg["Location_X"] = getField(req, "Location_X")
+        msg["Location_Y"] = getField(req, "Location_Y")
+        msg["Scale"] = getField(req, "Scale")
+        msg["Label"] = getField(req, "Label")
+        msg["Title"] = getField(req, "Title")
+        msg["Description"] = getField(req, "Description")
+        msg["Url"] = getField(req, "Url")
+        msg["Event"] = getField(req, "Event")
+        msg["EventKey"] = getField(req, "EventKey")
+        msg["Ticket"] = getField(req, "Ticket")
+        msg["Latitude"] = getField(req, "Latitude")
+        msg["Longitude"] = getField(req, "Longitude")
+        msg["Precision"] = getField(req, "Precision")
+        msg["Recognition"] = getField(req, "Recognition")
+        return msg
+
+    def post(self):
+        msg = self.parseMsg()
+        self.dumpMsg(msg)
+        openid = msg["FromUserName"]
+        print(openid)
+        content = msg["Content"]
+
+        mtype="admin"
+
+        menu_entries = [
+                ("你好，Admin。", "", "http://www.nossiac.com/static/images/360-200.jpg", "", None, "admin"),
+                ("你好，健将。", "", "http://www.nossiac.com/static/images/360-200.jpg", "", None,  "member"),
+                ("你好，Fans。", "", "http://www.nossiac.com/static/images/360-200.jpg", "", None,  "fans"),
+                ("课程表", "", "", "/courses?openid="+openid, None, "fans, member, admin"),
+                ("活动查询与报名", "", "", "/activity?action=history&openid="+openid, None, "member, admin"),
+                ("个人信息", "", "", "/member?action=edit&openid="+openid, None, "member, admin"),
+                ("会员信息", "", "", "/member?action=all&openid="+openid, None, "admin,member"),
+                ("会员通知（邮件+微信）", "", "", "/notify?openid="+openid, None, "admin"),
+                ("关于外研社", "", "", "/about", None, "fans, member, admin"),
+                ("使用帮助", "", "", "/help", None, "fans, member, admin"),
+                ("意见反馈", "", "", "/feedback?openid="+openid, None, "admin,member"),
+                ("会员认证", "", "", "/member?action=reg&openid="+openid, None, "fans"),
+                ]
+
+        if str.isdigit(content):
+            instruction = int(content)
+            counter = 0
+            for menu in menu_entries:
+                print(menu[-1], mtype)
+                if menu[-1].find(mtype) != -1:
+                    counter = counter + 1
+                    if counter == instruction:
+                        self.sendText(menu[-2](openid), msg)
+                        break
+            else:
+                self.sendText("错误的指令。\n输入？获得帮助。", msg)
+        else:
+            tmpmenu=[]
+            for each in menu_entries:
+                if each[5].find(mtype) >= 0:
+                    tmpmenu.append(each)
+            self.sendMenu(tmpmenu, msg)
+            #self.sendNews(msg)
 
     def get(self):
         if not self.verify():
@@ -355,7 +468,7 @@ class WX(object):
     def handlers(self):
         return [
             (r'/wx/dump', WXDump),
-            (r'/wx', HandleWX),
+            (r'/wx', WXEntrance),
         ]
 
 if __name__ == "__main__":
@@ -372,7 +485,7 @@ if __name__ == "__main__":
     app = tornado.web.Application(
         handlers = [
             (r"/wx/dump", WXDump),
-            (r'/wx', HandleWX),
+            (r'/wx', WXEntrance),
         ],
         Debug=True,
         static_path =os.path.join(os.path.dirname(__file__), "../static"),

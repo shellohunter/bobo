@@ -148,7 +148,7 @@ if __name__ == "__main__":
 
     from blog import blog
     from t9x import t9x
-    #from wx import wx
+    from wx.wx import WX
     #from wifigod import wifigod
     #from movies import movies
     #from club import club
@@ -156,13 +156,16 @@ if __name__ == "__main__":
     #from mysky import mysky
     webhandlers.extend(blog.Blog().handlers())
     webhandlers.extend(t9x.T9x().handlers())
-    #webhandlers.extend(wx.WX().handlers())
     #webhandlers.extend(club.Club().handlers())
     #webhandlers.extend(wifigod.WifiGod().handlers())
     #webhandlers.extend(movies.Movies().handlers())
     #webhandlers.extend(geek.Geek().handlers())
     #webhandlers.extend(mysky.MySky().handlers())
+    webhandlers.extend(WX().handlers())
     webhandlers.append((r"/.*", Error)) # always the last!
+
+    for handler in webhandlers:
+        print(handler[0], handler[1])
 
     app = tornado.web.Application(
         handlers = webhandlers,

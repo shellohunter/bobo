@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import hashlib
-import time
 import os
 import re
 if sys.platform == "linux":
@@ -12,8 +10,6 @@ import tornado.web
 import tornado.httpserver
 import tornado.options
 import tornado.ioloop
-import xml.etree.ElementTree as et
-import time
 
 
 
@@ -22,13 +18,25 @@ from wx.enclub.enclub import EnClub
 
 class WXBaseHandler(WXBase):
     """handle wechat message from server."""
-    def __init__(self):
-        self.codes = enclub.EnClub().codes()
 
     def get(self):
+        if not self.verify():
+            return self.write("you peeper!")
+
+        msg = self.parseMsg(self)
+        self.dumpMsg(msg)
+
+        echostr = self.get_argument("echostr", "<none>")
+        self.write(echostr)
+
+
+    def post(self):
+
+        self.codes = EnClub().codes()
+
         if self.verify():
             return self.write("you peeper!")
-        msg = self.parseMsg(self)
+        msg = self.parseMsg()
         self.dumpMsg(msg)
 
         openid = msg["FromUserName"]
@@ -37,18 +45,11 @@ class WXBaseHandler(WXBase):
         if msg["MsgType"] == "text":
             msgtext = msg["Content"]
             for hdl in self.codes:
-                if string.trim(msgtext) == hdl[0]:
-                    hdl[1](msgtext, msg)
+                if msgtext.strip() == hdl[0]:
+                    if hdl[1](self, msgtext, msg):
+                        return
             else:
-                self.sendText("自动回复："+msgtext, msg)
-
-
-    def post(self):
-        if self.verify():
-            return self.write("you peeper!")
-        msg = self.parseMsg(self)
-        self.dumpMsg(msg)
-
+                self.sendText("自动回复：({0})".format(msgtext), msg)
 
 
 

@@ -1,5 +1,8 @@
+import time
+import re
+import hashlib
 import tornado.web
-import tornado.httpserver
+import xml.etree.ElementTree as et
 
 class WXBase(tornado.web.RequestHandler):
     def verify(self):
@@ -153,6 +156,14 @@ class WXBase(tornado.web.RequestHandler):
         rsp = et.tostring(rspxml, encoding="utf-8")
         print("Response:\n"+rsp.decode("utf-8"))
         self.write(rsp.decode("utf-8"))
+
+    def addlog(self, msg, *args):
+        if msg["MsgType"] == "event":
+            #db.addlog(msg["FromUserName"], msg["Event"], ",".join(args))
+            pass
+        else:
+            #db.addlog(msg["FromUserName"], msg["MsgType"], ",".join(args))
+            pass
 
     def dumpMsg(self, msg):
         print(len(msg),type(msg))

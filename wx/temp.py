@@ -1,3 +1,15 @@
+import sys
+import hashlib
+import time
+import os
+import re
+if sys.platform == "linux":
+    import daemon
+import tornado.web
+import tornado.httpserver
+import tornado.options
+import tornado.ioloop
+import time
 import sqlite3
 
 
@@ -19,7 +31,7 @@ class WXDB():
             create table log (
                 time text,
                 who text,
-                type text,
+           1     type text,
                 event text
                 )
         """
@@ -547,3 +559,20 @@ class WXDump(tornado.web.RequestHandler):
         log = db.getlog()
         auth = db.getauth()
         self.render("wx/dump.htm", log=log, auth=auth)
+
+
+
+if __name__=="__main__":
+    import requests
+    import sys
+    url = "http://192.168.0.200:8081/wx"
+    msg = """<xml>
+    <ToUserName><![CDATA[toUser]]></ToUserName>
+    <FromUserName><![CDATA[fromUser]]></FromUserName>
+    <CreateTime>1348831860</CreateTime>
+    <MsgType><![CDATA[text]]></MsgType>
+    <Content><![CDATA[{0}]]></Content>
+    <MsgId>1234567890123456</MsgId>
+    </xml>""".format(sys.argv[1])
+
+    r = requests.post(url, msg)

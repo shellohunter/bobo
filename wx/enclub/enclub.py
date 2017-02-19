@@ -56,16 +56,19 @@ class EnClubTest(tornado.web.RequestHandler):
 from wx.wxbase import WXBase
 
 class EnClubCodes(WXBase):
-    """docstring for EnClubCodes"""
-    def __init__(self, arg):
-        super(EnClubCodes, self).__init__()
-        self.arg = arg
-
     @staticmethod
-    def handeCode(self, code, msg):
+    def handleCode(self, code, msg):
+        openid = msg["FromUserName"]
         print("EnClubCodes.handleCode({0})".format(code))
+        menu = [
+            ("你好，Fans。", "", "http://www.nossiac.com/static/images/360-200.jpg", "", None,  "fans"),
+            ("课程表", "", "", "/courses?openid="+openid, None, "fans, member, admin"),
+            ("活动查询与报名", "", "", "/activity?action=history&openid="+openid, None, "member, admin"),
+        ]
+        self.sendMenu(menu, msg)
+        return 123
 
-class EnClub(object):
+class EnClub():
     def handlers(self):
         return [
             (r'/wx/enc/reg', EnClubReg),
@@ -74,5 +77,6 @@ class EnClub(object):
 
     def codes(self):
         return [
-            (r'enclub', EnClubCodes.handeCode)
+            (r'enclub', EnClubCodes.handleCode)
         ]
+

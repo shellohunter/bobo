@@ -1,0 +1,74 @@
+<html>
+
+<head>
+    <meta name="description" content="nossiac">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>DUMP</title>
+	<link rel="stylesheet" type="text/css" href="{{ static_url('t9x/9x.css')}}">
+    <link rel="icon" type="image/png" href="{{ static_url('images/me.jpg')}}">
+    <meta name="share_url" content="https://nossiac.com/9x">
+    <meta name="share_channels" content="wechat_friends, wechat_moments, qq">
+    <meta name="MobileOptimized" content="width">
+    <meta name="HandheldFriendly" content="true">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="msapplication-tap-highlight" content="no">
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+            font-size: 1.2em;
+            margin: 2em;
+        }
+        .dump th {
+            border: 1px solid black;
+            color: red;
+            padding: 0 1em;
+            text-align: left;
+        }
+        .dump td {
+            border: 1px solid black;
+            padding: 0 1em;
+        }
+    </style>
+</head>
+<body>
+    <table id="member" class="dump">
+        <tr>
+            <th>openid</th>
+            <th>name</th>
+            <th>email</th>
+            <th>type</th>
+            <th>score</th>
+            <th>progress</th>
+        </tr>
+        {% for member in members %}
+        <tr>
+            <td>{{member[0]}}</td>
+            <td>{{member[1]}}</td>
+            <td>{{member[2]}}</td>
+            <td>{{member[3]}}</td>
+            <td>{{member[4]}}</td>
+            <td>{{member[5]}}</td>
+        </tr>
+        {% end %}
+    </table>
+
+    <table id="homework" class="dump">
+        <tr>
+            <th>id</th>
+            <th>test</th>
+            <th>score</th>
+        </tr>
+        {% for item in homework %}
+        <tr>
+            <td>{{item[0]}}</td>
+            <td>{{item[1]}}</td>
+            <td>{{item[2]}}</td>
+        </tr>
+        {% end %}
+    </table>
+
+</body>
+
+</html>

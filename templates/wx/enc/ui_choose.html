@@ -1,0 +1,25 @@
+<script type="text/javascript">
+function option_click(o) {
+    if (o.className == "option") {
+        document.getElementById('answer').value += o.getAttribute("value");
+        o.className = "option-chosen";
+    } else {
+        o.getAttribute("value");
+        o.className = "option";
+        tmp = document.getElementById('answer').value;
+        tmp = tmp.replace(o.getAttribute("value"), "")
+        document.getElementById('answer').value = tmp;
+    }
+}
+</script>
+<form method="post" action="/wx/enc/test" autocomplete="off">
+    <div id="test-item" class="text-left">
+        <input type="hidden" value="{{item['id']}}" id="id" name="id" />
+        <input type="hidden" value="" id="answer" name="answer" />
+        <label>{{item["id"]}}. {{item["text"]}}</label>
+        {% for option in item['options'] %}
+        <label class="option" onclick="option_click(this)" name="{{option[0]}}" value="{{option[0]}}"><span class="option_idx">{{option[0]}}</span>.{{option[1]}}</label>
+        {% end %}
+        <button type="submit">提交</button>
+    </div>
+</form>

@@ -4,7 +4,7 @@
     <meta name="description" content="nossiac">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>注册</title>
+    <title>测试来了</title>
 	<link rel="stylesheet" type="text/css" href="{{ static_url('t9x/9x.css')}}">
     <link rel="icon" type="image/png" href="{{ static_url('images/me.jpg')}}">
     <meta name="share_url" content="https://nossiac.com/9x">
@@ -25,7 +25,21 @@
         display: block;
     }
     button {
-
+        display: block;
+        width: 100%;
+        background: lightgreen none repeat scroll 0 0;
+        border-color: #ccc #ccc silver;
+        border-image: none;
+        border-style: solid solid dotted;
+        border-width: 1px;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 28px;
+        margin: 0.2em;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
     }
     input {
     }
@@ -36,18 +50,23 @@
     .text-center {
         text-align: center;
     }
+    .text-left {
+        text-align: left;
+    }
+    .option {
+        color: green;
+    }
+    .option-chosen {
+        background-color: yellow;
+    }
 
     </style>
 </head>
 <body>
     <div class="wrapper text-center">
-    <form method="post" action="/wx/enc/reg">
-        <div><label>邮箱账号</label></div>
-        <div><input type="text" name="email"></div>
-        <div><input type="hidden" value="{{openid}}" name="openid"></div>
-        <div><input type="submit" value="提交"></div>
-    </form>
+		{% module Item(item) %}
     </div>
 </body>
 
 </html>
+

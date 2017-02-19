@@ -34,7 +34,7 @@ class WXBaseHandler(WXBase):
 
         self.codes = EnClub().codes()
 
-        if self.verify():
+        if not self.verify():
             return self.write("you peeper!")
         msg = self.parseMsg()
         self.dumpMsg(msg)
@@ -63,6 +63,11 @@ class WX(object):
             (r'/wx', WXBaseHandler),
         ]
         x.extend(EnClub().handlers())
+        return x
+
+    def uimodules(self):
+        x = EnClub().uimodules()
+        #x = dict(list(x.items()) + list(EnClub().uimodules()))
         return x
 
 if __name__ == "__main__":

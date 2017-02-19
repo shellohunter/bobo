@@ -13,6 +13,20 @@ import time
 import sqlite3
 
 
+
+"""
+item = {}
+item["type"] = "choose"
+item["id"] = 0
+item["text"] = "Many a house ____ been built these years."
+item["options"] = [
+    ("A", "has"),
+    ("A", "have"),
+    ("A", "is"),
+    ("A", "are"),
+]
+"""
+
 class WXDB():
     def __init__(self, path=None):
         if path != None:

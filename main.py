@@ -164,11 +164,15 @@ if __name__ == "__main__":
     webhandlers.extend(WX().handlers())
     webhandlers.append((r"/.*", Error)) # always the last!
 
+
+    ui_modules = WX().uimodules()
+
     for handler in webhandlers:
         print(handler[0], handler[1])
 
     app = tornado.web.Application(
         handlers = webhandlers,
+        ui_modules = ui_modules, 
         template_path = os.path.join(os.path.dirname(__file__),"templates"),
         static_path =os.path.join(os.path.dirname(__file__), "static"),
         debug = True,

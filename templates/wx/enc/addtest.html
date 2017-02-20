@@ -4,50 +4,249 @@
     <meta name="description" content="nossiac">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>请出题</title>
-	<link rel="stylesheet" type="text/css" href="{{ static_url('t9x/9x.css')}}">
+    <title>出题</title>
+    <link rel="stylesheet" type="text/css" href="{{ static_url('wx/enc/enc.css')}}">
     <link rel="icon" type="image/png" href="{{ static_url('images/me.jpg')}}">
-    <meta name="share_url" content="https://nossiac.com/9x">
-    <meta name="share_channels" content="wechat_friends, wechat_moments, qq">
     <meta name="MobileOptimized" content="width">
     <meta name="HandheldFriendly" content="true">
     <meta http-equiv="cleartype" content="on">
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
     <meta name="msapplication-tap-highlight" content="no">
-    <style type="text/css">
-    body {
-        background-color:#eee;
-        margin: 0;
-        padding: 0;
-        font-size: 1.2em;
-    }
-    label {
-        display: block;
-    }
-    button {
-
-    }
-    input {
-    }
-    .wrapper {
-        width:100%;
-        margin: auto;
-    }
-    .text-center {
-        text-align: center;
-    }
-
-    </style>
 </head>
+
 <body>
-    <div class="wrapper text-center">
-    <form method="post" action="/wx/enc/addtest">
-        <div><label>请出题</label></div>
-        <div><input type="hidden" value="{{openid}}" name="openid"></div>
-        <div><input type="textarea" name="test"></div>
-        <div><input type="text" value="1" name="score"></div>
-        <div><input type="submit" value="提交"></div>
-    </form>
+    <div class="wrapper">
+        <form method="post" action="/wx/enc/addtest">
+            <fieldset class="add-test-item">
+                <legend>类型</legend>
+                <input type="radio" value="choose" name="type" /> 选择
+                <input type="radio" value="fill" name="type" /> 拼写
+                <input type="radio" value="read" name="type" /> 阅读
+                <input type="radio" value="listen" name="type" /> 听力
+                <input type="radio" value="dictate" name="type" /> 听写
+            </fieldset>
+            <fieldset class="add-test-item">
+                <legend>选择题</legend>
+                <h4>问题
+                <span class="desc">可以用连续的4个英文下标(____)来表示待填空的部分。</span>
+                </h4>
+                <textarea name="question" placeholder="Q: What day is it today? A: ____."></textarea>
+                <h4>选项
+                <span class="desc">最多4个选项，可以留空。</span>
+                </h4>
+                <div class="set-option">
+                    <div class="set-option-idx">
+                        <input type="text" value="A" class="text-center">
+                    </div>
+                    <div class="set-option-txt">
+                        <input type="text" name="A" value="" placeholder="Monday">
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="set-option">
+                    <div class="set-option-idx">
+                        <input type="text" value="B" class="text-center">
+                    </div>
+                    <div class="set-option-txt">
+                        <input type="text" name="B" value="" placeholder="Tuesday">
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="set-option">
+                    <div class="set-option-idx">
+                        <input type="text" value="C" class="text-center">
+                    </div>
+                    <div class="set-option-txt">
+                        <input type="text" name="C" value="" placeholder="Wednesday">
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="set-option">
+                    <div class="set-option-idx">
+                        <input type="text" value="D" class="text-center">
+                    </div>
+                    <div class="set-option-txt">
+                        <input type="text" name="D" value="">
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <h4>答案
+                <span class="desc">不分大小写。</span>
+                </h4>
+                <div class="add-answer">
+                    <input type="text" name="B" value="" placeholder="AB">
+                </div>
+            </fieldset>
+            <fieldset class="add-test-item">
+                <legend>阅读题</legend>
+                <h4>阅读内容</h4>
+                <textarea name="yd_text"></textarea>
+                <fieldset>
+                    <legend>问题</legend>
+                    <textarea name="yd_question"></textarea>
+                    <div class="set-option">
+                        <div class="set-option-idx">
+                            <input type="text" value="A" class="text-center">
+                        </div>
+                        <div class="set-option-txt">
+                            <input type="text" name="A" value="">
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="set-option">
+                        <div class="set-option-idx">
+                            <input type="text" value="B" class="text-center">
+                        </div>
+                        <div class="set-option-txt">
+                            <input type="text" name="B" value="">
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="set-option">
+                        <div class="set-option-idx">
+                            <input type="text" value="C" class="text-center">
+                        </div>
+                        <div class="set-option-txt">
+                            <input type="text" name="C" value="">
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="set-option">
+                        <div class="set-option-idx">
+                            <input type="text" value="D" class="text-center">
+                        </div>
+                        <div class="set-option-txt">
+                            <input type="text" name="D" value="">
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <h4>答案</h4>
+                    <div class="add-answer">
+                        <input type="text" name="B" value="">
+                    </div>
+                </fieldset>
+                <div class="set-option">
+                    <div class="add-option">
+                        <button onclick="alert('添加选项'); return false;">添加问题</button>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="add-test-item">
+                <legend>拼写题</legend>
+                <h4>题目
+                <span class="desc">可以用连续的4个英文下标(____)来表示待填空的部分。</span>
+                </h4>
+                <textarea name="text" placeholder="example: Write down the plural of the words below."></textarea>
+                <div class="set-option">
+                    <div class="fill">
+                        <div class="fill-hint">
+                            <input value="" name="" placeholder="radio" />
+                        </div>
+                        <div class="fill-answer">
+                            <input value="" name="" placeholder="radios" />
+                        </div>
+                    </div>
+                    <div class="fill">
+                        <div class="fill-hint">
+                            <input value="" name="" placeholder="tomato" />
+                        </div>
+                        <div class="fill-answer">
+                            <input value="" name="" placeholder="tomatoes" />
+                        </div>
+                    </div>
+                    <div class="fill">
+                        <div class="fill-hint">
+                            <input value="" name="" placeholder="belief" />
+                        </div>
+                        <div class="fill-answer">
+                            <input value="" name="" placeholder="beliefs" />
+                        </div>
+                    </div>
+                    <div class="fill">
+                        <div class="fill-hint">
+                            <input value="" name="" placeholder="knife" />
+                        </div>
+                        <div class="fill-answer">
+                            <input value="" name="" placeholder="knives" />
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="add-test-item">
+                <legend>听力</legend>
+                <h4>说明文字
+                <span class="desc">可以用连续的4个英文下标(____)来表示待填空的部分。</span>
+                </h4>
+                <h4>音频链接
+                <span class="desc">暂只接受mp3类型。</span>
+                </h4>
+                <fieldset>
+                    <legend>问题</legend>
+                    <textarea name="yd_question"></textarea>
+                    <div class="set-option">
+                        <div class="set-option-idx">
+                            <input type="text" value="A" class="text-center">
+                        </div>
+                        <div class="set-option-txt">
+                            <input type="text" name="A" value="">
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="set-option">
+                        <div class="set-option-idx">
+                            <input type="text" value="B" class="text-center">
+                        </div>
+                        <div class="set-option-txt">
+                            <input type="text" name="B" value="">
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="set-option">
+                        <div class="set-option-idx">
+                            <input type="text" value="C" class="text-center">
+                        </div>
+                        <div class="set-option-txt">
+                            <input type="text" name="C" value="">
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="set-option">
+                        <div class="set-option-idx">
+                            <input type="text" value="D" class="text-center">
+                        </div>
+                        <div class="set-option-txt">
+                            <input type="text" name="D" value="">
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <h4>答案</h4>
+                    <div class="add-answer">
+                        <input type="text" name="B" value="">
+                    </div>
+                </fieldset>
+                <div class="set-option">
+                    <div class="add-option">
+                        <button onclick="alert('添加选项'); return false;">添加问题</button>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="add-test-item">
+                <legend>听写题</legend>
+                <h4>题目
+                <span class="desc">写下你听到的。</span>
+                </h4>
+                <h4>音频链接
+                <span class="desc">暂只接受mp3类型。</span>
+                </h4>
+                <h4>答案
+                <span class="desc">暂只接受mp3类型。</span>
+                </h4>
+                <textarea name="text" placeholder="example: Write down the plural of the words below."></textarea>
+            </fieldset>
+            <p class="text-center">
+                <button class="commit-test-item" onclick="alert('添加选项'); return false;">测试一下</button>
+            </p>
+        </form>
     </div>
 </body>
 

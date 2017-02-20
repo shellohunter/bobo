@@ -15,7 +15,22 @@
 </head>
 <body>
     <div class="wrapper text-center">
-		{% module Item(item) %}
+        {% if xml %}
+        <form method="post" action="/wx/enc/addtest" autocomplete="off">
+        {% else %}
+        <form method="post" action="/wx/enc/test" autocomplete="off">
+        {% end %}
+
+    		{% module Item(item) %}
+
+            {% if xml %}
+            <input type="hidden" name="xml" value="{{xml}}"/>
+            <button class="commit-test-item" onclick="history.go(-1); return false;" >再改一下</button>
+            <button class="commit-test-item" type="submit" >没问题，提交</button>
+            {% else %}
+            <button class="commit-test-item" type="submit" >OK</button>
+            {% end %}
+        </form>
     </div>
 </body>
 

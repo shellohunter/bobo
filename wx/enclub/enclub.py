@@ -1,7 +1,10 @@
 import tornado.httpserver
 import tornado.web
 import tornado.ioloop
+import json
 import sqlite3
+
+from io import StringIO
 
 
 # database path of enclub
@@ -40,8 +43,8 @@ class EnClubDB():
 
         tmp = """CREATE TABLE homework (
                 id integer,
-                test text,
-                score integer
+                item text,
+                point integer
                 )"""
         self.dbcusor.execute(tmp)
 
@@ -93,20 +96,66 @@ class EnClubAddTest(tornado.web.RequestHandler):
 
     def post(self):
         openid=self.get_argument("openid", None)
-        test=self.get_argument("test", None)
-        score=self.get_argument("score", None)
-        if not test or not score:
-            return self.write("invalid argument!")
 
-        self.dbconn = sqlite3.connect(enc_db_path)
-        self.dbcusor = self.dbconn.cursor()
-        cmd = """INSERT INTO homework(id, test, score)
-                 VALUES(?,?,?)"""
-        self.dbcusor.execute(cmd, (openid, test, score))
-        self.dbconn.commit()
+        xml=self.get_argument("xml", None)
+        if xml:
+            point = self.get_argument("point", 1)
+            self.dbconn = sqlite3.connect(enc_db_path)
+            self.dbcusor = self.dbconn.cursor()
+            cmd = """INSERT INTO homework(id, item, point)
+                     VALUES(?,?,?)"""
+            self.dbcusor.execute(cmd, (openid, xml, point))
+            self.dbconn.commit()
 
-        # save. openid & email.
-        self.write("welcome!")
+            return self.write("Appreciate  your contribution!")
+
+        qtype=self.get_argument("type", None)
+        point=self.get_argument("point", None)
+
+        if qtype == "choose":
+            question = self.get_argument("question", "")
+            option_a = self.get_argument("A", "")
+            option_b = self.get_argument("B", "")
+            option_c = self.get_argument("C", "")
+            option_d = self.get_argument("D", "")
+            answer   = self.get_argument("answer", "")
+            point    = self.get_argument("point", 1)
+
+            print("question={0}\noption_a:{1}\noption_b:{2}\
+                \noption_c:{3}\noption_d:{4}\nanswer={5}\npoint={6}\n".format(
+                question, option_a, option_b, option_c,
+                option_d, answer, point
+                )
+            )
+        elif qtype == "fill":
+            pass
+        elif qtype == "read":
+            pass
+        elif qtype == "listen":
+            pass
+        elif qtype == "dictate":
+            pass
+        else:
+            pass
+
+        item = {}
+        item["type"] = qtype
+        item["id"] = 0
+        item["question"] = question
+        item["options"] = [
+            ("A", option_a),
+            ("B", option_b),
+            ("C", option_c),
+            ("D", option_d),
+        ]
+        item["answer"] = answer
+
+        io = StringIO()
+        json.dump(item, io)
+        xml = io.getvalue()
+        return self.render("wx/enc/test.html", 
+            openid=openid, item=item, point=point, xml=xml)
+
 
 
 class ItemUI(tornado.web.UIModule):
@@ -131,14 +180,14 @@ class EnClubTest(tornado.web.RequestHandler):
 
         self.dbconn = sqlite3.connect(enc_db_path)
         self.dbcusor = self.dbconn.cursor()
-        cmd = """SELECT * FROM homework WHERE id=?"""
-        self.dbcusor.execute(cmd, (id))
+        cmd = """SELECT * FROM homework WHERE ROWID=?"""
+        self.dbcusor.execute(cmd, (id,))
         item = self.dbcusor.fetchall()
-        print(item)
+        print("======", item)
         item = {}
         item["type"] = "choose"
         item["id"] = 0
-        item["text"] = "Many a house ____ been built these years."
+        item["question"] = "Many a house ____ been built these years."
         item["options"] = [
             ("A", "has"),
             ("B", "have"),
@@ -146,7 +195,7 @@ class EnClubTest(tornado.web.RequestHandler):
             ("D", "are"),
         ]
         item["answer"] = "AB"
-        self.render("wx/enc/test.html", openid=openid, item=item)
+        self.render("wx/enc/test.html", openid=openid, item=item, xml=None)
 
     def post(self):
         openid=self.get_argument("openid", None)

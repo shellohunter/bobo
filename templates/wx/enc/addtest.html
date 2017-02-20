@@ -16,10 +16,11 @@
 
 <body>
     <div class="wrapper">
-        <form method="post" action="/wx/enc/addtest">
+        <form method="post" action="/wx/enc/addtest" autocomplete="off">
+            <input type="hidden" value="{{openid}}" name="openid"/>
             <fieldset class="add-test-item">
                 <legend>类型</legend>
-                <input type="radio" value="choose" name="type" /> 选择
+                <input type="radio" value="choose" name="type" checked="checked"/> 选择
                 <input type="radio" value="fill" name="type" /> 拼写
                 <input type="radio" value="read" name="type" /> 阅读
                 <input type="radio" value="listen" name="type" /> 听力
@@ -30,7 +31,7 @@
                 <h4>问题
                 <span class="desc">可以用连续的4个英文下标(____)来表示待填空的部分。</span>
                 </h4>
-                <textarea name="question" placeholder="Q: What day is it today? A: ____."></textarea>
+                <textarea name="question" placeholder="Professor Smith, along with his assistants, ____ on the project day and night to meet the deadline.">Professor Smith, along with his assistants, ____ on the project day and night to meet the deadline.</textarea>
                 <h4>选项
                 <span class="desc">最多4个选项，可以留空。</span>
                 </h4>
@@ -39,7 +40,7 @@
                         <input type="text" value="A" class="text-center">
                     </div>
                     <div class="set-option-txt">
-                        <input type="text" name="A" value="" placeholder="Monday">
+                        <input type="text" name="A" value="work" placeholder="work">
                     </div>
                     <div class="clear"></div>
                 </div>
@@ -48,7 +49,7 @@
                         <input type="text" value="B" class="text-center">
                     </div>
                     <div class="set-option-txt">
-                        <input type="text" name="B" value="" placeholder="Tuesday">
+                        <input type="text" name="B" value="working" placeholder="working">
                     </div>
                     <div class="clear"></div>
                 </div>
@@ -57,7 +58,7 @@
                         <input type="text" value="C" class="text-center">
                     </div>
                     <div class="set-option-txt">
-                        <input type="text" name="C" value="" placeholder="Wednesday">
+                        <input type="text" name="C" value="is working" placeholder="is working">
                     </div>
                     <div class="clear"></div>
                 </div>
@@ -66,7 +67,7 @@
                         <input type="text" value="D" class="text-center">
                     </div>
                     <div class="set-option-txt">
-                        <input type="text" name="D" value="">
+                        <input type="text" name="D" value="are working" placeholder="are working">
                     </div>
                     <div class="clear"></div>
                 </div>
@@ -74,9 +75,16 @@
                 <span class="desc">不分大小写。</span>
                 </h4>
                 <div class="add-answer">
-                    <input type="text" name="B" value="" placeholder="AB">
+                    <input type="text" name="answer" value="AB" placeholder="AB">
+                </div>
+                <h4>积分
+                <span class="desc">参与即可获得</span>
+                </h4>
+                <div class="add-answer">
+                    <input type="text" name="point" value="1" placeholder="1">
                 </div>
             </fieldset>
+            <script>
             <fieldset class="add-test-item">
                 <legend>阅读题</legend>
                 <h4>阅读内容</h4>
@@ -131,6 +139,8 @@
                     </div>
                 </div>
             </fieldset>
+            </script>
+            <script>
             <fieldset class="add-test-item">
                 <legend>拼写题</legend>
                 <h4>题目
@@ -172,6 +182,8 @@
                     </div>
                 </div>
             </fieldset>
+            </script>
+            <script>
             <fieldset class="add-test-item">
                 <legend>听力</legend>
                 <h4>说明文字
@@ -230,6 +242,8 @@
                     </div>
                 </div>
             </fieldset>
+            </script>
+            <script>
             <fieldset class="add-test-item">
                 <legend>听写题</legend>
                 <h4>题目
@@ -243,8 +257,9 @@
                 </h4>
                 <textarea name="text" placeholder="example: Write down the plural of the words below."></textarea>
             </fieldset>
+            </script>
             <p class="text-center">
-                <button class="commit-test-item" onclick="alert('添加选项'); return false;">测试一下</button>
+                <button class="commit-test-item" type="submit" name="verify" value="1">测试一下</button>
             </p>
         </form>
     </div>

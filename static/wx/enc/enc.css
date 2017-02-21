@@ -5,6 +5,16 @@ body {
     font-size: 1.2em;
 }
 
+.title {
+    display: block;
+    padding: 0.5em 1.2em;
+    border: 1px solid #ccc;
+    font-weight: 400;
+    cursor: pointer;
+    color: black;
+    background: lightgreen;
+}
+
 label {
     display: block;
     margin: 0.2em;
@@ -14,14 +24,13 @@ label {
     line-height: 1.5em;
     font-weight: 400;
     cursor: pointer;
-    color: 888583;
+    color: black;
     background: #fff;
     padding: 10px 20px;
     font-size: 18px;
     border-bottom: 1px dotted silver;
     line-height: 28px;
 }
-
 table {
     border-collapse: collapse;
     font-size: 1.2em;
@@ -46,17 +55,18 @@ table {
     -moz-border-radius: 5px;
 }
 
+.mobile input {
+    margin: 0.2em;
+    padding: 10px 20px;
+    width: 100%;
+}
+
 textarea {
     width: 100%;
     margin: auto;
     min-height: 2em;
 }
 
-.mobile input {
-    margin: 0.2em;
-    padding: 10px 20px;
-    width: 100%;
-}
 
 .text-center {
     text-align: center;
@@ -66,8 +76,10 @@ textarea {
     text-align: left;
 }
 
+
+
 .option {
-    color: green;
+    color: #888;
 }
 
 .option-chosen {

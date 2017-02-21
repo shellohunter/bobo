@@ -16,10 +16,12 @@
 <body>
     <div class="wrapper text-center">
     <form method="post" action="/wx/enc/reg">
-        <div><label>邮箱账号</label></div>
+        <div><label class="title">Email (xxx@mediatek.com)</label></div>
         <div class="mobile"><input type="text" name="email"></div>
+        <div><label class="title">Nickname</label></div>
+        <div class="mobile"><input type="text" name="name"></div>
         <div><input type="hidden" value="{{openid}}" name="openid"></div>
-        <button type="submit">提交</button>
+        <div class="mobile"><button type="submit">提交</button></div>
     </form>
     </div>
 </body>

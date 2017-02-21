@@ -3,12 +3,26 @@ import tornado.web
 import tornado.ioloop
 import json
 import sqlite3
+import datetime
 
 from io import StringIO
 
 
 # database path of enclub
 enc_db_path = "wx/enclub/.enclub.sqlite3.py"
+
+def identify(openid):
+
+    self.dbconn = sqlite3.connect(enc_db_path)
+    self.dbcusor = self.dbconn.cursor()
+
+    cmd = "SELECT type FROM member WHERE openid=?"
+    self.dbcusor.execute(cmd, (openid, ))
+
+    ret = self.dbcusor.fetchone()
+    if ret:
+        return ret[0]
+
 
 class EnClubDB():
     def __init__(self, path=None):
@@ -48,6 +62,15 @@ class EnClubDB():
                 )"""
         self.dbcusor.execute(tmp)
 
+        tmp = """CREATE TABLE log (
+                id INTEGER PRIMARY KEY,
+                who TEXT,
+                when_ TEXT,
+                what TEXT
+                )"""
+        # when is a keyword of sqlite3 ?
+        self.dbcusor.execute(tmp)
+
         self.dbconn.commit()
 
 class EnClubDump(tornado.web.RequestHandler):
@@ -60,7 +83,11 @@ class EnClubDump(tornado.web.RequestHandler):
         self.dbcusor.execute("SELECT * FROM homework ORDER BY id")
         homework = self.dbcusor.fetchall()
         print(homework)
-        self.render("wx/enc/dump.html", members=members, homework=homework)
+        self.dbcusor.execute("SELECT * FROM log ORDER BY id")
+        log = self.dbcusor.fetchall()
+        print(log)
+        self.render("wx/enc/dump.html", members=members,
+            homework=homework, log=log)
 
 class EnClubReg(tornado.web.RequestHandler):
     def get(self):
@@ -73,14 +100,38 @@ class EnClubReg(tornado.web.RequestHandler):
     def post(self):
         openid=self.get_argument("openid", None)
         email=self.get_argument("email", None)
-        if not openid or not email:
+        name=self.get_argument("name", None)
+        if not openid or not email or not name:
             return self.write("invalid argument!")
+
+        with open("wx/enclub/member.list", "rb") as fp:
+            data = fp.read()
+            data = data.decode("utf-8")
+            if data.find(email) < 0:
+                return self.write("Email not expected, seems you are not invited. sorry.")
 
         self.dbconn = sqlite3.connect(enc_db_path)
         self.dbcusor = self.dbconn.cursor()
+
+        cmd = "SELECT openid FROM member WHERE email=?"
+        self.dbcusor.execute(cmd, (email,))
+        found = self.dbcusor.fetchone()
+        if found:
+            return self.write("Error: email already registered.")
+
         cmd = """INSERT INTO member(openid, name, email, type, score, hw)
                  VALUES(?,?,?,?,?,?)"""
-        self.dbcusor.execute(cmd, (openid, "", email, "member", 0, 0))
+
+        self.dbcusor.execute(cmd, (openid, name, email, "member", 0, 0))
+
+
+        cmd = """INSERT INTO log(id, who, when_, what)
+                 VALUES(?,?,?,?)"""
+
+        when_ = str(datetime.datetime.utcnow()).split(".")[0]
+        what = "registered, email={0}, openid={1}".format(email, openid)
+        self.dbcusor.execute(cmd, (None, name, when_, what))
+
         self.dbconn.commit()
 
         # save. openid & email.
@@ -104,9 +155,14 @@ class EnClubAddTest(tornado.web.RequestHandler):
             self.dbcusor = self.dbconn.cursor()
             cmd = """INSERT INTO homework VALUES(?,?,?)"""
             self.dbcusor.execute(cmd, (None, item_json, point))
-            self.dbconn.commit()
 
-            return self.write("Appreciate  your contribution!")
+            cmd = """INSERT INTO log(id, who, when_, what) VALUES(NULL, ?,?,?)"""
+            when_ = str(datetime.datetime.utcnow()).split(".")[0]
+            what = "contributed, item={0}".format(item_json)
+            self.dbcusor.execute(cmd, (openid, when_, what))
+
+            self.dbconn.commit()
+            return self.write("Appreciate your contribution!")
 
         qtype=self.get_argument("type", None)
         item = {}
@@ -182,7 +238,7 @@ class EnClubTest(tornado.web.RequestHandler):
 
         self.dbconn = sqlite3.connect(enc_db_path)
         self.dbcusor = self.dbconn.cursor()
-        cmd = """SELECT * FROM homework WHERE ROWID=?"""
+        cmd = """SELECT * FROM homework WHERE id=?"""
         self.dbcusor.execute(cmd, (qid,))
 
         item = self.dbcusor.fetchone()
@@ -199,21 +255,29 @@ class EnClubTest(tornado.web.RequestHandler):
         answer = self.get_argument("answer", None)
 
         if not qid or not openid or not answer:
-            self.write("Invalid answer!")
+            self.write("Invalid arguments!")
         else:
             self.dbconn = sqlite3.connect(enc_db_path)
             self.dbcusor = self.dbconn.cursor()
-            cmd = "SELECT item FROM homework WHERE id=?"
-            self.dbcusor.execute(cmd, (qid,))
+
+            self.dbcusor.execute("UPDATE member SET score=score+1 WHERE openid == ?", (openid,))
+
+            cmd = """INSERT INTO log(id, who, when_, what) VALUES(NULL, ?,?,?)"""
+            when_ = str(datetime.datetime.utcnow()).split(".")[0]
+            what = "take test, id={0}, answer={1}, ".format(qid, answer)
+            self.dbcusor.execute(cmd, (openid, when_, what))
+
+            self.dbconn.commit()
+
+            self.dbcusor.execute("SELECT item FROM homework WHERE id=?", (qid,))
             item = self.dbcusor.fetchone()
             print("item", item)
             item = json.loads(item[0])
-            #print(set(answer.strip().upper()))
-            #print(set(item["answer"].strip().upper()))
             if set(answer.strip().upper()) == set(item["answer"].strip().upper()):
                 self.write("OK!")
             else:
                 self.write("Wrong!")
+
 
 from wx.wxbase import WXBase
 

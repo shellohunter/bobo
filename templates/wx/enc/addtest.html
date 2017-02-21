@@ -12,6 +12,13 @@
     <meta http-equiv="cleartype" content="on">
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
     <meta name="msapplication-tap-highlight" content="no">
+    <script src="{{ static_url('mustache.min.js')}}"></script>
+
+    <script type="text/javascript">
+        function add_read_question (argument) {
+            alert('添加问题');
+        }
+    </script>
 </head>
 
 <body>
@@ -20,13 +27,15 @@
             <input type="hidden" value="{{openid}}" name="openid"/>
             <fieldset class="add-test-item">
                 <legend>类型</legend>
-                <input type="radio" value="choose"  name="type" checked="checked"/> 选择
-                <input type="radio" value="fill"    name="type" disabled="disabled" /> 拼写
-                <input type="radio" value="read"    name="type" disabled="disabled" /> 阅读
-                <input type="radio" value="listen"  name="type" disabled="disabled" /> 听力
-                <input type="radio" value="dictate" name="type" disabled="disabled" /> 听写
+                <input type="radio" value="choose"  name="type" checked="checked"   onclick="switch_type(this.value)"/> 选择
+                <input type="radio" value="spell"   name="type" onclick="switch_type(this.value)"/> 拼写
+                <input type="radio" value="read"    name="type" onclick="switch_type(this.value)"/> 阅读
+                <input type="radio" value="listen"  name="type" onclick="switch_type(this.value)"/> 听力
+                <input type="radio" value="dictate" name="type" onclick="switch_type(this.value)"/> 听写
             </fieldset>
-            <fieldset class="add-test-item">
+            <fieldset class="add-test-item" id="test-field">
+            </fieldset>
+            <script type="text/x-choose" id="tpl-choose">
                 <legend>选择题</legend>
                 <h4>问题
                 <span class="desc">可以用连续的4个英文下标(____)来表示待填空的部分。</span>
@@ -83,9 +92,8 @@
                 <div class="add-answer">
                     <input type="text" name="point" value="1" placeholder="1">
                 </div>
-            </fieldset>
-            <script>
-            <fieldset class="add-test-item">
+            </script>
+            <script type="text/x-mustance" id="tpl-read">
                 <legend>阅读题</legend>
                 <h4>阅读内容</h4>
                 <textarea name="yd_text"></textarea>
@@ -135,18 +143,15 @@
                 </fieldset>
                 <div class="set-option">
                     <div class="add-option">
-                        <button onclick="alert('添加选项'); return false;">添加问题</button>
+                        <button onclick="add_read_question(this); return false;">添加问题</button>
                     </div>
                 </div>
-            </fieldset>
             </script>
-            <script>
-            <fieldset class="add-test-item">
+            <script type="text/x-mustance" id="tpl-spell">
                 <legend>拼写题</legend>
-                <h4>题目
-                <span class="desc">可以用连续的4个英文下标(____)来表示待填空的部分。</span>
-                </h4>
-                <textarea name="text" placeholder="example: Write down the plural of the words below."></textarea>
+                <span class="desc">说明文字。</span>
+                <textarea name="text" placeholder="Write down the plural of the words below."></textarea>
+                <span class="desc">左列为题面，右侧为答案。</span>
                 <div class="set-option">
                     <div class="fill">
                         <div class="fill-hint">
@@ -181,10 +186,8 @@
                         </div>
                     </div>
                 </div>
-            </fieldset>
             </script>
-            <script>
-            <fieldset class="add-test-item">
+            <script type="text/x-mustance" id="tpl-listen">
                 <legend>听力</legend>
                 <h4>说明文字
                 <span class="desc">可以用连续的4个英文下标(____)来表示待填空的部分。</span>
@@ -238,13 +241,11 @@
                 </fieldset>
                 <div class="set-option">
                     <div class="add-option">
-                        <button onclick="alert('添加选项'); return false;">添加问题</button>
+                        <button onclick="add_read_question(this); return false;">添加问题</button>
                     </div>
                 </div>
-            </fieldset>
             </script>
-            <script>
-            <fieldset class="add-test-item">
+            <script type="text/x-mustance" id="tpl-dictate">
                 <legend>听写题</legend>
                 <h4>题目
                 <span class="desc">写下你听到的。</span>
@@ -256,13 +257,21 @@
                 <span class="desc">暂只接受mp3类型。</span>
                 </h4>
                 <textarea name="text" placeholder="example: Write down the plural of the words below."></textarea>
-            </fieldset>
             </script>
             <p class="text-center">
                 <button class="commit-test-item" type="submit" name="verify" value="1">测试一下</button>
             </p>
         </form>
     </div>
+
+    <script type="text/javascript">
+        document.getElementById("test-field").innerHTML = Mustache.render(document.getElementById('tpl-choose').innerHTML)
+
+        function switch_type(type) {
+            document.getElementById("test-field").innerHTML = Mustache.render(document.getElementById('tpl-'+type).innerHTML)
+        }
+
+    </script>
 </body>
 
 </html>

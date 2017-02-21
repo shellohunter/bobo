@@ -231,7 +231,7 @@ class EnClubCodes(WXBase):
             ("Homework", "", "", "/wx/enc/test?&openid="+openid, None, "member, admin"),
         ]
         self.sendMenu(menu, msg)
-        return 123
+        return True # we have ended the code, no more procedure.
 
 class EnClub():
     def __init__(self):

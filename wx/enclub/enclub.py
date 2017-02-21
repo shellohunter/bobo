@@ -8,7 +8,7 @@ from io import StringIO
 
 
 # database path of enclub
-enc_db_path = "wx/enclub/.wx.sqlite3.py"
+enc_db_path = "wx/enclub/.enclub.sqlite3.py"
 
 class EnClubDB():
     def __init__(self, path=None):
@@ -32,19 +32,19 @@ class EnClubDB():
             print("EnClub does not exist, create it now.")
 
         tmp = """CREATE TABLE member (
-                openid text,
-                name text,
-                email text,
-                type text,
-                score integer,
-                hw integer
+                openid TEXT,
+                name TEXT,
+                email TEXT,
+                type TEXT,
+                score INTEGER,
+                hw INTEGER
                 )"""
         self.dbcusor.execute(tmp)
 
         tmp = """CREATE TABLE homework (
-                id integer,
-                item text,
-                point integer
+                id INTEGER PRIMARY KEY,
+                item TEXT,
+                point INTEGER
                 )"""
         self.dbcusor.execute(tmp)
 
@@ -97,29 +97,31 @@ class EnClubAddTest(tornado.web.RequestHandler):
     def post(self):
         openid=self.get_argument("openid", None)
 
-        xml=self.get_argument("xml", None)
-        if xml:
+        item_json=self.get_argument("item_json", None)
+        if item_json:
             point = self.get_argument("point", 1)
             self.dbconn = sqlite3.connect(enc_db_path)
             self.dbcusor = self.dbconn.cursor()
-            cmd = """INSERT INTO homework(id, item, point)
-                     VALUES(?,?,?)"""
-            self.dbcusor.execute(cmd, (openid, xml, point))
+            cmd = """INSERT INTO homework VALUES(?,?,?)"""
+            self.dbcusor.execute(cmd, (None, item_json, point))
             self.dbconn.commit()
 
             return self.write("Appreciate  your contribution!")
 
         qtype=self.get_argument("type", None)
-        point=self.get_argument("point", None)
+        item = {}
+        item_json = ""
+        point    = self.get_argument("point", 1)
 
+        print("AAAAAAAA",qtype)
         if qtype == "choose":
+            print("BBBBBBBB")
             question = self.get_argument("question", "")
             option_a = self.get_argument("A", "")
             option_b = self.get_argument("B", "")
             option_c = self.get_argument("C", "")
             option_d = self.get_argument("D", "")
             answer   = self.get_argument("answer", "")
-            point    = self.get_argument("point", 1)
 
             print("question={0}\noption_a:{1}\noption_b:{2}\
                 \noption_c:{3}\noption_d:{4}\nanswer={5}\npoint={6}\n".format(
@@ -127,6 +129,21 @@ class EnClubAddTest(tornado.web.RequestHandler):
                 option_d, answer, point
                 )
             )
+
+            item["type"] = qtype
+            item["question"] = question
+            item["options"] = [
+                ("A", option_a),
+                ("B", option_b),
+                ("C", option_c),
+                ("D", option_d),
+            ]
+            item["answer"] = answer
+
+            io = StringIO()
+            json.dump(item, io)
+            item_json = io.getvalue()
+
         elif qtype == "fill":
             pass
         elif qtype == "read":
@@ -138,23 +155,8 @@ class EnClubAddTest(tornado.web.RequestHandler):
         else:
             pass
 
-        item = {}
-        item["type"] = qtype
-        item["id"] = 0
-        item["question"] = question
-        item["options"] = [
-            ("A", option_a),
-            ("B", option_b),
-            ("C", option_c),
-            ("D", option_d),
-        ]
-        item["answer"] = answer
-
-        io = StringIO()
-        json.dump(item, io)
-        xml = io.getvalue()
         return self.render("wx/enc/test.html", 
-            openid=openid, item=item, point=point, xml=xml)
+            openid=openid, item=item, point=point, item_json=item_json, qid="Preview")
 
 
 
@@ -171,7 +173,7 @@ class ItemUI(tornado.web.UIModule):
 
 
 class EnClubTest(tornado.web.RequestHandler):
-    def get(self, id=0):
+    def get(self, qid=0):
         openid = self.get_argument("openid", None)
         if openid is None:
             print("not a member!")
@@ -181,27 +183,37 @@ class EnClubTest(tornado.web.RequestHandler):
         self.dbconn = sqlite3.connect(enc_db_path)
         self.dbcusor = self.dbconn.cursor()
         cmd = """SELECT * FROM homework WHERE ROWID=?"""
-        self.dbcusor.execute(cmd, (id,))
-        item = self.dbcusor.fetchall()
-        print("======", item)
-        item = {}
-        item["type"] = "choose"
-        item["id"] = 0
-        item["question"] = "Many a house ____ been built these years."
-        item["options"] = [
-            ("A", "has"),
-            ("B", "have"),
-            ("C", "is"),
-            ("D", "are"),
-        ]
-        item["answer"] = "AB"
-        self.render("wx/enc/test.html", openid=openid, item=item, xml=None)
+        self.dbcusor.execute(cmd, (qid,))
 
-    def post(self):
-        openid=self.get_argument("openid", None)
-        email=self.get_argument("email", None)
-        # save.
-        self.write("OK!")
+        item = self.dbcusor.fetchone()
+        print("======", item)
+        if item:
+            print(json.loads(item[1]))
+            self.render("wx/enc/test.html", openid=openid,
+                item=json.loads(item[1]), qid=qid, item_json=None)
+        else:
+            self.write("no such item.")
+
+    def post(self, qid):
+        openid = self.get_argument("openid", None)
+        answer = self.get_argument("answer", None)
+
+        if not qid or not openid or not answer:
+            self.write("Invalid answer!")
+        else:
+            self.dbconn = sqlite3.connect(enc_db_path)
+            self.dbcusor = self.dbconn.cursor()
+            cmd = "SELECT item FROM homework WHERE id=?"
+            self.dbcusor.execute(cmd, (qid,))
+            item = self.dbcusor.fetchone()
+            print("item", item)
+            item = json.loads(item[0])
+            #print(set(answer.strip().upper()))
+            #print(set(item["answer"].strip().upper()))
+            if set(answer.strip().upper()) == set(item["answer"].strip().upper()):
+                self.write("OK!")
+            else:
+                self.write("Wrong!")
 
 from wx.wxbase import WXBase
 

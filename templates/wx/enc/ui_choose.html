@@ -13,10 +13,9 @@ function option_click(o) {
 }
 </script>
 <div id="test-item" class="text-left">
-    <input type="hidden" value="{{item['id']}}" id="id" name="id" />
     <input type="hidden" value="" id="answer" name="answer" />
-    <label>{{item["id"]}}. {{item["question"]}}</label>
+    <label>{{item["question"]}}</label>
     {% for option in item['options'] %}
-    <label class="option" onclick="option_click(this)" name="{{option[0]}}"><span class="option_idx">{{option[0]}}</span>.{{option[1]}}</label>
+    <label class="option" onclick="option_click(this)" name="{{option[0]}}" value="{{option[0]}}"><span class="option_idx">{{option[0]}}</span>.{{option[1]}}</label>
     {% end %}
 </div>

@@ -15,16 +15,17 @@
 </head>
 <body>
     <div class="wrapper text-center">
-        {% if xml %}
+        {% if item_json %}
         <form method="post" action="/wx/enc/addtest" autocomplete="off">
         {% else %}
-        <form method="post" action="/wx/enc/test" autocomplete="off">
+        <form method="post" autocomplete="off">
         {% end %}
 
+            <label>{{qid}}</label>
     		{% module Item(item) %}
 
-            {% if xml %}
-            <input type="hidden" name="xml" value="{{xml}}"/>
+            {% if item_json %}
+            <input type="hidden" name="item_json" value="{{item_json}}"/>
             <button class="commit-test-item" onclick="history.go(-1); return false;" >再改一下</button>
             <button class="commit-test-item" type="submit" >没问题，提交</button>
             {% else %}

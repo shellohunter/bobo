@@ -1,19 +1,10 @@
-<html>
+{% extends m-template.html %}
 
-<head>
-    <meta name="description" content="nossiac">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>测试来了</title>
-    <link rel="stylesheet" type="text/css" href="{{ static_url('wx/enc/enc.css')}}">
-    <link rel="icon" type="image/png" href="{{ static_url('images/me.jpg')}}">
-    <meta name="MobileOptimized" content="width">
-    <meta name="HandheldFriendly" content="true">
-    <meta http-equiv="cleartype" content="on">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
-    <meta name="msapplication-tap-highlight" content="no">
-</head>
-<body>
+{% block title %}
+<title>Homework</title>
+{% end %}
+
+{% block body %}
     <div class="wrapper text-center">
         {% if item_json %}
         <form method="post" action="/wx/enc/addtest" autocomplete="off">
@@ -22,7 +13,7 @@
         {% end %}
 
             <label>{{qid}}</label>
-    		{% module Item(item) %}
+            {% module Item(item) %}
 
             {% if item_json %}
             <input type="hidden" name="item_json" value="{{item_json}}"/>
@@ -33,7 +24,4 @@
             {% end %}
         </form>
     </div>
-</body>
-
-</html>
-
+{% end %}

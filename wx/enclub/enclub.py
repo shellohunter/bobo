@@ -94,13 +94,13 @@ class EnClubMe(tornado.web.RequestHandler):
     def get(self):
         openid = self.get_argument("openid", None)
         if not identify(openid):
-            return self.write("Error: you are not a member yet.")
+            return self.render("wx/enc/error.html","You are not a member yet.")
         self.dbconn = sqlite3.connect(enc_db_path)
         self.dbcusor = self.dbconn.cursor()
         self.dbcusor.execute("SELECT * FROM member WHERE openid=?", (openid,))
         me = self.dbcusor.fetchone()
 
-        self.write("""
+        self.render("wx/enc/error.html","""
             openid=&lt;{0}><br/>
             email=&lt;{1}><br/>
             type=&lt;{2}><br/>
@@ -121,23 +121,26 @@ class EnClubLog(tornado.web.RequestHandler):
 class EnClubReg(tornado.web.RequestHandler):
     def get(self):
         openid = self.get_argument("openid", None)
-        if openid is not None:
-            self.render("wx/enc/reg.html", openid=openid)
-        else:
-            self.write("not allowed!")
+        if not openid:
+            return self.render("wx/enc/error.html","Invalid Request!")
+        if not identify(openid):
+            return self.render("wx/enc/error.html","Already registered!")
+
+        self.render("wx/enc/reg.html", openid=openid)
 
     def post(self):
         openid=self.get_argument("openid", None)
         email=self.get_argument("email", None)
         name=self.get_argument("name", None)
         if not openid or not email or not name:
-            return self.write("invalid argument!")
+            return self.render("wx/enc/error.html","Invalid argument!")
 
         with open("wx/enclub/member.list", "rb") as fp:
             data = fp.read()
             data = data.decode("utf-8")
             if data.find(email) < 0:
-                return self.write("Email not expected, seems you are not invited. sorry.")
+                return self.render("wx/enc/error.html",
+                    "Email not expected, seems you are not invited. sorry.")
 
         self.dbconn = sqlite3.connect(enc_db_path)
         self.dbcusor = self.dbconn.cursor()
@@ -146,7 +149,7 @@ class EnClubReg(tornado.web.RequestHandler):
         self.dbcusor.execute(cmd, (email,))
         found = self.dbcusor.fetchone()
         if found:
-            return self.write("Error: email already registered.")
+            return self.render("wx/enc/error.html","Email already registered.")
 
         cmd = """INSERT INTO member(openid, name, email, type, score, hw)
                  VALUES(?,?,?,?,?,?)"""
@@ -164,7 +167,7 @@ class EnClubReg(tornado.web.RequestHandler):
         self.dbconn.commit()
 
         # save. openid & email.
-        self.write("welcome!")
+        self.render("wx/enc/error.html","Welcome!")
 
 class EnClubAddTest(tornado.web.RequestHandler):
     def get(self):
@@ -172,7 +175,7 @@ class EnClubAddTest(tornado.web.RequestHandler):
         if openid is not None:
             self.render("wx/enc/addtest.html", openid=openid)
         else:
-            self.write("not allowed!")
+            self.render("wx/enc/error.html","Not allowed!")
 
     def post(self):
         openid=self.get_argument("openid", None)
@@ -191,7 +194,7 @@ class EnClubAddTest(tornado.web.RequestHandler):
             self.dbcusor.execute(cmd, (openid, when_, what))
 
             self.dbconn.commit()
-            return self.write("Appreciate your contribution!")
+            return self.render("wx/enc/error.html","Appreciate your contribution!")
 
         qtype=self.get_argument("type", None)
         item = {}
@@ -260,7 +263,7 @@ class EnClubTest(tornado.web.RequestHandler):
         openid = self.get_argument("openid", None)
         if openid is None:
             print("not a member!")
-            self.write("you are not a member yet.")
+            self.render("wx/enc/error.html","You are not a member yet.")
             return
 
         self.dbconn = sqlite3.connect(enc_db_path)
@@ -275,14 +278,14 @@ class EnClubTest(tornado.web.RequestHandler):
             self.render("wx/enc/test.html", openid=openid,
                 item=json.loads(item[1]), qid=qid, item_json=None)
         else:
-            self.write("no such item.")
+            self.render("wx/enc/error.html","no such item.")
 
     def post(self, qid):
         openid = self.get_argument("openid", None)
         answer = self.get_argument("answer", None)
 
         if not qid or not openid or not answer:
-            self.write("Invalid arguments!")
+            self.render("wx/enc/error.html","Invalid arguments!")
         else:
             self.dbconn = sqlite3.connect(enc_db_path)
             self.dbcusor = self.dbconn.cursor()
@@ -301,9 +304,9 @@ class EnClubTest(tornado.web.RequestHandler):
             print("item", item)
             item = json.loads(item[0])
             if set(answer.strip().upper()) == set(item["answer"].strip().upper()):
-                self.write("OK!")
+                self.render("wx/enc/error.html","OK! Next one!")
             else:
-                self.write("Wrong!")
+                self.render("wx/enc/error.html","Wrong!")
 
 
 from wx.wxbase import WXBase

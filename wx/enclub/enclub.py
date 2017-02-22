@@ -318,7 +318,10 @@ class EnClubCodes(WXBase):
 
         who = identify(openid)
         menu = []
-        if who[1] == "admin":
+        if not who:
+            print("not a member yet!")
+            menu.append(("Register First", "", headpic, "http://nossiac.com/wx/enc/reg?openid="+openid, None, ""))
+        elif who[1] == "admin":
             print("enclub amdin!")
             menu.append(("Hello，"+who[0], "", headpic, "", None, ""))
             menu.append(("About Me", "", "", "http://nossiac.com/wx/enc/me?openid="+openid, None, "member, admin"))

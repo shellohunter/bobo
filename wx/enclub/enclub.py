@@ -11,17 +11,18 @@ from io import StringIO
 # database path of enclub
 enc_db_path = "wx/enclub/.enclub.sqlite3.py"
 
-def identify(openid):
+def identify(openid, dbcusor=None):
+    if not openid:
+        return
+    if not dbcusor:
+        dbcusor = sqlite3.connect(enc_db_path).cursor()
 
-    self.dbconn = sqlite3.connect(enc_db_path)
-    self.dbcusor = self.dbconn.cursor()
+    cmd = "SELECT name,type FROM member WHERE openid=?"
+    dbcusor.execute(cmd, (openid,))
 
-    cmd = "SELECT type FROM member WHERE openid=?"
-    self.dbcusor.execute(cmd, (openid, ))
-
-    ret = self.dbcusor.fetchone()
-    if ret:
-        return ret[0]
+    ret = dbcusor.fetchone()
+    print("identify", ret)
+    return ret
 
 
 class EnClubDB():
@@ -88,6 +89,34 @@ class EnClubDump(tornado.web.RequestHandler):
         print(log)
         self.render("wx/enc/dump.html", members=members,
             homework=homework, log=log)
+
+class EnClubMe(tornado.web.RequestHandler):
+    def get(self):
+        openid = self.get_argument("openid", None)
+        if not identify(openid):
+            return self.write("Error: you are not a member yet.")
+        self.dbconn = sqlite3.connect(enc_db_path)
+        self.dbcusor = self.dbconn.cursor()
+        self.dbcusor.execute("SELECT * FROM member WHERE openid=?", (openid,))
+        me = self.dbcusor.fetchone()
+
+        self.write("""
+            openid=&lt;{0}><br/>
+            email=&lt;{1}><br/>
+            type=&lt;{2}><br/>
+            score=&lt;{3}><br/>
+            hw=&lt;{4}><br/>
+            """.format(me[0],me[1],me[2],me[3],me[4]))
+
+
+class EnClubLog(tornado.web.RequestHandler):
+    def get(self):
+        self.dbconn = sqlite3.connect(enc_db_path)
+        self.dbcusor = self.dbconn.cursor()
+        self.dbcusor.execute("SELECT * FROM log ORDER BY id")
+        log = self.dbcusor.fetchall()
+        print(log)
+        self.render("wx/enc/log.html", log=log)
 
 class EnClubReg(tornado.web.RequestHandler):
     def get(self):
@@ -167,11 +196,9 @@ class EnClubAddTest(tornado.web.RequestHandler):
         qtype=self.get_argument("type", None)
         item = {}
         item_json = ""
-        point    = self.get_argument("point", 1)
+        point = self.get_argument("point", 1)
 
-        print("AAAAAAAA",qtype)
         if qtype == "choose":
-            print("BBBBBBBB")
             question = self.get_argument("question", "")
             option_a = self.get_argument("A", "")
             option_b = self.get_argument("B", "")
@@ -287,13 +314,25 @@ class EnClubCodes(WXBase):
         openid = msg["FromUserName"]
         print("EnClubCodes.handleCode({0})".format(code))
 
-        # if user is not our member.
-        menu = [
-            ("Hello，Fans。", "", "http://www.nossiac.com/static/images/360-200.jpg", "", None,  "fans"),
-            ("Register", "", "", "/wx/enc/reg?openid="+openid, None, "fan"),
-            ("About Me", "", "", "/wx/enc/me?openid="+openid, None, "member, admin"),
-            ("Homework", "", "", "/wx/enc/test?&openid="+openid, None, "member, admin"),
-        ]
+        headpic = "http://nossiac.com/static/images/360-200.jpg"
+
+        who = identify(openid)
+        menu = []
+        if who[1] == "admin":
+            print("enclub amdin!")
+            menu.append(("Hello，"+who[0], "", headpic, "", None, ""))
+            menu.append(("About Me", "", "", "http://nossiac.com/wx/enc/me?openid="+openid, None, "member, admin"))
+            menu.append(("Homework", "", "", "http://nossiac.com/wx/enc/test/1?&openid="+openid, None, "member, admin"))
+            menu.append(("Club Log", "", "", "http://nossiac.com/wx/enc/log?&openid="+openid, None, "member, admin"))
+        elif who[1] == "member":
+            print("enclub member!")
+            menu.append(("Hello，"+who[0], "", headpic, "", None, ""))
+            menu.append(("About Me", "", "", "http://nossiac.com/wx/enc/me?openid="+openid, None, "member, admin"))
+            menu.append(("Homework", "", "", "http://nossiac.com/wx/enc/test/1?&openid="+openid, None, "member, admin"))
+        else:
+            print("not a member yet!")
+            menu.append(("Hello，"+who[0], "", headpic, "/wx/enc/reg?openid="+openid, None, ""))
+
         self.sendMenu(menu, msg)
         return True # we have ended the code, no more procedure.
 
@@ -305,6 +344,8 @@ class EnClub():
         return [
             (r'/wx/enc/reg', EnClubReg),
             (r'/wx/enc/dump', EnClubDump),
+            (r'/wx/enc/log', EnClubLog),
+            (r'/wx/enc/me', EnClubMe),
             (r'/wx/enc/addtest', EnClubAddTest),
             (r'/wx/enc/test/*', EnClubTest),
             (r'/wx/enc/test/(\d+)', EnClubTest),

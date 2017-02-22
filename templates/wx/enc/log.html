@@ -1,0 +1,36 @@
+<html>
+
+<head>
+    <meta name="description" content="nossiac">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>EnClub Log</title>
+	<link rel="stylesheet" type="text/css" href="{{ static_url('wx/enc/enc.css')}}">
+    <link rel="icon" type="image/png" href="{{ static_url('images/me.jpg')}}">
+    <meta name="MobileOptimized" content="width">
+    <meta name="HandheldFriendly" content="true">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="msapplication-tap-highlight" content="no">
+</head>
+<body>
+    <table id="log" class="dump">
+        <tr>
+            <th>Index</th>
+            <th>Who</th>
+            <th>When</th>
+            <th>What</th>
+        </tr>
+        {% for item in log %}
+        <tr>
+            <td>{{item[0]}}</td>
+            <td>{{item[1]}}</td>
+            <td>{{item[2]}}</td>
+            <td>{{item[3]}}</td>
+        </tr>
+        {% end %}
+    </table>
+
+</body>
+
+</html>

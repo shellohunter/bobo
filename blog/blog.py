@@ -138,9 +138,9 @@ class Read(BaseHandler):
                 c = blog.conn.cursor()
                 a = c.execute("SELECT * FROM articles WHERE link == ?",(link,)).fetchone()
         except tornado.web.MissingArgumentError:
-            self.redirect("/page-not-exist")
+            return self.redirect("/page-not-exist")
         if a == None:
-            self.redirect("/page-not-exist")
+            return self.redirect("/page-not-exist")
 
         c.execute("UPDATE articles SET view=view+1 WHERE link == ?",(link,))
         blog.conn.commit()

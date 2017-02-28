@@ -1,0 +1,17 @@
+
+<div id="test-item" class="text-left">
+    <input type="hidden" value="" id="answer" name="answer" />
+    <label class="question">{{item["question"]}}</label>
+    {% for option in item['options'] %}
+    {% if option[0] in item.get("answer","") %}
+    <label class="option option-correct"><span class="option_idx">{{option[0]}}</span> . {{option[1]}}</label>
+    {% else %}
+    <label class="option option-wrong"><span class="option_idx">{{option[0]}}</span> . {{option[1]}}</label>
+    {% end %}
+    {% end %}
+</div>
+
+<label class="answer text-left">
+    Answer: {{item.get("answer","")}} <br>
+    Explain: {{item.get("explain","123123123123123")}}
+</label>

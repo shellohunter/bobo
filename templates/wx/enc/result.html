@@ -1,0 +1,25 @@
+{% extends template.html %}
+
+{% block title %}
+<title>Rss</title>
+{% end %}
+
+{% block body %}
+<div class="wrapper text-center">
+    <form method="post" autocomplete="off">
+        <label>{{id}}</label>
+        <input type="hidden" name="openid" value="{{openid}}"/>
+        {% if fr %}<input type="hidden" name="fr" value="{{fr}}"/>{% end %}
+        {% if to %}<input type="hidden" name="to" value="{{to}}"/>{% end %}
+        {% module ItemResult(item) %}
+
+        {% if next %}
+		<button type="submit" onclick="document.location.href='{{next}}'; return false;" >OK, Next One.</button>
+		{% else %}
+		<button type="submit" onclick="return false;" >OK, funished.</button>
+		{% end %}
+    </form>
+</div>
+
+{% end %}
+

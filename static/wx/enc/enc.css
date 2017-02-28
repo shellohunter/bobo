@@ -127,12 +127,39 @@ label.option {
     font-size: 18px;
     border-bottom: 1px dotted silver;
     line-height: 28px;
+    color: black;
 }
 
 label.option-chosen {
     background-color: yellow;
+    color: black;
 }
 
+label.option-correct {
+    background-color: lightgreen;
+    color: black;
+}
+
+label.option-wrong {
+    text-decoration: line-through;
+    color: gray;
+}
+
+label.answer {
+    display: block;
+    margin: 0.2em;
+    padding: 0.8em 1.2em;
+    border: 1px solid #ccc;
+    font-size: 1.2em;
+    line-height: 1.5em;
+    font-weight: 400;
+    background-color: white;
+    cursor: auto;
+}
+
+label.explain {
+
+}
 
 textarea {
     width: 100%;
@@ -247,4 +274,8 @@ textarea {
 }
 .fill-answer input {
     height: 2em;
+}
+
+.hidden {
+    display: none;
 }

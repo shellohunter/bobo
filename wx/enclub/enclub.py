@@ -114,15 +114,17 @@ class EnClubDBG(tornado.web.RequestHandler):
         "/wx/enc/addtest",
         "/wx/enc/addtest?openid=xxx",
         "/wx/enc/addtest?openid=12344",
-        "/wx/enc/test/0",
-        "/wx/enc/test/0?openid=xxx",
-        "/wx/enc/test/0?openid=12344",
-        "/wx/enc/test/1",
-        "/wx/enc/test/1?openid=xxx",
-        "/wx/enc/test/1?openid=12344",
-        "/wx/enc/test/x",
-        "/wx/enc/test/x?openid=xxx",
-        "/wx/enc/test/x?openid=12344",
+        "/wx/enc/test?id=0",
+        "/wx/enc/test?id=0&openid=xxx",
+        "/wx/enc/test?id=0&openid=12344",
+        "/wx/enc/test?id=1",
+        "/wx/enc/test?id=1&openid=xxx",
+        "/wx/enc/test?id=1&openid=12344",
+        "/wx/enc/test?id=1&openid=12344&fr=1&to=5",
+        "/wx/enc/test?id=1&openid=12344&fr=2&to=4",
+        "/wx/enc/test?id=x",
+        "/wx/enc/test?id=x&openid=xxx",
+        "/wx/enc/test?id=x&openid=12344",
         ]
         links = ["<a href=\""+x+"\">"+x+"</a>" for x in urls]
 
@@ -238,6 +240,7 @@ class EnClubAddTest(tornado.web.RequestHandler):
             option_c = self.get_argument("C", "")
             option_d = self.get_argument("D", "")
             answer   = self.get_argument("answer", "")
+            explain   = self.get_argument("explain", "")
 
             # print("question={0}\noption_a:{1}\noption_b:{2}\
             #     \noption_c:{3}\noption_d:{4}\nanswer={5}\npoint={6}\n".format(
@@ -255,6 +258,7 @@ class EnClubAddTest(tornado.web.RequestHandler):
                 ("D", option_d),
             ]
             item["answer"] = answer
+            item["explain"] = explain
 
             io = StringIO()
             json.dump(item, io)
@@ -271,8 +275,8 @@ class EnClubAddTest(tornado.web.RequestHandler):
         else:
             pass
 
-        return self.render("wx/enc/test.html", 
-            openid=openid, item=item, point=point, item_json=item_json, qid="Preview")
+        return self.render("wx/enc/preview.html", 
+            openid=openid, item=item, point=point, item_json=item_json, id="Preview")
 
 
 
@@ -288,28 +292,46 @@ class ItemUI(tornado.web.UIModule):
             return self.render_string('wx/enc/ui_fill.html', item=item)
 
 
+class ItemResultUI(tornado.web.UIModule):
+    def render(self, item):
+        if item["type"] == "choose":
+            return self.render_string('wx/enc/ui_choose_result.html', item=item)
+        elif item["type"] == "fill":
+            return self.render_string('wx/enc/ui_fill.html', item=item)
+        elif item["type"] == "dictate":
+            return self.render_string('wx/enc/ui_fill.html', item=item)
+        else:
+            return self.render_string('wx/enc/ui_fill.html', item=item)
+
 class EnClubTest(tornado.web.RequestHandler):
-    def get(self, qid=0):
+    def get(self):
+        id = self.get_argument("id", 0)
+        fr = self.get_argument("fr", 0)
+        to = self.get_argument("to", 0)
         openid = self.get_argument("openid", None)
         if not identify(openid):
-            self.render("wx/enc/error.html",
+            return self.render("wx/enc/error.html",
                 info="You are not a member yet. Please login via wechat.")
-            return
+        #if id==0 or fr==0 or to==0 or to < fr or id < fr or to < id :
+        #    return self.render("wx/enc/error.html", info="Invalid test id.")
 
         self.dbconn = sqlite3.connect(enc_db_path)
         self.dbcusor = self.dbconn.cursor()
         cmd = """SELECT * FROM homework WHERE id=?"""
-        self.dbcusor.execute(cmd, (qid,))
+        self.dbcusor.execute(cmd, (id,))
 
         item = self.dbcusor.fetchone()
         if item:
             # print(json.loads(item[1]))
             self.render("wx/enc/test.html", openid=openid,
-                item=json.loads(item[1]), qid=qid, item_json=None)
+                item=json.loads(item[1]), id=id, fr=fr, to=to)
         else:
-            self.render("wx/enc/error.html", info="no such item.")
+            self.render("wx/enc/error.html", info="Invalid test id.")
 
-    def post(self, qid):
+    def post(self):
+        id = self.get_argument("id", None)
+        fr = self.get_argument("fr", None)
+        to = self.get_argument("to", None)
         openid = self.get_argument("openid", None)
         answer = self.get_argument("answer", None)
         me = identify(openid)
@@ -317,14 +339,14 @@ class EnClubTest(tornado.web.RequestHandler):
             return self.render("wx/enc/error.html",
                 info="You must login via wechat first!")
 
-        if not qid:
-            return self.render("wx/enc/error.html", info="Invalid arguments! qid missing!")
+        if not id:
+            return self.render("wx/enc/error.html", info="Invalid arguments! id missing!")
 
         self.dbconn = sqlite3.connect(enc_db_path)
         self.dbcusor = self.dbconn.cursor()
 
         who = "{0}({1})".format(me[0], me[1])
-        cmd = """SELECT * FROM log WHERE who = '{0}' AND what LIKE '%TEST, qid={1}%'""".format(who, qid)
+        cmd = """SELECT * FROM log WHERE who = '{0}' AND what LIKE '%TEST, id={1}%'""".format(who, id)
         self.dbcusor.execute(cmd)
         item = self.dbcusor.fetchone()
 
@@ -334,19 +356,34 @@ class EnClubTest(tornado.web.RequestHandler):
             # print("没有分！", item)
 
         when_ = str(datetime.datetime.utcnow()).split(".")[0]
-        what = "TEST, qid={0}, answer={1}, ".format(qid, answer)
+        what = "TEST, id={0}, answer={1}, ".format(id, answer)
         cmd = """INSERT INTO log(id, who, when_, what) VALUES(?,?,?,?)"""
         self.dbcusor.execute(cmd, (None, who, when_, what))
 
         self.dbconn.commit()
 
-        self.dbcusor.execute("SELECT item FROM homework WHERE id=?", (qid,))
+        next = None
+        if fr and to and int(id) < int(to):
+            next = "/wx/enc/test?id={0}&fr={1}&to={2}&openid={3}".format(int(id)+1, fr, to, openid)
+
+        self.dbcusor.execute("SELECT item FROM homework WHERE id=?", (id,))
         item = self.dbcusor.fetchone()
         item = json.loads(item[0])
         if set(answer.strip().upper()) == set(item["answer"].strip().upper()):
-            self.render("wx/enc/error.html", info="OK! Next one!")
+            print("correct!")
+            return self.render("wx/enc/error.html",
+                info="OK! Next one!",
+                next=next)
         else:
-            self.render("wx/enc/error.html", info="Wrong!")
+            print("Wrong!")
+            #return self.render("wx/enc/error.html", info="Wrong!", next=next)
+            return self.render("wx/enc/result.html", 
+                openid=openid,
+                item=item,
+                id=id,
+                fr=fr,
+                to=to,
+                next=next)
 
 
 from wx.wxbase import WXBase
@@ -389,8 +426,7 @@ class EnClub():
             (r'/wx/enc/log', EnClubLog),
             (r'/wx/enc/me', EnClubMe),
             (r'/wx/enc/addtest', EnClubAddTest),
-            (r'/wx/enc/test/*', EnClubTest),
-            (r'/wx/enc/test/(.+)', EnClubTest),
+            (r'/wx/enc/test', EnClubTest),
         ]
 
     def codes(self):
@@ -400,5 +436,6 @@ class EnClub():
 
     def uimodules(self):
         return [
-            {'Item':ItemUI}
+            {'Item':ItemUI},
+            {'ItemResult':ItemResultUI}
         ]

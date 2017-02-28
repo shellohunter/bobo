@@ -6,23 +6,12 @@
 
 {% block body %}
     <div class="wrapper text-center">
-        {% if item_json %}
-        <form method="post" action="/wx/enc/addtest" autocomplete="off">
-        {% else %}
         <form method="post" autocomplete="off">
-        {% end %}
-
-            <label>{{qid}}</label>
-            {% module Item(item) %}
-
-            {% if item_json %}
+            <label>{{id}}</label>
             <input type="hidden" name="openid" value="{{openid}}"/>
-            <input type="hidden" name="item_json" value="{{item_json}}"/>
-            <button onclick="history.go(-1); return false;" >再改一下</button>
-            <button type="submit" >没问题，提交</button>
-            {% else %}
-            <button type="submit" >OK</button>
-            {% end %}
+            {% if fr %}<input type="hidden" name="fr" value="{{fr}}"/>{% end %}
+            {% if to %}<input type="hidden" name="to" value="{{to}}"/>{% end %}
+            {% module Item(item) %}
         </form>
     </div>
 {% end %}

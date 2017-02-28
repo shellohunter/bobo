@@ -1,4 +1,4 @@
-{% extends m-template.html %}
+{% extends template.html %}
 
 {% block title %}
 <title>Register</title>
@@ -7,12 +7,12 @@
 {% block body %}
     <div class="wrapper text-center">
     <form method="post" action="/wx/enc/reg">
-        <div><label class="title">Email (xxx@mediatek.com)</label></div>
-        <div class="mobile"><input type="text" name="email"></div>
-        <div><label class="title">Nickname</label></div>
-        <div class="mobile"><input type="text" name="name"></div>
-        <div><input type="hidden" value="{{openid}}" name="openid"></div>
-        <div class="mobile"><button type="submit">提交</button></div>
+        <label class="label-line">Email</label>
+        <input type="text" name="email" class="input-line">
+        <label class="label-line">Nickname</label>
+        <input type="text" name="name" class="input-line">
+        <input type="hidden" value="{{openid}}" name="openid">
+        <button type="submit">Register</button>
     </form>
     </div>
 {% end %}

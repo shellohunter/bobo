@@ -1,40 +1,60 @@
 body {
-    background-color: #eee;
+    /*background-color: #eee;*/
+    background: white;
     margin: 0;
     padding: 0;
     font-size: 1.2em;
 }
 
-.title {
+.label-line {
     display: block;
     padding: 0.5em 1.2em;
     border: 1px solid #ccc;
     font-weight: 400;
+    font-size: 28px;
     cursor: pointer;
     color: black;
-    background: lightgreen;
+    background: #eee;
 }
 
-label {
+.input-line {
     display: block;
-    margin: 0.2em;
-    padding: 0.8em 1.2em;
-    border: 1px solid #ccc;
-    font-size: 1.2em;
-    line-height: 1.5em;
-    font-weight: 400;
-    cursor: pointer;
-    color: black;
-    background: #fff;
-    padding: 10px 20px;
-    font-size: 18px;
-    border-bottom: 1px dotted silver;
-    line-height: 28px;
+    margin: 0.2em 0em;
+    width: 100%;
+    font-size: 28px;
 }
+
+button {
+    display: block;
+    width: 100%;
+    font-size: 1.1em;
+    font-weight: 400;
+    line-height: 28px;
+    margin: 0.2em 0em;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 15px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius:15px;
+    background-color:#ededed;
+    border:1px solid #a69fa6;
+}
+
+
+.error {
+    padding: 1em ;
+    font-size: 32px;
+    line-height: 32px;
+    word-wrap:　break-word;
+}
+
 table {
     border-collapse: collapse;
+    width: 100%;
+    font-size: 1.2em;
+    margin: 0.2em 0;
 }
-
+/*
 .mobile button {
     display: block;
     width: 100%;
@@ -51,13 +71,45 @@ table {
     cursor: pointer;
     border-radius: 5px;
     -moz-border-radius: 5px;
+}*/
+
+label.question {
+    display: block;
+    margin: 0.2em;
+    padding: 0.8em 1.2em;
+    border: 1px solid #ccc;
+    font-size: 1.2em;
+    line-height: 1.5em;
+    font-weight: 400;
+    cursor: pointer;
+    color: black;
+    background: #fff;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-bottom: 1px dotted silver;
+    line-height: 28px;
 }
 
-.mobile input {
+label.option {
+    display: block;
     margin: 0.2em;
+    padding: 0.8em 1.2em;
+    border: 1px solid #ccc;
+    font-size: 1.2em;
+    line-height: 1.5em;
+    font-weight: 400;
+    cursor: pointer;
+    background: #fff;
     padding: 10px 20px;
-    width: 100%;
+    font-size: 18px;
+    border-bottom: 1px dotted silver;
+    line-height: 28px;
 }
+
+label.option-chosen {
+    background-color: yellow;
+}
+
 
 textarea {
     width: 100%;
@@ -75,18 +127,9 @@ textarea {
 }
 
 
-
-.option {
-    color: #888;
-}
-
-.option-chosen {
-    background-color: yellow;
-}
-
 .wrapper {
-    width: 80%;
     margin: auto;
+    width: 98%;
 }
 
 .dump th {
@@ -98,7 +141,10 @@ textarea {
 
 .dump td {
     border: 1px solid black;
-    padding: 0 1em;
+    padding: 0.2em 0.3em;
+    overflow: hidden;
+    word-wrap:　break-word;
+    word-break: break-all;
 }
 
 .set-option {
@@ -172,13 +218,6 @@ textarea {
     display: block;
 }
 
-.commit-test-item {
-    margin: 0.5em;
-    min-height: 1.5em;
-    min-width: 8em;
-    font-size: 1.5em;
-    line-height: 1.5em;
-}
 
 .fill {
     margin: 0.5em 0;

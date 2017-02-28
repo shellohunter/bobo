@@ -1,4 +1,4 @@
-{% extends m-template.html %}
+{% extends template.html %}
 
 {% block title %}
 <title>Info</title>
@@ -6,6 +6,9 @@
 
 {% block body %}
 <div class="wrapper text-center">
-    <p>{{error}}</p>
+	<img src="{{ static_url('images/500.png')}}" style="margin: auto;">
+</div>
+<div class="wrapper">
+	<p class="error">{{info}}</p>
 </div>
 {% end %}

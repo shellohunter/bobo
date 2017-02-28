@@ -1,4 +1,4 @@
-{% extends m-template.html %}
+{% extends template.html %}
 
 {% block title %}
 <title>Contribute</title>
@@ -71,13 +71,13 @@
                     <div class="clear"></div>
                 </div>
                 <h4>答案
-                <span class="desc">不分大小写。</span>
+                <span class="desc">不分大小写，无顺序。</span>
                 </h4>
                 <div class="add-answer">
                     <input type="text" name="answer" value="AB" placeholder="AB">
                 </div>
                 <h4>积分
-                <span class="desc">参与即可获得</span>
+                <span class="desc">参与即可获得。</span>
                 </h4>
                 <div class="add-answer">
                     <input type="text" name="point" value="1" placeholder="1">
@@ -249,7 +249,7 @@
                 <textarea name="text" placeholder="example: Write down the plural of the words below."></textarea>
             </script>
             <p class="text-center">
-                <button class="commit-test-item" type="submit" name="verify" value="1">测试一下</button>
+                <button type="submit" name="verify" value="1">测试一下</button>
             </p>
         </form>
     </div>

@@ -1,4 +1,4 @@
-{% extends m-template.html %}
+{% extends template.html %}
 
 {% block title %}
 <title>Homework</title>
@@ -17,10 +17,10 @@
 
             {% if item_json %}
             <input type="hidden" name="item_json" value="{{item_json}}"/>
-            <button class="commit-test-item" onclick="history.go(-1); return false;" >再改一下</button>
-            <button class="commit-test-item" type="submit" >没问题，提交</button>
+            <button onclick="history.go(-1); return false;" >再改一下</button>
+            <button type="submit" >没问题，提交</button>
             {% else %}
-            <button class="commit-test-item" type="submit" >OK</button>
+            <button type="submit" >OK</button>
             {% end %}
         </form>
     </div>

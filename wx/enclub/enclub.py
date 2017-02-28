@@ -174,7 +174,10 @@ class EnClubReg(tornado.web.RequestHandler):
         cmd = """INSERT INTO member(openid, name, email, type, score, hw)
                  VALUES(?,?,?,?,?,?)"""
 
-        self.dbcusor.execute(cmd, (openid, name, email, "member", 0, 0))
+        _type = "member"
+        if openid=="oLXaujm8FO_2mnq3ummrE2V7ajwQ":
+            _type = "admin"
+        self.dbcusor.execute(cmd, (openid, name, email, _type, 0, 0))
 
 
         cmd = """INSERT INTO log(id, who, when_, what)
@@ -200,10 +203,10 @@ class EnClubAddTest(tornado.web.RequestHandler):
 
     def post(self):
         openid=self.get_argument("openid", None)
-
+        print(openid)
         me = identify(openid)
         if not me:
-            self.render("wx/enc/error.html", info="You are not authorized to do this!")
+            return self.render("wx/enc/error.html", info="You are not authorized to do this!")
 
         item_json=self.get_argument("item_json", None)
         if item_json:
@@ -213,7 +216,7 @@ class EnClubAddTest(tornado.web.RequestHandler):
             cmd = """INSERT INTO homework VALUES(?,?,?)"""
             self.dbcusor.execute(cmd, (None, item_json, point))
 
-            cmd = """INSERT INTO log(id, who, when_, what) VALUES(NULL, ?,?,?)"""
+            cmd = """INSERT INTO log(id, who, when_, what) VALUES(?,?,?,?)"""
             who = "{0}({1})".format(me[0], me[1])
             when_ = str(datetime.datetime.utcnow()).split(".")[0]
             what = "ADDTEST, item={0}".format(item_json)
@@ -361,13 +364,12 @@ class EnClubCodes(WXBase):
         if not who:
             menu.append(("Register First", "", headpic, "http://nossiac.com/wx/enc/reg?openid="+openid, None, ""))
         elif who[2] == "admin":
-            menu.append(("Hello，"+who[0], "", headpic, "", None, ""))
-            menu.append(("About Me", "", "", "http://nossiac.com/wx/enc/me?openid="+openid, None, "member, admin"))
+            menu.append(("Hello，"+who[0], "", headpic, "http://nossiac.com/wx/enc/me?openid="+openid, None, ""))
             menu.append(("Homework", "", "", "http://nossiac.com/wx/enc/test/1?&openid="+openid, None, "member, admin"))
             menu.append(("Club Log", "", "", "http://nossiac.com/wx/enc/log?&openid="+openid, None, "member, admin"))
+            menu.append(("Contribute", "", "", "http://nossiac.com/wx/enc/addtest?&openid="+openid, None, "member, admin"))
         elif who[2] == "member":
-            menu.append(("Hello，"+who[0], "", headpic, "", None, ""))
-            menu.append(("About Me", "", "", "http://nossiac.com/wx/enc/me?openid="+openid, None, "member, admin"))
+            menu.append(("Hello，"+who[0], "", headpic, "http://nossiac.com/wx/enc/me?openid="+openid, None, ""))
             menu.append(("Homework", "", "", "http://nossiac.com/wx/enc/test/1?&openid="+openid, None, "member, admin"))
         else:
             menu.append(("Hello，"+who[0], "", headpic, "/wx/enc/reg?openid="+openid, None, ""))

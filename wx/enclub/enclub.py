@@ -17,11 +17,10 @@ def identify(openid, dbcusor=None):
     if not dbcusor:
         dbcusor = sqlite3.connect(enc_db_path).cursor()
 
-    cmd = "SELECT name,type FROM member WHERE openid=?"
+    cmd = "SELECT name,openid,type FROM member WHERE openid=?"
     dbcusor.execute(cmd, (openid,))
 
     ret = dbcusor.fetchone()
-    print("identify", ret)
     return ret
 
 
@@ -35,16 +34,9 @@ class EnClubDB():
         self.dbcusor = self.dbconn.cursor()
         self.dbcusor.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
         tables = self.dbcusor.fetchall()
-        print(tables)
         for each in tables:
             if "member" == each[0]:
-                print("EnClub db exists.")
                 return
-        #if "member" in tables:
-        #    print("EnClub db exists.")
-        #    return
-        else:
-            print("EnClub does not exist, create it now.")
 
         tmp = """CREATE TABLE member (
                 openid TEXT,
@@ -80,15 +72,10 @@ class EnClubDump(tornado.web.RequestHandler):
         self.dbcusor = self.dbconn.cursor()
         self.dbcusor.execute("SELECT * FROM member ORDER BY name")
         members = self.dbcusor.fetchall()
-        print(members)
         self.dbcusor.execute("SELECT * FROM homework ORDER BY id")
         homework = self.dbcusor.fetchall()
-        print(homework)
-        self.dbcusor.execute("SELECT * FROM log ORDER BY id")
-        log = self.dbcusor.fetchall()
-        print(log)
         self.render("wx/enc/dump.html", members=members,
-            homework=homework, log=log)
+            homework=homework)
 
 class EnClubMe(tornado.web.RequestHandler):
     def get(self):
@@ -110,7 +97,6 @@ class EnClubLog(tornado.web.RequestHandler):
         self.dbcusor = self.dbconn.cursor()
         self.dbcusor.execute("SELECT * FROM log ORDER BY id")
         log = self.dbcusor.fetchall()
-        print(log)
         self.render("wx/enc/log.html", log=log)
 
 
@@ -193,10 +179,10 @@ class EnClubReg(tornado.web.RequestHandler):
 
         cmd = """INSERT INTO log(id, who, when_, what)
                  VALUES(?,?,?,?)"""
-
+        who = "{0}({1})".format(name, openid)
         when_ = str(datetime.datetime.utcnow()).split(".")[0]
-        what = "registered, email={0}, openid={1}".format(email, openid)
-        self.dbcusor.execute(cmd, (None, name, when_, what))
+        what = "REGISTER, email={0}, openid={1}".format(email, openid)
+        self.dbcusor.execute(cmd, (None, who, when_, what))
 
         self.dbconn.commit()
 
@@ -215,6 +201,10 @@ class EnClubAddTest(tornado.web.RequestHandler):
     def post(self):
         openid=self.get_argument("openid", None)
 
+        me = identify(openid)
+        if not me:
+            self.render("wx/enc/error.html", info="You are not authorized to do this!")
+
         item_json=self.get_argument("item_json", None)
         if item_json:
             point = self.get_argument("point", 1)
@@ -224,9 +214,10 @@ class EnClubAddTest(tornado.web.RequestHandler):
             self.dbcusor.execute(cmd, (None, item_json, point))
 
             cmd = """INSERT INTO log(id, who, when_, what) VALUES(NULL, ?,?,?)"""
+            who = "{0}({1})".format(me[0], me[1])
             when_ = str(datetime.datetime.utcnow()).split(".")[0]
-            what = "contributed, item={0}".format(item_json)
-            self.dbcusor.execute(cmd, (openid, when_, what))
+            what = "ADDTEST, item={0}".format(item_json)
+            self.dbcusor.execute(cmd, (None, openid, when_, what))
 
             self.dbconn.commit()
             return self.render("wx/enc/error.html",
@@ -245,12 +236,12 @@ class EnClubAddTest(tornado.web.RequestHandler):
             option_d = self.get_argument("D", "")
             answer   = self.get_argument("answer", "")
 
-            print("question={0}\noption_a:{1}\noption_b:{2}\
-                \noption_c:{3}\noption_d:{4}\nanswer={5}\npoint={6}\n".format(
-                question, option_a, option_b, option_c,
-                option_d, answer, point
-                )
-            )
+            # print("question={0}\noption_a:{1}\noption_b:{2}\
+            #     \noption_c:{3}\noption_d:{4}\nanswer={5}\npoint={6}\n".format(
+            #     question, option_a, option_b, option_c,
+            #     option_d, answer, point
+            #     )
+            # )
 
             item["type"] = qtype
             item["question"] = question
@@ -298,7 +289,6 @@ class EnClubTest(tornado.web.RequestHandler):
     def get(self, qid=0):
         openid = self.get_argument("openid", None)
         if not identify(openid):
-            print("not a member!")
             self.render("wx/enc/error.html",
                 info="You are not a member yet. Please login via wechat.")
             return
@@ -309,9 +299,8 @@ class EnClubTest(tornado.web.RequestHandler):
         self.dbcusor.execute(cmd, (qid,))
 
         item = self.dbcusor.fetchone()
-        print("======", item)
         if item:
-            print(json.loads(item[1]))
+            # print(json.loads(item[1]))
             self.render("wx/enc/test.html", openid=openid,
                 item=json.loads(item[1]), qid=qid, item_json=None)
         else:
@@ -320,34 +309,41 @@ class EnClubTest(tornado.web.RequestHandler):
     def post(self, qid):
         openid = self.get_argument("openid", None)
         answer = self.get_argument("answer", None)
-
-        if not openid or not identify(openid):
+        me = identify(openid)
+        if not me:
             return self.render("wx/enc/error.html",
-                info="You must login in wechat first!")
+                info="You must login via wechat first!")
 
-        if not qid or not openid or not answer:
-            self.render("wx/enc/error.html", info="Invalid arguments!")
-        else:
-            self.dbconn = sqlite3.connect(enc_db_path)
-            self.dbcusor = self.dbconn.cursor()
+        if not qid:
+            return self.render("wx/enc/error.html", info="Invalid arguments! qid missing!")
 
+        self.dbconn = sqlite3.connect(enc_db_path)
+        self.dbcusor = self.dbconn.cursor()
+
+        who = "{0}({1})".format(me[0], me[1])
+        cmd = """SELECT * FROM log WHERE who = '{0}' AND what LIKE '%TEST, qid={1}%'""".format(who, qid)
+        self.dbcusor.execute(cmd)
+        item = self.dbcusor.fetchone()
+
+        if not item:
             self.dbcusor.execute("UPDATE member SET score=score+1 WHERE openid == ?", (openid,))
+        # else:
+            # print("没有分！", item)
 
-            cmd = """INSERT INTO log(id, who, when_, what) VALUES(NULL, ?,?,?)"""
-            when_ = str(datetime.datetime.utcnow()).split(".")[0]
-            what = "take test, id={0}, answer={1}, ".format(qid, answer)
-            self.dbcusor.execute(cmd, (openid, when_, what))
+        when_ = str(datetime.datetime.utcnow()).split(".")[0]
+        what = "TEST, qid={0}, answer={1}, ".format(qid, answer)
+        cmd = """INSERT INTO log(id, who, when_, what) VALUES(?,?,?,?)"""
+        self.dbcusor.execute(cmd, (None, who, when_, what))
 
-            self.dbconn.commit()
+        self.dbconn.commit()
 
-            self.dbcusor.execute("SELECT item FROM homework WHERE id=?", (qid,))
-            item = self.dbcusor.fetchone()
-            print("item", item)
-            item = json.loads(item[0])
-            if set(answer.strip().upper()) == set(item["answer"].strip().upper()):
-                self.render("wx/enc/error.html", info="OK! Next one!")
-            else:
-                self.render("wx/enc/error.html", info="Wrong!")
+        self.dbcusor.execute("SELECT item FROM homework WHERE id=?", (qid,))
+        item = self.dbcusor.fetchone()
+        item = json.loads(item[0])
+        if set(answer.strip().upper()) == set(item["answer"].strip().upper()):
+            self.render("wx/enc/error.html", info="OK! Next one!")
+        else:
+            self.render("wx/enc/error.html", info="Wrong!")
 
 
 from wx.wxbase import WXBase
@@ -356,28 +352,24 @@ class EnClubCodes(WXBase):
     @staticmethod
     def handleCode(self, code, msg):
         openid = msg["FromUserName"]
-        print("EnClubCodes.handleCode({0})".format(code))
+        #print("EnClubCodes.handleCode({0})".format(code))
 
         headpic = "http://nossiac.com/static/images/360-200.jpg"
 
         who = identify(openid)
         menu = []
         if not who:
-            print("not a member yet!")
             menu.append(("Register First", "", headpic, "http://nossiac.com/wx/enc/reg?openid="+openid, None, ""))
-        elif who[1] == "admin":
-            print("enclub amdin!")
+        elif who[2] == "admin":
             menu.append(("Hello，"+who[0], "", headpic, "", None, ""))
             menu.append(("About Me", "", "", "http://nossiac.com/wx/enc/me?openid="+openid, None, "member, admin"))
             menu.append(("Homework", "", "", "http://nossiac.com/wx/enc/test/1?&openid="+openid, None, "member, admin"))
             menu.append(("Club Log", "", "", "http://nossiac.com/wx/enc/log?&openid="+openid, None, "member, admin"))
-        elif who[1] == "member":
-            print("enclub member!")
+        elif who[2] == "member":
             menu.append(("Hello，"+who[0], "", headpic, "", None, ""))
             menu.append(("About Me", "", "", "http://nossiac.com/wx/enc/me?openid="+openid, None, "member, admin"))
             menu.append(("Homework", "", "", "http://nossiac.com/wx/enc/test/1?&openid="+openid, None, "member, admin"))
         else:
-            print("not a member yet!")
             menu.append(("Hello，"+who[0], "", headpic, "/wx/enc/reg?openid="+openid, None, ""))
 
         self.sendMenu(menu, msg)

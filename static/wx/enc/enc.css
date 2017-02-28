@@ -54,6 +54,29 @@ table {
     font-size: 1.2em;
     margin: 0.2em 0;
 }
+
+th {
+    border: 1px solid black;
+    color: red;
+    text-align: left;
+}
+
+td {
+    border: 1px solid black;
+    padding: 0.2em 0.3em;
+    overflow: hidden;
+    word-wrap:　break-word;
+    word-break: break-all;
+}
+
+.log th {
+    font-size: 0.5em;
+}
+
+.log td {
+    font-size: 0.5em;
+}
+
 /*
 .mobile button {
     display: block;
@@ -132,20 +155,6 @@ textarea {
     width: 98%;
 }
 
-.dump th {
-    border: 1px solid black;
-    color: red;
-    padding: 0 1em;
-    text-align: left;
-}
-
-.dump td {
-    border: 1px solid black;
-    padding: 0.2em 0.3em;
-    overflow: hidden;
-    word-wrap:　break-word;
-    word-break: break-all;
-}
 
 .set-option {
     width: 100%;

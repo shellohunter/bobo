@@ -6,7 +6,7 @@
 {% end %}
 
 {% block body %}
-    <table id="member" class="dump">
+    <table id="member" class="log">
         <tr>
             <th>openid</th>
             <th>name</th>
@@ -27,35 +27,16 @@
         {% end %}
     </table>
 
-    <table id="homework" class="dump">
-        <tr>
-            <th>id</th>
-            <th>test</th>
-            <th>score</th>
-        </tr>
+    <table id="homework" class="log">
         {% for item in homework %}
         <tr>
-            <td>{{item[0]}}</td>
-            <td>{{item[1]}}</td>
-            <td>{{item[2]}}</td>
+            <th>ID={{item[0]}}</th>
+            <td>Score={{item[2]}}</td>
+        </tr>
+        <tr>
+            <td colspan="2">{{item[1]}}</td>
         </tr>
         {% end %}
     </table>
 
-    <table id="log" class="dump">
-        <tr>
-            <th>idx</th>
-            <th>who</th>
-            <th>when</th>
-            <th>what</th>
-        </tr>
-        {% for item in log %}
-        <tr>
-            <td>{{item[0]}}</td>
-            <td>{{item[1]}}</td>
-            <td>{{item[2]}}</td>
-            <td>{{item[3]}}</td>
-        </tr>
-        {% end %}
-    </table>
 {% end %}

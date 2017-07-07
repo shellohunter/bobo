@@ -147,6 +147,7 @@ if __name__ == "__main__":
         ]
 
     from blog import blog
+    from geek import geek
     from t9x import t9x
     from wx.wx import WX
     #from wifigod import wifigod
@@ -159,7 +160,7 @@ if __name__ == "__main__":
     #webhandlers.extend(club.Club().handlers())
     #webhandlers.extend(wifigod.WifiGod().handlers())
     #webhandlers.extend(movies.Movies().handlers())
-    #webhandlers.extend(geek.Geek().handlers())
+    webhandlers.extend(geek.Geek().handlers())
     #webhandlers.extend(mysky.MySky().handlers())
     webhandlers.extend(WX().handlers())
     webhandlers.append((r"/.*", Error)) # always the last!

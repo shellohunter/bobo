@@ -1,0 +1,41 @@
+{% extends template.html %}
+{% block title %}
+  <title>{{a[0]}}</title>
+{% end %}
+{% block body %}
+
+<h2>
+{% if auth %}
+  <a class="ainhx" href="/geek/w/{{a[2]}}">{{a[0]}}</a>
+{% else %}
+  {{a[0]}}
+{% end %}
+</h2>
+
+<div style="padding: 0.25em 0.5em;">
+  <span class="small">tags:</span>
+  {% for each in a[5].split("(")[1:] %}
+    <a class="tags small" href="/geek/tags/{{each.strip("()")}}">{{each.strip("()")}}</a>
+  {% end %}
+</div>
+
+
+<div class="article">{% raw a[1] %}</div>
+{#<div class="text-right"  style="padding-right: 2em;">{{a[3]}}</div>#}
+
+<script type="text/javascript">
+(function(){
+var url = "http://widget.weibo.com/distribution/comments.php?width=0&url=http%3A%2F%2Fnossiac.com%2Fgeek%2F{{a[2]}}&dpc=1";
+document.write('<iframe id="WBCommentFrame" src="' + url + '" scrolling="no" frameborder="0" style="width:100%"></iframe>');
+})();
+</script>
+<script src="http://tjs.sjs.sinajs.cn/open/widget/js/widget/comment.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+window.WBComment.init({
+    "id": "WBCommentFrame"
+});
+</script>
+{% end %}
+
+
+

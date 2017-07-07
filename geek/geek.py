@@ -15,7 +15,7 @@ import requests
 from qiniu import Auth, put_file, etag, BucketManager
 import qiniu.config
 
-blog=None
+geek=None
 root=".."
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -56,7 +56,7 @@ class Index(BaseHandler):
             cmd2 = """SELECT title,link,hide,view
                       FROM articles
                       ORDER BY rowid DESC
-                      LIMIT 20 OFFSET ?"""
+                      LIMIT 25 OFFSET ?"""
         else:
             print("visitor!")
             auth = False
@@ -65,9 +65,9 @@ class Index(BaseHandler):
                       FROM articles
                       WHERE hide <> 1
                       ORDER BY rowid DESC
-                      LIMIT 20 OFFSET ?"""
+                      LIMIT 25 OFFSET ?"""
 
-        c = blog.conn.cursor()
+        c = geek.conn.cursor()
         page = int(self.get_argument("p", "1"))
 
         pages = int((c.execute(cmd1).fetchone()[0]-1)/20+1)
@@ -80,9 +80,9 @@ class Index(BaseHandler):
         # LIMIT 100
         articles = c.execute(cmd2,((page-1)*20,)).fetchall()
         if self.ismobile():
-            self.render("blog/m-blog.html", aa=articles, pages=pages, auth = auth)
+            self.render("geek/m-geek.html", aa=articles, pages=pages, auth = auth)
         else:
-            self.render("blog/blog.html", aa=articles, pages=pages, auth = auth)
+            self.render("geek/geek.html", aa=articles, pages=pages, auth = auth)
 
 class Tags(BaseHandler):
     """docstring for Tags"""
@@ -96,7 +96,7 @@ class Tags(BaseHandler):
 
         taglist = tags.split('-')
 
-        c = blog.conn.cursor()
+        c = geek.conn.cursor()
         page = int(self.get_argument("p", "1"))
 
         cmd = "SELECT title,link,hide,view FROM articles WHERE"
@@ -120,9 +120,9 @@ class Tags(BaseHandler):
         #print(cmd)
         pages = int((c.execute(cmd).fetchone()[0]-1)/20+1)
         if self.ismobile():
-            self.render("blog/m-blog.html", aa=articles, pages=pages, auth = auth)
+            self.render("geek/m-geek.html", aa=articles, pages=pages, auth = auth)
         else:
-            self.render("blog/blog.html", aa=articles, pages=pages, auth = auth)
+            self.render("geek/geek.html", aa=articles, pages=pages, auth = auth)
 
 class Read(BaseHandler):
     def get(self, link = None):
@@ -135,7 +135,7 @@ class Read(BaseHandler):
         try:
             if link != None:
                 link = "".join(link.rsplit(".html", 1)) # nice trick for rreplace!
-                c = blog.conn.cursor()
+                c = geek.conn.cursor()
                 a = c.execute("SELECT * FROM articles WHERE link == ?",(link,)).fetchone()
         except tornado.web.MissingArgumentError:
             return self.redirect("/page-not-exist")
@@ -143,19 +143,19 @@ class Read(BaseHandler):
             return self.redirect("/page-not-exist")
 
         c.execute("UPDATE articles SET view=view+1 WHERE link == ?",(link,))
-        blog.conn.commit()
+        geek.conn.commit()
         if self.ismobile():
-            self.render("blog/m-read.html", a=a, auth=auth)
+            self.render("geek/m-read.html", a=a, auth=auth)
         else:
-            self.render("blog/read.html", a=a, auth=auth)
+            self.render("geek/read.html", a=a, auth=auth)
 
 class Write(BaseHandler):
     def get(self, link = None):
         if link == None:
-            return self.render("blog/write.html", a=None)
+            return self.render("geek/write.html", a=None)
         link = link.replace(".html","")
         action = self.get_argument("a", None)
-        c = blog.conn.cursor()
+        c = geek.conn.cursor()
         a = c.execute("SELECT * FROM articles WHERE link == ?",(link,)).fetchone()
         if not a:
             return self.redirect("/page-not-exist")
@@ -169,9 +169,9 @@ class Write(BaseHandler):
             # show
             c.execute("UPDATE articles SET hide=? WHERE link == ?",(0,link))
         else:
-            return self.render("blog/write.html", a=a)
-        blog.conn.commit()
-        return self.redirect("/blog")
+            return self.render("geek/write.html", a=a)
+        geek.conn.commit()
+        return self.redirect("/geek")
 
     @tornado.web.authenticated
     def post(self, origin_link = None):
@@ -192,7 +192,7 @@ class Write(BaseHandler):
             posttime= str(datetime.datetime.utcnow()).split(".")[0]
 
         a = ()
-        c = blog.conn.cursor()
+        c = geek.conn.cursor()
         if origin_link != None:
             origin_link = origin_link.replace(".html","")
             a = c.execute("SELECT * FROM articles WHERE link == ?",(origin_link,)).fetchone()
@@ -201,14 +201,14 @@ class Write(BaseHandler):
             cmd = ("UPDATE articles SET title=?, content=?,"
                 "link=?, date=?, tags=?, hide=? where link = ?")
             c.execute(cmd, (title, content, link, posttime, tags, hide, origin_link))
-            blog.conn.commit()
+            geek.conn.commit()
         else:
             cmd = """INSERT INTO articles(title, content, link, date, view, tags, hide)
                      VALUES(?,?,?,?,?,?,?)"""
             c.execute(cmd, (title, content, link, posttime, 0, tags, hide))
-            blog.conn.commit()
+            geek.conn.commit()
 
-        self.redirect("/blog/"+link+".html")
+        self.redirect("/geek/"+link+".html")
 
 
 class Baidu_Post(tornado.web.RequestHandler):
@@ -217,11 +217,11 @@ class Baidu_Post(tornado.web.RequestHandler):
                  FROM articles
                  WHERE hide <> 1
                  ORDER BY rowid DESC"""
-        c = blog.conn.cursor()
+        c = geek.conn.cursor()
         articles = c.execute(cmd).fetchall()
         urllist = []
         for article in articles:
-            urllist.append("http://nossiac.com/blog/"+article[0]+".html")
+            urllist.append("http://nossiac.com/geek/"+article[0]+".html")
         return urllist
 
     def get(self):
@@ -286,7 +286,7 @@ class Upload(BaseHandler):
         for item in items:
             files.append("http://7xthf5.com1.z0.glb.clouddn.com/"+item["key"])
 
-        self.render("blog/upload.html", files=files)
+        self.render("geek/upload.html", files=files)
 
     @tornado.web.authenticated
     def post(self):
@@ -302,28 +302,28 @@ class Upload(BaseHandler):
         # post to qiniu
         key = self.get_argument("key", None)
         upload_to_qiniu(filepath, key)
-        self.redirect("/blog/upload")
+        self.redirect("/geek/upload")
 
-class Blog(object):
+class Geek(object):
     def __init__(self):
-        global blog
+        global geek
         self.tryinitdb()
         try:
-            self.conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), root,".db.blog.py"))
+            self.conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), root,".db.geek.py"))
         except:
             print("unable to connect to sqlite3!")
             return
-        blog = self
+        geek = self
 
     def tryinitdb(self):
-        if os.path.exists(os.path.join(os.path.dirname(__file__), root,".db.blog.py")):
-            self.conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), root,".db.blog.py"))
+        if os.path.exists(os.path.join(os.path.dirname(__file__), root,".db.geek.py")):
+            self.conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), root,".db.geek.py"))
             c = self.conn.cursor()
             ret = c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='articles';")
             if ret != None:
                 return
         # else we create a new db
-        self.conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), root,".db.blog.py"))
+        self.conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), root,".db.geek.py"))
         c = self.conn.cursor()
         cmd = """CREATE TABLE articles
                  (title text, content text, link text, date text,
@@ -351,13 +351,13 @@ class Blog(object):
 
     def handlers(self):
         return [
-            (r"/blog/baidu_post", Baidu_Post),
-            (r"/blog/upload", Upload),
-            (r"/blog/*", Index),
-            (r"/blog/w/*", Write),
-            (r"/blog/w/(.*)", Write),
-            (r"/blog/tags/(.*)", Tags),
-            (r"/blog/(.*)", Read),
+            (r"/geek/baidu_post", Baidu_Post),
+            (r"/geek/upload", Upload),
+            (r"/geek/*", Index),
+            (r"/geek/w/*", Write),
+            (r"/geek/w/(.*)", Write),
+            (r"/geek/tags/(.*)", Tags),
+            (r"/geek/(.*)", Read),
         ]
 
 
@@ -374,10 +374,10 @@ if __name__ == "__main__":
     #    ctx.open()
 
     root = ".."
-    blog = Blog()
+    geek = Geek()
 
     app = tornado.web.Application(
-        handlers = blog.handlers(),
+        handlers = geek.handlers(),
         template_path = os.path.join(os.path.dirname(__file__), root,"templates"),
         static_path =os.path.join(os.path.dirname(__file__), root, "static"),
         debug = True,

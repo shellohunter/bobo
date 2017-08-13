@@ -144,6 +144,7 @@ if __name__ == "__main__":
             (r"/logout", Logout),
             (r"/7", Qiniu),
             (r"/(baidu_verify_.*)",tornado.web.StaticFileHandler,{"path":os.path.join(os.path.dirname(__file__), "static")}),
+            (r"/(MP_verify_.*)",tornado.web.StaticFileHandler,{"path":os.path.join(os.path.dirname(__file__), "static")}),
         ]
 
     from blog import blog

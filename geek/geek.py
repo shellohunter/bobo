@@ -141,11 +141,11 @@ class Read(BaseHandler):
             if link != None:
                 link = "".join(link.rsplit(".html", 1)) # nice trick for rreplace!
                 c = geek.conn.cursor()
-                a = c.execute("SELECT * FROM articles WHERE link == ?",(link,)).fetchone()
+                cmd = "SELECT * FROM articles WHERE link == ?"
+                if not self.current_user: cmd = cmd + " AND hide<>1"
+                a = c.execute(cmd,(link,)).fetchone()
                 a = Article(*a)._asdict()
-        except tornado.web.MissingArgumentError:
-            return self.redirect("/page-not-exist")
-        if a == None:
+        except Exception as e: #tornado.web.MissingArgumentError:
             return self.redirect("/page-not-exist")
 
         c.execute("UPDATE articles SET view=view+1 WHERE link == ?",(link,))

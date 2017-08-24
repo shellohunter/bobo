@@ -11,21 +11,14 @@ html {
 
 
 a {text-decoration: none;color:navy}
-a:active{color:navy}
-a:visited{color:navy;}
-a:hover{color:navy}
 
-.article a {text-decoration: none;color:#FF6600}
-.article a:active{color:#FF6600}
-.article a:visited{color:#FF6600;}
-.article a:hover{color:#FF6600}
 
 #wrap {
   margin:0 auto;
   background:whitesmoke;
 }
 #header {
-  padding: 1em;
+  padding: 0.25em;
   text-align: center;
   background-color: gray;
   color: white;
@@ -66,19 +59,20 @@ img {
   max-width: 90%;
 }
 
+.article a {text-decoration: none;color:#FF6600}
 .article {
   padding: 0.25em 0.5em;
   margin-bottom: 1.25em;
 }
 .article a {
   font-style: italic;
-  text-decoration: none;
 }
 .article a:hover {
   text-decoration: underline;
 }
-
-
+.article>p {
+  text-indent: 2em;
+}
 
 .text-right {
   text-align: right;
@@ -183,10 +177,14 @@ table {
 }
 
 blockquote {
-  background-color: #EEEEEE;
-  padding: 5px;
-  color: green;
+  background-color: #DDD;
+  padding: 10px;
   margin: 0 10px;
+}
+
+blockquote p {
+    margin: 0;
+    text-indent: 0;
 }
 
 .tags {

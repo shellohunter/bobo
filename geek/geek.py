@@ -12,19 +12,24 @@ import datetime
 import sqlite3
 import random
 import requests
+import markdown
 from qiniu import Auth, put_file, etag, BucketManager
 import qiniu.config
+from collections import namedtuple
 
 geek=None
 root=".."
 
+Article = namedtuple("Article",
+    ["title", "content", "link", "date", "view", "tags", "hide"])
+
 class BaseHandler(tornado.web.RequestHandler):
     def prepare(self):
         host = self.request.headers.get("Host", "none")
-        if host.find("nossiac.com") < 0 \
-        and host.find("127.0.0") < 0 \
-        and host.find("172.26") < 0 \
-        and host.find("192.168.") < 0:
+        if (host.find("nossiac.com") < 0
+        and host.find("127.0.0") < 0
+        and host.find("172.26") < 0
+        and host.find("192.168.") < 0):
             print("an unexpected host "+host)
             return self.redirect("http://nossiac.com", permanent=True)
         super().prepare()
@@ -137,6 +142,7 @@ class Read(BaseHandler):
                 link = "".join(link.rsplit(".html", 1)) # nice trick for rreplace!
                 c = geek.conn.cursor()
                 a = c.execute("SELECT * FROM articles WHERE link == ?",(link,)).fetchone()
+                a = Article(*a)._asdict()
         except tornado.web.MissingArgumentError:
             return self.redirect("/page-not-exist")
         if a == None:
@@ -144,6 +150,7 @@ class Read(BaseHandler):
 
         c.execute("UPDATE articles SET view=view+1 WHERE link == ?",(link,))
         geek.conn.commit()
+        a["content"] = markdown.markdown(a["content"])
         if self.ismobile():
             self.render("geek/m-read.html", a=a, auth=auth)
         else:

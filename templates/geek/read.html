@@ -4,18 +4,18 @@
 {% end %}
 {% block body %}
 
-<h2>
+<h1>
 {% if auth %}
   <a href="/geek/w/{{a['link']}}">{{a["title"]}}</a>
 {% else %}
   {{a["title"]}}
 {% end %}
-</h2>
+</h1>
 
 <div style="padding: 0.25em 0.5em;">
   <span class="small">tags:</span>
   {% for each in a["tags"].split("(")[1:] %}
-    <a class="tags small" href="/geek/tags/{{each.strip("()")}}">{{each.strip("()")}}</a>
+    <a class="tags" href="/geek/tags/{{each.strip("()")}}"><small>{{each.strip("()")}}</small></a>
   {% end %}
 </div>
 

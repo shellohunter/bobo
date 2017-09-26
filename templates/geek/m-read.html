@@ -16,8 +16,8 @@
 <hr style="border-top:1px dashed gray; width: 95%;" >
 <div class="text-right tags">
   <!-- <span class="tags">{{a["date"]}}</span> -->
-  {% for each in a["tags"].split("(")[1:] %}
-    <a class="tags small" href="/geek/tags/{{each.strip("()")}}">{{each.strip("()")}}</a>
+  tags: {% for each in a["tags"].split("(")[1:] %}
+    <a class="tags" href="/geek/tags/{{each.strip("()")}}">{{each.strip("()")}}</a>
   {% end %}
 </div>
 <div class="article">

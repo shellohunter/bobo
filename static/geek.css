@@ -5,9 +5,68 @@ html {
     color: #333;
     /*background-image: url('images/0.jpg');*/
     background-color: gray;
-    font-family: "Arial", "Times new roman", "宋体";
+    font-family: "Consolas","Arial", "Times new roman", "宋体";
     font-size: 16px;
     line-height: 1.5em;
+}
+
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  color: #000;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+h2 {
+  font-size: 24px;
+  color: #000;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 14px;
+}
+
+h6 {
+  color: #777;
+  font-size: 14px;
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
 }
 
 a {
@@ -15,12 +74,136 @@ a {
     color: #259;
 }
 
+a:hover {
+  text-decoration: underline;
+}
 
-h1,
-h2,
-h3,
-h4 {
-    margin: 10px;
+
+ul, ol {
+  padding-left: 30px;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
 }
 
 
@@ -67,40 +250,8 @@ img {
     font-size: 0.875em;
 }
 
-.article a {
-    text-decoration: none;
-    color: #FF6600
-}
-.article a:hover {
-    text-decoration: underline;
-}
-.article>p {
-    text-indent: 2em;
-}
-
-.article li {
-    list-style-position: outside;
-    text-indent: 0.5em;
-}
-
 ul>li {
     list-style-type: square;
-}
-
-.article table {
-    width: 90%;
-    margin: 0 2em;
-    border-collapse: collapse;
-    border: none;
-}
-
-.article td {
-    border: solid #000 1px;
-}
-
-.article th {
-    border: solid #000 1px;
-    background-color: lightgray;
 }
 
 .code {
@@ -219,13 +370,6 @@ table {
     text-align: center;
 }
 
-.pad-20 {
-    padding: 1.25em;
-}
-
-.pad-10 {
-    padding: 0.625em;
-}
 
 .wordwrap {
     white-space: pre-wrap;
@@ -238,21 +382,6 @@ table {
     /* Opera 7 */
     word-wrap: break-word;
     /* IE */
-}
-
-blockquote {
-    background-color: #EEEEEE;
-    padding: 10px;
-}
-
-blockquote p {
-    margin: 0;
-    text-indent: 0;
-}
-
-strong {
-    color: red;
-    font-weight: normal;
 }
 
 #qrcontainer {
@@ -285,44 +414,4 @@ strong {
 .tags {
     padding: 2px;
     color: orange;
-}
-
-.small {
-    font-size: 0.875em;
-}
-
-.dim {
-    color: #BBBBBB;
-}
-
-pre {
-    text-indent: 0;
-    background-color: black;
-    color: white;
-    padding: 0.5em;
-    margin: 1em 2em;
-    font-family: "Consolas", "Courier New";
-    line-height: 1.125em;
-}
-
-.inline-quote {
-    background-color: #CCFFCC;
-    padding: 0 0.2em;
-    margin: 0 0.2em;
-}
-
-.image-preview {
-    float: left;
-    margin: 9px;
-    width: 100px;
-    height: 100px;
-    border: 1px solid lightgray;
-}
-
-.clear {
-    clear: both;
-}
-
-.dim {
-    color: #BBBBBB;
 }

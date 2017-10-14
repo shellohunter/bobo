@@ -12,11 +12,15 @@ import datetime
 import sqlite3
 import random
 import requests
+import markdown
 from qiniu import Auth, put_file, etag, BucketManager
 import qiniu.config
+from collections import namedtuple
 
 blog=None
 root=".."
+Article = namedtuple("Article",
+    ["title", "content", "link", "date", "view", "tags", "hide"])
 
 class BaseHandler(tornado.web.RequestHandler):
     def prepare(self):
@@ -137,10 +141,13 @@ class Read(BaseHandler):
                 link = "".join(link.rsplit(".html", 1)) # nice trick for rreplace!
                 c = blog.conn.cursor()
                 a = c.execute("SELECT * FROM articles WHERE link == ?",(link,)).fetchone()
+                a = Article(*a)._asdict()
         except tornado.web.MissingArgumentError:
             return self.redirect("/page-not-exist")
         if a == None:
             return self.redirect("/page-not-exist")
+
+        a["content"] = markdown.markdown(a["content"])
 
         c.execute("UPDATE articles SET view=view+1 WHERE link == ?",(link,))
         blog.conn.commit()

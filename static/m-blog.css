@@ -24,17 +24,29 @@ a:hover{color:navy}
   margin:0 auto;
   background:whitesmoke;
 }
+
 #header {
   padding: 1em;
   text-align: center;
   background-color: gray;
   color: white;
 }
+
 h1 {
+  margin:0;
+  font-size: 1.5em;
+  border-bottom: 1px solid #CCC;
+  padding: 0.25em;
+}
+
+#header h1 {
   margin:0;
   font-size: 2em;
   color: white;
+  border-bottom: none;
+  padding: 0;
 }
+
 h2 {
   text-align: left;
   margin:0;
@@ -174,7 +186,7 @@ table {
   padding: 0.3125em;
 }
 
-.wordwrap {
+.pre {
    white-space: pre-wrap;      /* CSS3 */
    white-space: -moz-pre-wrap; /* Firefox */
    white-space: -pre-wrap;     /* Opera <7 */

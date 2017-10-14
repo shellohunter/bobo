@@ -4,21 +4,15 @@ html {
   padding:0;
   color:#333;
   background-image: url('images/0.jpg');
-  font-family: "Arial", "Times new roman", "宋体";
   font-size: 16px;
   line-height: 1.5em;
 }
-
 
 a {text-decoration: none;color:navy}
 a:active{color:navy}
 a:visited{color:navy;}
 a:hover{color:navy}
 
-.article a {text-decoration: none;color:#FF6600}
-.article a:active{color:#FF6600}
-.article a:visited{color:#FF6600;}
-.article a:hover{color:#FF6600}
 
 #wrap {
   width:750px;
@@ -31,43 +25,38 @@ a:hover{color:navy}
   background-image: url('images/m.jpg');
   height: 120px;
 }
-h1 {
+
+#header h1 {
   padding-top: 70px;
   margin:0;
-  font-size: 2.5em;
+  font-size: 3em;
   color: white;
-  font-family: "仿宋";
+  border-bottom: none;
 }
 
-h2 {
-  text-align: left;
-  margin:0;
-  font-size: 1.75em;
-  padding: 1em 0.5em;
+#header a {
+  color: white;
 }
 
-h3 {
-  text-align: left;
-  margin:10px 0;
-  font-size: 1.375em;
-  color: #333;
-  padding-left: 10px;
-  border-left: 4px solid #aaf;
-}
 
-h4 {
-  margin: 0;
-  padding: 10px 0;
-  font-size: 1.15em;
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 10px 0;
+  padding: 0;
+  font-weight: bold;
   color: navy;
+  -webkit-font-smoothing: antialiased;
 }
 
-h1 .ainhx {
-  color: white;
+
+h1 {
+  font-weight: bold;
+  border-bottom: 1px solid #CCC;
+  padding: 10px 0 20px;
 }
 
-h2 .ainhx {
-  color: black;
+h2:before {
+  content: "";
 }
 
 img {
@@ -80,20 +69,20 @@ img {
 }
 
 .article {
-  padding: 1.25em 0.5em;
+  padding: 0 0.5em;
   margin-bottom: 1.25em;
   font-size: 0.875em;
 }
 
+.article a {text-decoration: none;color:#FF6600}
+.article a:active{color:#FF6600}
+.article a:visited{color:#FF6600;}
+.article a:hover{color:#FF6600}
+
 .article p {
   text-indent: 2em;
 }
-.article a {
-  text-decoration: none;
-}
-.article a:hover {
-  text-decoration: underline;
-}
+
 
 .article li{
   list-style-position: outside;
@@ -235,7 +224,7 @@ table {
   padding: 0.625em;
 }
 
-.wordwrap {
+.pre {
    white-space: pre-wrap;      /* CSS3 */
    white-space: -moz-pre-wrap; /* Firefox */
    white-space: -pre-wrap;     /* Opera <7 */

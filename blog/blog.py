@@ -61,6 +61,8 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class WX_JSAPI_Param(tornado.web.UIModule):
     def __init__(self, url):
+        self.__appid = "wxa9a9ba240b345647"
+        self.__secret = "54267c90d03d814394688f0c0205195a"
         self.__wx_token = ""
         self.__wx_token_expire = 0
         self.__wx_ticket = ""
@@ -81,7 +83,7 @@ class WX_JSAPI_Param(tornado.web.UIModule):
         param = {
             "wx_nonceStr": wx_nonceStr,
             "wx_timestamp": wx_timestamp,
-            "wx_appId": "wxa9a9ba240b345647",
+            "wx_appId": self.__appid,
             "wx_signature": wx_signature,
         }
 
@@ -94,9 +96,7 @@ class WX_JSAPI_Param(tornado.web.UIModule):
 
     def get_wx_token(self):
         def __get_wx_token():
-            appId = ""
-            appSecret = ""
-            url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={0}&secret={1}".format(appId, appSecret)
+            url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={0}&secret={1}".format(self.__appid, self.__secret)
 
             try:
                 s = requests.Session()
@@ -106,7 +106,7 @@ class WX_JSAPI_Param(tornado.web.UIModule):
                 print("wx_token", e)
                 return
             try:
-                rspjson = json.loads(rsp.content, encoding="ascii")
+                rspjson = json.loads(rsp.content.decode("ascii"))
                 self.__wx_token = rspjson["access_token"]
                 self.__wx_token_expire = int(time.time()) + int(rspjson["expires_in"])
             except Exception as e:
@@ -121,10 +121,7 @@ class WX_JSAPI_Param(tornado.web.UIModule):
 
     def get_wx_ticket(self):
         def __get_wx_ticket():
-            appId = ""
-            appSecret = ""
-            url = "https://api.weixin.qq.com/cgi-bin/ticket?access_token={0}&type=jsapi".format(self.get_wx_token())
-
+            url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={0}&type=jsapi".format(self.get_wx_token())
             try:
                 s = requests.Session()
                 rsp = s.post(url)
@@ -133,7 +130,7 @@ class WX_JSAPI_Param(tornado.web.UIModule):
                 print("wx_ticket", e)
                 return
             try:
-                rspjson = json.loads(rsp.content, encoding="ascii")
+                rspjson = json.loads(rsp.content.decode("ascii"))
                 self.__wx_ticket = rspjson["ticket"]
                 self.__wx_ticket_expire = int(time.time()) + int(rspjson["expires_in"])
             except Exception as e:

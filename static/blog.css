@@ -111,7 +111,7 @@ img {
   margin-left: 1em;
 }
 
-.article ol {
+.article ol,ul {
   margin: 0;
 }
 
@@ -184,6 +184,7 @@ table {
 
 #postlist td {
   height: 1.5em;
+  padding: 3px;
   background: none;
 }
 

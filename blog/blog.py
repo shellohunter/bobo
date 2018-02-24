@@ -39,18 +39,17 @@ class BaseHandler(tornado.web.RequestHandler):
         return self.get_secure_cookie("1tdhblkfcdhx2a")
 
     def ismobile(self):
-        #print(self.request.headers)
-        ua = self.request.headers.get("User-Agent", None)
-        if not ua:
-            return False
-        key1 = ["iPad","Windows","x86","X11","MAC","Vista","MSIE","Firefox"]
-        key2 = ["Android","iPod", "iPhone"]
-        for k in key1:
-            if ua.find(k) >= 0:
-                return False 
-        for k in key2:
-            if ua.find(k) >= 0:
-                return True
+        # ua = self.request.headers.get("User-Agent", None)
+        # if not ua:
+        #     return False
+        # key1 = ["iPad","Windows","x86","X11","MAC","Vista","MSIE","Firefox"]
+        # key2 = ["Android","iPod", "iPhone"]
+        # for k in key1:
+        #     if ua.find(k) >= 0:
+        #         return False 
+        # for k in key2:
+        #     if ua.find(k) >= 0:
+        #         return True
         return False
 
     def render(self, template_name, **kwargs):

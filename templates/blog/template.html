@@ -12,7 +12,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<link rel="stylesheet" type="text/css" href="{{ static_url('blog.css')}}">
 	<script src="{{ static_url('jquery/jquery-1.11.1.min.js')}}"></script>
-{% module WX_JSAPI_Param(param["url"]) %}
+{% block wxshare %}
+{% end %}
 	<!-- shello @ baidu -->
 	<script>
 	var _hmt = _hmt || [];
@@ -38,7 +39,7 @@
     })();
     </script>
 </head>
-<body>
+<body onload="onshare()">
 <div id="wrap">
 	<div id="header"><a href="/blog">杂学家</a></div>
 	<div id="main">

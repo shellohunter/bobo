@@ -53,41 +53,48 @@ class BaseHandler(tornado.web.RequestHandler):
         return False
 
     def render(self, template_name, **kwargs):
+        print("render", self.request.uri)
+        host = self.request.headers.get("Host", "nossiac.com")
+        if host.find(":") > 0:
+            host = "nossiac.com"
+        print("http://{0}{1}".format(host, self.request.uri))
         param = {
-            "url": self.request.uri
+            "url": "http://{0}{1}".format(host, self.request.uri)
         }
         return super().render(template_name, param = param, **kwargs)
 
 class WX_JSAPI_Param(tornado.web.UIModule):
-    def __init__(self, url):
-        self.__appid = "wxa9a9ba240b345647"
-        self.__secret = "54267c90d03d814394688f0c0205195a"
-        self.__wx_token = ""
-        self.__wx_token_expire = 0
-        self.__wx_ticket = ""
-        self.__wx_ticket_expire = 0
-        super(WX_JSAPI_Param, self).__init__(url)
+    __appid = "wxa9a9ba240b345647"
+    __secret = "54267c90d03d814394688f0c0205195a"
+    __wx_token = ""
+    __wx_token_expire = 0
+    __wx_ticket = ""
+    __wx_ticket_expire = 0
 
-    def render(self, url=""):
+    def render(self, url="", title=""):
         wx_nonceStr = str(int(time.time())+random.randint(100,999))
         wx_timestamp = int(time.time())
 
-        tmp = "jsapi_ticket={0}&nonceStr={1}&timestamp={2}&url={3}".format(
+        tmp = "jsapi_ticket={0}&noncestr={1}&timestamp={2}&url={3}".format(
             self.get_wx_ticket(), wx_nonceStr, wx_timestamp, url)
 
-        m = hashlib.sha1()
-        m.update(tmp.encode("ascii"))
-        wx_signature = m.hexdigest()
+        wx_signature = hashlib.sha1(tmp.encode("ascii")).hexdigest()
 
         param = {
+            "wx_title": title,
+            "wx_link": url,
             "wx_nonceStr": wx_nonceStr,
             "wx_timestamp": wx_timestamp,
             "wx_appId": self.__appid,
             "wx_signature": wx_signature,
         }
 
-        for k,v in param.items():
-            print("{0}={1}".format(k,v))
+        #print("{0}={1}".format("tmp", tmp))
+        #print("{0}={1}".format("url", url))
+        #print("{0}={1}".format("token", self.get_wx_token()))
+        #print("{0}={1}".format("ticket", self.get_wx_ticket()))
+        #for k,v in param.items():
+        #    print("{0}={1}".format(k,v))
 
         return self.render_string(
             "blog/modules/wx_param.html", param = param)
@@ -100,21 +107,22 @@ class WX_JSAPI_Param(tornado.web.UIModule):
             try:
                 s = requests.Session()
                 rsp = s.post(url)
-                print("wx_token", rsp.content)
+                #print("wx_token", rsp.content)
             except Exception as e:
-                print("wx_token", e)
+                #print("wx_token", e)
                 return
             try:
                 rspjson = json.loads(rsp.content.decode("ascii"))
-                self.__wx_token = rspjson["access_token"]
-                self.__wx_token_expire = int(time.time()) + int(rspjson["expires_in"])
+                #print(type(rspjson), rspjson)
+                WX_JSAPI_Param.__wx_token = rspjson["access_token"]
+                WX_JSAPI_Param.__wx_token_expire = int(time.time()) + int(rspjson["expires_in"])
             except Exception as e:
-                print(e)
+                #print(e)
                 return
-            return self.__wx_token
+            return WX_JSAPI_Param.__wx_token
 
-        if int(time.time()) < self.__wx_token_expire - 10:
-            return self.__wx_token
+        if int(time.time()) < WX_JSAPI_Param.__wx_token_expire - 10:
+            return WX_JSAPI_Param.__wx_token
         else:
             return __get_wx_token()
 
@@ -124,21 +132,22 @@ class WX_JSAPI_Param(tornado.web.UIModule):
             try:
                 s = requests.Session()
                 rsp = s.post(url)
-                print("wx_ticket", rsp.content)
+                #print("wx_ticket", rsp.content)
             except Exception as e:
-                print("wx_ticket", e)
+                #print("wx_ticket", e)
                 return
             try:
                 rspjson = json.loads(rsp.content.decode("ascii"))
-                self.__wx_ticket = rspjson["ticket"]
-                self.__wx_ticket_expire = int(time.time()) + int(rspjson["expires_in"])
+                #print(type(rspjson), rspjson)
+                WX_JSAPI_Param.__wx_ticket = rspjson["ticket"]
+                WX_JSAPI_Param.__wx_ticket_expire = int(time.time()) + int(rspjson["expires_in"])
             except Exception as e:
-                print(e)
+                #print(e)
                 return
-            return self.__wx_ticket
+            return WX_JSAPI_Param.__wx_ticket
 
-        if int(time.time()) < self.__wx_ticket_expire - 10:
-            return self.__wx_ticket
+        if int(time.time()) < WX_JSAPI_Param.__wx_ticket_expire - 10:
+            return WX_JSAPI_Param.__wx_ticket
         else:
             return __get_wx_ticket()
 

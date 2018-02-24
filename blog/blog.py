@@ -8,6 +8,7 @@ import tornado.options
 import tornado.web
 import time
 import datetime
+import json
 #import daemon
 import sqlite3
 import random
@@ -23,6 +24,7 @@ Article = namedtuple("Article",
     ["title", "content", "link", "date", "view", "tags", "hide"])
 
 class BaseHandler(tornado.web.RequestHandler):
+
     def prepare(self):
         host = self.request.headers.get("Host", "none")
         if host.find("nossiac.com") < 0 \
@@ -50,6 +52,101 @@ class BaseHandler(tornado.web.RequestHandler):
             if ua.find(k) >= 0:
                 return True
         return False
+
+    def render(self, template_name, **kwargs):
+        param = {
+            "url": self.request.uri
+        }
+        return super().render(template_name, param = param, **kwargs)
+
+class WX_JSAPI_Param(tornado.web.UIModule):
+    def __init__(self, url):
+        self.__wx_token = ""
+        self.__wx_token_expire = 0
+        self.__wx_ticket = ""
+        self.__wx_ticket_expire = 0
+        super(WX_JSAPI_Param, self).__init__(url)
+
+    def render(self, url=""):
+        wx_nonceStr = str(int(time.time())+random.randint(100,999))
+        wx_timestamp = int(time.time())
+
+        tmp = "jsapi_ticket={0}&nonceStr={1}&timestamp={2}&url={3}".format(
+            self.get_wx_ticket(), wx_nonceStr, wx_timestamp, url)
+
+        m = hashlib.sha1()
+        m.update(tmp.encode("ascii"))
+        wx_signature = m.hexdigest()
+
+        param = {
+            "wx_nonceStr": wx_nonceStr,
+            "wx_timestamp": wx_timestamp,
+            "wx_appId": "wxa9a9ba240b345647",
+            "wx_signature": wx_signature,
+        }
+
+        for k,v in param.items():
+            print("{0}={1}".format(k,v))
+
+        return self.render_string(
+            "blog/modules/wx_param.html", param = param)
+
+
+    def get_wx_token(self):
+        def __get_wx_token():
+            appId = ""
+            appSecret = ""
+            url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={0}&secret={1}".format(appId, appSecret)
+
+            try:
+                s = requests.Session()
+                rsp = s.post(url)
+                print("wx_token", rsp.content)
+            except Exception as e:
+                print("wx_token", e)
+                return
+            try:
+                rspjson = json.loads(rsp.content, encoding="ascii")
+                self.__wx_token = rspjson["access_token"]
+                self.__wx_token_expire = int(time.time()) + int(rspjson["expires_in"])
+            except Exception as e:
+                print(e)
+                return
+            return self.__wx_token
+
+        if int(time.time()) < self.__wx_token_expire - 10:
+            return self.__wx_token
+        else:
+            return __get_wx_token()
+
+    def get_wx_ticket(self):
+        def __get_wx_ticket():
+            appId = ""
+            appSecret = ""
+            url = "https://api.weixin.qq.com/cgi-bin/ticket?access_token={0}&type=jsapi".format(self.get_wx_token())
+
+            try:
+                s = requests.Session()
+                rsp = s.post(url)
+                print("wx_ticket", rsp.content)
+            except Exception as e:
+                print("wx_ticket", e)
+                return
+            try:
+                rspjson = json.loads(rsp.content, encoding="ascii")
+                self.__wx_ticket = rspjson["ticket"]
+                self.__wx_ticket_expire = int(time.time()) + int(rspjson["expires_in"])
+            except Exception as e:
+                print(e)
+                return
+            return self.__wx_ticket
+
+        if int(time.time()) < self.__wx_ticket_expire - 10:
+            return self.__wx_ticket
+        else:
+            return __get_wx_ticket()
+
+
 
 class Index(BaseHandler):
     def get(self):
@@ -367,6 +464,10 @@ class Blog(object):
             (r"/blog/(.*)", Read),
         ]
 
+    def uimodules(self):
+        return [
+            {'WX_JSAPI_Param':WX_JSAPI_Param},
+        ]
 
 
 if __name__ == "__main__":

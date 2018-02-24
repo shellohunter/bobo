@@ -166,8 +166,9 @@ if __name__ == "__main__":
     webhandlers.extend(WX().handlers())
     webhandlers.append((r"/.*", Error)) # always the last!
 
-
-    ui_modules = WX().uimodules()
+    ui_modules = []
+    ui_modules.extend(WX().uimodules())
+    ui_modules.extend(blog.Blog().uimodules())
 
     for handler in webhandlers:
         print(handler[0], handler[1])

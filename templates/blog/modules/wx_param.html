@@ -1,0 +1,16 @@
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.1.0.js"></script>
+	<script type="text/javascript">	
+		wx.onMenuShareTimeline({
+			imgUrl: '{{ static_url("images/200-200.jpg")}}'
+		});
+		wx.config({
+			debug: false,
+			appId: '{{param["wx_appId"]}}',
+			timestamp: {{param["wx_timestamp"]}},
+			nonceStr: '{{param["wx_nonceStr"]}}',
+			signature: '{{param["wx_signature"]}}',
+			jsApiList: [
+			  'onMenuShareTimeline'
+			]
+		  });
+	</script>

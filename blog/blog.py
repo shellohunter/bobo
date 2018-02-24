@@ -9,7 +9,6 @@ import tornado.web
 import time
 import datetime
 import json
-#import daemon
 import sqlite3
 import random
 import requests
@@ -37,20 +36,6 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def get_current_user(self):
         return self.get_secure_cookie("1tdhblkfcdhx2a")
-
-    def ismobile(self):
-        # ua = self.request.headers.get("User-Agent", None)
-        # if not ua:
-        #     return False
-        # key1 = ["iPad","Windows","x86","X11","MAC","Vista","MSIE","Firefox"]
-        # key2 = ["Android","iPod", "iPhone"]
-        # for k in key1:
-        #     if ua.find(k) >= 0:
-        #         return False 
-        # for k in key2:
-        #     if ua.find(k) >= 0:
-        #         return True
-        return False
 
     def render(self, template_name, **kwargs):
         print("render", self.request.uri)
@@ -132,17 +117,13 @@ class WX_JSAPI_Param(tornado.web.UIModule):
             try:
                 s = requests.Session()
                 rsp = s.post(url)
-                #print("wx_ticket", rsp.content)
             except Exception as e:
-                #print("wx_ticket", e)
                 return
             try:
                 rspjson = json.loads(rsp.content.decode("ascii"))
-                #print(type(rspjson), rspjson)
                 WX_JSAPI_Param.__wx_ticket = rspjson["ticket"]
                 WX_JSAPI_Param.__wx_ticket_expire = int(time.time()) + int(rspjson["expires_in"])
             except Exception as e:
-                #print(e)
                 return
             return WX_JSAPI_Param.__wx_ticket
 
@@ -185,10 +166,7 @@ class Index(BaseHandler):
         # ORDER BY SomeColumn
         # LIMIT 100
         articles = c.execute(cmd2,((page-1)*20,)).fetchall()
-        if self.ismobile():
-            self.render("blog/m-blog.html", aa=articles, pages=pages, auth = auth)
-        else:
-            self.render("blog/blog.html", aa=articles, pages=pages, auth = auth)
+        self.render("blog/blog.html", aa=articles, pages=pages, auth = auth)
 
 class Tags(BaseHandler):
     """docstring for Tags"""
@@ -225,10 +203,7 @@ class Tags(BaseHandler):
             cmd = cmd + " AND hide <> 1"
         #print(cmd)
         pages = int((c.execute(cmd).fetchone()[0]-1)/20+1)
-        if self.ismobile():
-            self.render("blog/m-blog.html", aa=articles, pages=pages, auth = auth)
-        else:
-            self.render("blog/blog.html", aa=articles, pages=pages, auth = auth)
+        self.render("blog/blog.html", aa=articles, pages=pages, auth = auth)
 
 class Read(BaseHandler):
     def get(self, link = None):
@@ -253,10 +228,7 @@ class Read(BaseHandler):
 
         c.execute("UPDATE articles SET view=view+1 WHERE link == ?",(link,))
         blog.conn.commit()
-        if self.ismobile():
-            self.render("blog/m-read.html", a=a, auth=auth)
-        else:
-            self.render("blog/read.html", a=a, auth=auth)
+        self.render("blog/read.html", a=a, auth=auth)
 
 class Write(BaseHandler):
     def get(self, link = None):
@@ -495,7 +467,7 @@ if __name__ == "__main__":
         static_path =os.path.join(os.path.dirname(__file__), root, "static"),
         debug = True,
         login_url = "/login",
-        cookie_secret = "61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=",
+        cookie_secret = hashlib.sha1(str(time.time()).encode("ascii")).hexdigest(),
     )
     http_server = tornado.httpserver.HTTPServer(app)
     http_server.listen(options.port)

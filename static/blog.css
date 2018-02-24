@@ -101,12 +101,18 @@ img {
 
 .article p {
   text-indent: 2em;
+  margin-bottom: 0;
 }
 
 
 .article li{
-  list-style-position: outside;
-  text-indent: 0.5em;
+  /*list-style-position: outside;*/
+  /*text-indent: 0.5em;*/
+  margin-left: 1em;
+}
+
+.article ol {
+  margin: 0;
 }
 
 ul>li {
@@ -181,40 +187,19 @@ table {
   background: none;
 }
 
-.star {
-  color: gray;
-}
-
 .btn {
-  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #b9bdc9));
-  background:-moz-linear-gradient(top, #ededed 5%, #b9bdc9 100%);
-  background:-webkit-linear-gradient(top, #ededed 5%, #b9bdc9 100%);
-  background:-o-linear-gradient(top, #ededed 5%, #b9bdc9 100%);
-  background:-ms-linear-gradient(top, #ededed 5%, #b9bdc9 100%);
-  background:linear-gradient(to bottom, #ededed 5%, #b9bdc9 100%);
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#b9bdc9',GradientType=0);
   background-color:#ededed;
   -moz-border-radius:15px;
   -webkit-border-radius:15px;
   border-radius:15px;
   border:1px solid #a69fa6;
-  display:inline-block;
-  cursor:pointer;
   color:#545154;
-  font-family:arial;
   font-size:0.875em;
   font-weight:bold;
   padding:4px 31px;
   text-decoration:none;
 }
 .btn:hover {
-  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #b9bdc9), color-stop(1, #ededed));
-  background:-moz-linear-gradient(top, #b9bdc9 5%, #ededed 100%);
-  background:-webkit-linear-gradient(top, #b9bdc9 5%, #ededed 100%);
-  background:-o-linear-gradient(top, #b9bdc9 5%, #ededed 100%);
-  background:-ms-linear-gradient(top, #b9bdc9 5%, #ededed 100%);
-  background:linear-gradient(to bottom, #b9bdc9 5%, #ededed 100%);
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#b9bdc9', endColorstr='#ededed',GradientType=0);
   background-color:#b9bdc9;
 }
 
@@ -231,14 +216,6 @@ table {
 }
 .text-center {
   text-align: center;
-}
-
-.pad-20 {
-  padding: 1.25em;
-}
-
-.pad-10 {
-  padding: 0.625em;
 }
 
 .pre {
@@ -297,10 +274,13 @@ strong {
   font-size: 0.875em;
 }
 
+.clear {
+  clear: both;
+}
+
 .dim {
   color: #BBBBBB;
 }
-
 pre {
   text-indent: 0;
   background-color: black;
@@ -323,12 +303,4 @@ pre {
   width: 100px;
   height:100px;
   border: 1px solid lightgray;
-}
-
-.clear {
-  clear: both;
-}
-
-.dim {
-  color: #BBBBBB;
 }

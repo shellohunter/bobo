@@ -16,7 +16,7 @@ from qiniu import Auth
 from qiniu import BucketManager
 
 from tornado.options import define, options
-define("port", default=8081, help="run on the given port", type=int)
+define("port", default=8080, help="run on the given port", type=int)
 define("daemon", default=0, help="run as a daemon", type=int)
 
 
@@ -148,7 +148,7 @@ if __name__ == "__main__":
         ]
 
     from blog import blog
-    from geek import geek
+    # from geek import geek
     from t9x import t9x
     from wx.wx import WX
     #from wifigod import wifigod
@@ -161,14 +161,14 @@ if __name__ == "__main__":
     #webhandlers.extend(club.Club().handlers())
     #webhandlers.extend(wifigod.WifiGod().handlers())
     #webhandlers.extend(movies.Movies().handlers())
-    webhandlers.extend(geek.Geek().handlers())
+    # webhandlers.extend(geek.Geek().handlers())
     #webhandlers.extend(mysky.MySky().handlers())
     webhandlers.extend(WX().handlers())
     webhandlers.append((r"/.*", Error)) # always the last!
 
     ui_modules = []
     ui_modules.extend(WX().uimodules())
-    ui_modules.extend(blog.Blog().uimodules())
+    ui_modules.extend(blog.Blog.uimodules())
 
     for handler in webhandlers:
         print(handler[0], handler[1])

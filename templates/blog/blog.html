@@ -12,18 +12,18 @@
       {% for a in aa %}
       <tr class="tr2">
         <td style="width: 600px">
-          <a href="/blog/{{a[1]}}.html">
+          <a href="{{prefix}}/{{a[1]}}.html">
             <span {% if a[2] == 1 %} class="dim" {% end %}>{{a[0]}}</span>
           </a>
         </td>
         {% if auth %}
         <td class="text-center small">
           {% if a[2] == 1 %}
-            <a href="/blog/w/{{a[1]}}?a=s">显</a> |
+            <a href="{{prefix}}/w/{{a[1]}}?a=s">显</a> |
           {% else %}
-            <a href="/blog/w/{{a[1]}}?a=h">隐</a> |
+            <a href="{{prefix}}/w/{{a[1]}}?a=h">隐</a> |
           {% end %}
-          <a href="/blog/w/{{a[1]}}?a=d">删</a>
+          <a href="{{prefix}}/w/{{a[1]}}?a=d">删</a>
         </td>
         <td class="text-center small">
            {{a[3]}}

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# flake8: noqa
 import os.path
 import hashlib
 import base64
@@ -17,13 +19,65 @@ from qiniu import Auth, put_file, etag, BucketManager
 import qiniu.config
 from collections import namedtuple
 
-blog=None
 root=".."
 Article = namedtuple("Article",
     ["title", "content", "link", "date", "view", "tags", "hide"])
 
-class BaseHandler(tornado.web.RequestHandler):
+_dbblog = None
+_dbgeek = None
 
+class DB():
+    dbs = {}
+    def __getattr__(self, dbname):
+        print("__getattr__", dbname)
+        return DB.dbs.get(dbname, None)
+
+    def __init__(self, dbname = None):
+        if not dbname: return
+        print("__init__")
+        try:
+            DB.dbs[dbname] = self._tryinitdb(".db."+dbname+".py")
+            c = DB.dbs[dbname].cursor()
+            assert(DB.dbs[dbname])
+        except Exception as e:
+            print(e)
+            raise Exception("unable to init db!", dbname)
+
+        # print("asdfasfsdfafasdasdfasdf")
+        # if not _dbblog or not _dbgeek:
+        #     raise Exception("unable to connect to sqlite3!",
+        #         _dbblog, _dbgeek)
+
+    def _tryinitdb(self, dbname=".db.py"):
+        if os.path.exists(os.path.join(os.path.dirname(__file__), root, dbname)):
+            conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), root,dbname))
+            c = conn.cursor()
+            ret = c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='articles';")
+            if ret != None:
+                print("db ready "+dbname)
+                return conn
+            else:
+                print("db not really there.")
+        # else we create a new db
+        print("create new db "+dbname)
+        conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), root,dbname))
+        c = conn.cursor()
+        cmd = """CREATE TABLE articles
+                 (title text, content text, link text, date text,
+                 view integer, tags text, hide boolean)"""
+        # print(cmd)
+        c.execute(cmd)
+        conn.commit()
+        #conn.close()
+        return conn
+
+    # def __del__(self):
+    #     for dbname,dbconn in DB.dbs.items():
+    #         print("close "+dbname)
+    #         dbconn.close()
+
+
+class BaseHandler(tornado.web.RequestHandler):
     def prepare(self):
         host = self.request.headers.get("Host", "none")
         if host.find("nossiac.com") < 0 \
@@ -47,6 +101,17 @@ class BaseHandler(tornado.web.RequestHandler):
             "url": "http://{0}{1}".format(host, self.request.uri)
         }
         return super().render(template_name, param = param, **kwargs)
+
+    def db(self):
+        # global _dbblog
+        # global _dbgeek
+        # print(_dbblog, _dbgeek)
+        # _dbblog = sqlite3.connect(os.path.join(os.path.dirname(__file__), root,".db.blog.py"))
+        # _dbgeek = sqlite3.connect(os.path.join(os.path.dirname(__file__), root,".db.geek.py"))
+        # assert(_dbblog)
+        # return _dbblog if self.request.uri.startswith("/blog") else _dbgeek
+        return DB().blog if self.request.uri.startswith("/blog") else DB().geek
+
 
 class WX_JSAPI_Param(tornado.web.UIModule):
     __appid = "wxa9a9ba240b345647"
@@ -154,7 +219,7 @@ class Index(BaseHandler):
                       ORDER BY rowid DESC
                       LIMIT 20 OFFSET ?"""
 
-        c = blog.conn.cursor()
+        c = self.db().cursor()
         page = int(self.get_argument("p", "1"))
 
         pages = int((c.execute(cmd1).fetchone()[0]-1)/20+1)
@@ -166,7 +231,12 @@ class Index(BaseHandler):
         # ORDER BY SomeColumn
         # LIMIT 100
         articles = c.execute(cmd2,((page-1)*20,)).fetchall()
-        self.render("blog/blog.html", aa=articles, pages=pages, auth = auth)
+        if self.request.uri.startswith("/blog"):
+            prefix = "/blog"
+        else:
+            prefix = "/geek"
+        self.render("blog/blog.html", aa=articles, pages=pages,
+            auth = auth, prefix = prefix)
 
 class Tags(BaseHandler):
     """docstring for Tags"""
@@ -180,7 +250,7 @@ class Tags(BaseHandler):
 
         taglist = tags.split('-')
 
-        c = blog.conn.cursor()
+        c = self.db().cursor()
         page = int(self.get_argument("p", "1"))
 
         cmd = "SELECT title,link,hide,view FROM articles WHERE"
@@ -216,7 +286,7 @@ class Read(BaseHandler):
         try:
             if link != None:
                 link = "".join(link.rsplit(".html", 1)) # nice trick for rreplace!
-                c = blog.conn.cursor()
+                c = self.db().cursor()
                 a = c.execute("SELECT * FROM articles WHERE link == ?",(link,)).fetchone()
                 a = Article(*a)._asdict()
         except tornado.web.MissingArgumentError:
@@ -227,7 +297,7 @@ class Read(BaseHandler):
         a["content"] = markdown.markdown(a["content"])
 
         c.execute("UPDATE articles SET view=view+1 WHERE link == ?",(link,))
-        blog.conn.commit()
+        self.db().commit()
         self.render("blog/read.html", a=a, auth=auth)
 
 class Write(BaseHandler):
@@ -236,7 +306,7 @@ class Write(BaseHandler):
             return self.render("blog/write.html", a=None)
         link = link.replace(".html","")
         action = self.get_argument("a", None)
-        c = blog.conn.cursor()
+        c = self.db().cursor()
         a = c.execute("SELECT * FROM articles WHERE link == ?",(link,)).fetchone()
         if not a:
             return self.redirect("/page-not-exist")
@@ -251,7 +321,7 @@ class Write(BaseHandler):
             c.execute("UPDATE articles SET hide=? WHERE link == ?",(0,link))
         else:
             return self.render("blog/write.html", a=Article(*a))
-        blog.conn.commit()
+        self.db().commit()
         return self.redirect("/blog")
 
     @tornado.web.authenticated
@@ -273,7 +343,7 @@ class Write(BaseHandler):
             posttime= str(datetime.datetime.utcnow()).split(".")[0]
 
         a = ()
-        c = blog.conn.cursor()
+        c = self.db().cursor()
         if origin_link != None:
             origin_link = origin_link.replace(".html","")
             a = c.execute("SELECT * FROM articles WHERE link == ?",(origin_link,)).fetchone()
@@ -282,12 +352,12 @@ class Write(BaseHandler):
             cmd = ("UPDATE articles SET title=?, content=?,"
                 "link=?, date=?, tags=?, hide=? where link = ?")
             c.execute(cmd, (title, content, link, posttime, tags, hide, origin_link))
-            blog.conn.commit()
+            self.db().commit()
         else:
             cmd = """INSERT INTO articles(title, content, link, date, view, tags, hide)
                      VALUES(?,?,?,?,?,?,?)"""
             c.execute(cmd, (title, content, link, posttime, 0, tags, hide))
-            blog.conn.commit()
+            self.db().commit()
 
         self.redirect("/blog/"+link+".html")
 
@@ -298,7 +368,7 @@ class Baidu_Post(tornado.web.RequestHandler):
                  FROM articles
                  WHERE hide <> 1
                  ORDER BY rowid DESC"""
-        c = blog.conn.cursor()
+        c = self.db().cursor()
         articles = c.execute(cmd).fetchall()
         urllist = []
         for article in articles:
@@ -315,8 +385,6 @@ class Baidu_Post(tornado.web.RequestHandler):
 
 
 def upload_to_qiniu(filepath, key=None):
-    # -*- coding: utf-8 -*-
-    # flake8: noqa
     access_key = '6LG96YZtw8bacYtviITUQIFqdK67qZ3SqXE8Lhaw'
     secret_key = 'Kc1aI18VwuDyVNdid8UfdPrAPiWXOb09UxmlFfQd'
 
@@ -385,52 +453,13 @@ class Upload(BaseHandler):
         upload_to_qiniu(filepath, key)
         self.redirect("/blog/upload")
 
+
 class Blog(object):
     def __init__(self):
-        global blog
-        self.tryinitdb()
-        try:
-            self.conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), root,".db.blog.py"))
-        except:
-            print("unable to connect to sqlite3!")
-            return
-        blog = self
-
-    def tryinitdb(self):
-        if os.path.exists(os.path.join(os.path.dirname(__file__), root,".db.blog.py")):
-            self.conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), root,".db.blog.py"))
-            c = self.conn.cursor()
-            ret = c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='articles';")
-            if ret != None:
-                return
-        # else we create a new db
-        self.conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), root,".db.blog.py"))
-        c = self.conn.cursor()
-        cmd = """CREATE TABLE articles
-                 (title text, content text, link text, date text,
-                 view integer, tags text, hide boolean)"""
-        print(cmd)
-        c.execute(cmd)
-        self.conn.commit()
-        for i in range(0):
-            title = "测试文章"+str(i+1)
-            content = ("这是测试的文章，没有任何意义."+str(i+1))*100
-            link = "test-article-"+str(i+1)
-            date = "2016-4-"+str(i+1)
-            view = str(random.randint(1,1000))
-            tags = "(测试)"
-            hide = 0
-            cmd = """INSERT INTO articles (title,content,link,date,view,tags,hide)
-                     VALUES(?,?,?,?,?,?,?)"""
-            c.execute(cmd, (title, content, link, date, view, tags, hide))
-            self.conn.commit()
-        self.conn.close()
-
-    def __del__(self):
-        if self.conn != None:
-            self.conn.close()
-
-    def handlers(self):
+        DB("blog")
+        DB("geek")
+    @classmethod
+    def handlers(cls):
         return [
             (r"/blog/baidu_post", Baidu_Post),
             (r"/blog/upload", Upload),
@@ -439,19 +468,26 @@ class Blog(object):
             (r"/blog/w/(.*)", Write),
             (r"/blog/tags/(.*)", Tags),
             (r"/blog/(.*)", Read),
+            (r"/geek/baidu_post", Baidu_Post),
+            (r"/geek/upload", Upload),
+            (r"/geek/*", Index),
+            (r"/geek/w/*", Write),
+            (r"/geek/w/(.*)", Write),
+            (r"/geek/tags/(.*)", Tags),
+            (r"/geek/(.*)", Read),
         ]
 
-    def uimodules(self):
+    @classmethod
+    def uimodules(cls):
         return [
             {'WX_JSAPI_Param':WX_JSAPI_Param},
         ]
-
 
 if __name__ == "__main__":
     from tornado.options import define, options
     define("port", default=8081, help="run on the given port", type=int)
     #define("daemon", default=0, help="run as a daemon", type=int)
-    define("db", default=0, help="can be \"mongodb\" or \"sqlite\"", type=str)
+    #define("db", default=0, help="can be \"mongodb\" or \"sqlite\"", type=str)
     tornado.options.parse_command_line()
     #if options.daemon != 0:
     #    log = open('tornado.' + str(options.port) + '.log', 'a+')

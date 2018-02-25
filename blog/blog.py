@@ -250,7 +250,7 @@ class Write(BaseHandler):
             # show
             c.execute("UPDATE articles SET hide=? WHERE link == ?",(0,link))
         else:
-            return self.render("blog/write.html", a=a)
+            return self.render("blog/write.html", a=Article(*a))
         blog.conn.commit()
         return self.redirect("/blog")
 

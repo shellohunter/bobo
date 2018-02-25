@@ -10,21 +10,18 @@
               'onMenuShareTimeline'
             ]
           });
+
         wx.onMenuShareTimeline({
             title: '{{param["wx_title"]}}',
             link: '{{param["wx_link"]}}',
-            imgUrl: 'http://nossiac.com/static/images/200-200.jpg',
-            success: function() { alert('success'); },
-            cancel: function() { alert('cancel'); },
+            imgUrl: 'http://nossiac.com/static/images/me.jpg',
         });
 
         function onshare(){
             wx.onMenuShareTimeline({
                 title: '{{param["wx_title"]}}',
                 link: '{{param["wx_link"]}}',
-                imgUrl: 'http://nossiac.com/static/images/200-200.jpg',
-                success: function() { alert('success'); },
-                cancel: function() { alert('cancel'); },
+                imgUrl: 'http://nossiac.com/static/images/me.jpg',
             });
         }
     </script>

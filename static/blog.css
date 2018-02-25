@@ -305,3 +305,15 @@ pre {
   height:100px;
   border: 1px solid lightgray;
 }
+
+input {
+  font-size: 1em;
+  font-weight: normal;
+  width: 99%;
+}
+
+textarea {
+  font-size: 1em;
+  font-weight: normal;
+  width: 99%;
+}

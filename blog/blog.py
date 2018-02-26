@@ -58,6 +58,7 @@ class BaseHandler(tornado.web.RequestHandler):
         return self.get_secure_cookie("1tdhblkfcdhx2a")
 
     def render(self, template_name, **kwargs):
+        print(self.subblog)
         host = self.request.headers.get("Host", "nossiac.com")
         if host.find(":") > 0:
             host = "nossiac.com"
@@ -187,15 +188,11 @@ class Index(BaseHandler):
         # ORDER BY SomeColumn
         # LIMIT 100
         articles = c.execute(cmd2,((page-1)*20,)).fetchall()
-        if self.request.uri.startswith("/blog"):
-            prefix = "/blog"
-        else:
-            prefix = "/geek"
         self.render("index.html", aa=articles, pages=pages,
-            auth = auth, prefix = prefix)
+            auth = auth)
 
 class Tags(BaseHandler):
-    def get(self, subblog, tags):
+    def get(self, tags):
         if self.get_current_user() != None:
             print("authenticated user!")
             auth = True
@@ -242,9 +239,9 @@ class Read(BaseHandler):
         link = "".join(link.rsplit(".html", 1)) # nice trick for rreplace!
         c = self.db.cursor()
         a = c.execute("SELECT * FROM articles WHERE link == ?",(link,)).fetchone()
-        a = Article(*a)._asdict()
-        a["content"] = markdown.markdown(a["content"])
         try:
+            a = Article(*a)._asdict()
+            a["content"] = markdown.markdown(a["content"])
             c.execute("UPDATE articles SET view=view+1 WHERE link == ?",(link,))
             self.db.commit()
             self.render("read.html", a=a, auth=auth)
@@ -253,7 +250,8 @@ class Read(BaseHandler):
             return self.redirect("/page-not-exist")
 
 class Write(BaseHandler):
-    def get(self, subblog, link = None):
+    @tornado.web.authenticated
+    def get(self, link = None):
         if link == None:
             return self.render("write.html", a=None)
         link = link.replace(".html","")
@@ -271,10 +269,10 @@ class Write(BaseHandler):
         else:
             return self.render("write.html", a=Article(*a))
         self.db.commit()
-        return self.redirect("/blog")
+        return self.redirect("/"+self.subblog)
 
     @tornado.web.authenticated
-    def post(self, subblog, origin_link = None):
+    def post(self, origin_link = None):
         title = self.get_argument("title","").strip()
         hide = int(self.get_argument("hide", "0").strip())
         tags = self.get_argument("tags", "").replace(chr(65292), ",")
@@ -307,10 +305,10 @@ class Write(BaseHandler):
             c.execute(cmd, (title, content, link, posttime, 0, tags, hide))
             self.db.commit()
 
-        self.redirect("/blog/"+link+".html")
+        self.redirect("/{0}/{1}.html".format(self.subblog,link))
 
 
-class Baidu_Post(tornado.web.RequestHandler):
+class Baidu_Post(BaseHandler):
     def get_all_urls(self):
         cmd = """SELECT link
                  FROM articles
@@ -320,7 +318,7 @@ class Baidu_Post(tornado.web.RequestHandler):
         articles = c.execute(cmd).fetchall()
         urllist = []
         for article in articles:
-            urllist.append("http://nossiac.com/blog/"+article[0]+".html")
+            urllist.append("http://nossiac.com/{0}/{1}.html".format(self.subblog, article[0]))
         return urllist
 
     def get(self):
@@ -399,7 +397,7 @@ class Upload(BaseHandler):
         # post to qiniu
         key = self.get_argument("key", None)
         upload_to_qiniu(filepath, key)
-        self.redirect("/blog/upload")
+        self.redirect("/{0}/upload".format(self.subblog))
 
 
 class SubBlog():

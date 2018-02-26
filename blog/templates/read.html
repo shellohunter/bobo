@@ -10,7 +10,7 @@
 {% block body %}
 <h1>
 {% if auth %}
-  <a href="/blog/w/{{a['link']}}">{{a["title"]}}</a>
+  <a href="/{{param['subblog']}}/w/{{a['link']}}">{{a["title"]}}</a>
 {% else %}
   {{a["title"]}}
 {% end %}
@@ -19,7 +19,7 @@
 <div style="padding: 0.25em 0.5em;">
   <span class="small">tags:</span>
   {% for each in a["tags"].split("(")[1:] %}
-    <a class="tags small" href="/blog/tags/{{each.strip("()")}}">{{each.strip("()")}}</a>
+    <a class="tags small" href="/{{param['subblog']}}/tags/{{each.strip("()")}}">{{each.strip("()")}}</a>
   {% end %}
 </div>
 
@@ -30,7 +30,7 @@
 {#
 <script type="text/javascript">
 (function(){
-var url = "http://widget.weibo.com/distribution/comments.php?width=0&url=http%3A%2F%2Fnossiac.com%2Fblog%2F{{a['link']}}&dpc=1";
+var url = "http://widget.weibo.com/distribution/comments.php?width=0&url=http%3A%2F%2Fnossiac.com%2F{{param['prefix']}}%2F{{a['link']}}&dpc=1";
 document.write('<iframe id="WBCommentFrame" src="' + url + '" scrolling="no" frameborder="0" style="width:100%"></iframe>');
 })();
 </script>

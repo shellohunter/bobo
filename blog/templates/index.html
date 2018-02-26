@@ -1,5 +1,9 @@
 {% extends template.html %}
 
+{% block header %}
+<div id="header"><a href="/">佛山黄灰红</a></div>
+{% end %}
+
 {% block body %}
 <div>
     <table id="postlist" style="width:100%;">
@@ -13,18 +17,18 @@
       {% for a in aa %}
       <tr class="tr2">
         <td style="width: 600px">
-          <a href="{{prefix}}/{{a[1]}}.html">
+          <a href="/{{param['subblog']}}/{{a[1]}}.html">
             <span {% if a[2] == 1 %} class="dim" {% end %}>{{a[0]}}</span>
           </a>
         </td>
         {% if auth %}
         <td class="text-center small">
           {% if a[2] == 1 %}
-            <a href="{{prefix}}/w/{{a[1]}}?a=s">显</a> |
+            <a href="/{{param['subblog']}}/w/{{a[1]}}?a=s">显</a> |
           {% else %}
-            <a href="{{prefix}}/w/{{a[1]}}?a=h">隐</a> |
+            <a href="/{{param['subblog']}}/w/{{a[1]}}?a=h">隐</a> |
           {% end %}
-          <a href="{{prefix}}/w/{{a[1]}}?a=d">删</a>
+          <a href="/{{param['subblog']}}/w/{{a[1]}}?a=d">删</a>
         </td>
         <td class="text-center small">
            {{a[3]}}

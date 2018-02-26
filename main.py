@@ -146,17 +146,19 @@ if __name__ == "__main__":
             (r"/(baidu_verify_.*)",tornado.web.StaticFileHandler,{"path":os.path.join(os.path.dirname(__file__), "static")}),
             (r"/(MP_verify_.*)",tornado.web.StaticFileHandler,{"path":os.path.join(os.path.dirname(__file__), "static")}),
         ]
+    ui_modules = []
 
-    from blog import blog
-    # from geek import geek
+    from blog.blog import Blog
     from t9x import t9x
     from wx.wx import WX
+    #from geek import geek
     #from wifigod import wifigod
     #from movies import movies
     #from club import club
     #from blog import blog
     #from mysky import mysky
-    webhandlers.extend(blog.Blog().handlers())
+    blog = Blog()
+    webhandlers.extend(Blog().handlers())
     webhandlers.extend(t9x.T9x().handlers())
     #webhandlers.extend(club.Club().handlers())
     #webhandlers.extend(wifigod.WifiGod().handlers())
@@ -166,9 +168,8 @@ if __name__ == "__main__":
     webhandlers.extend(WX().handlers())
     webhandlers.append((r"/.*", Error)) # always the last!
 
-    ui_modules = []
     ui_modules.extend(WX().uimodules())
-    ui_modules.extend(blog.Blog.uimodules())
+    ui_modules.extend(Blog().uimodules())
 
     for handler in webhandlers:
         print(handler[0], handler[1])

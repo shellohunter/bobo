@@ -3,15 +3,17 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 {% block title %}
-	<title>手艺人</title>
+	<title>佛山黄灰红</title>
 {% end %}
-	<meta name="description" content="Nossiac's geek.">
+	<meta name="description" content="Nossiac's blog.">
 	<meta name="copyright" content="Copyright (c) Hua Shao">
 	<meta name="author" content="Hua Shao, Nossiac, 佛山黄灰红">
 	<meta http-equiv="X-UA-Compatible" content="IE=9" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<link rel="stylesheet" type="text/css" href="{{ static_url('m-geek.css')}}">
+	<link rel="stylesheet" type="text/css" href="/blog/static/blog.css">
 	<script src="{{ static_url('jquery/jquery-1.11.1.min.js')}}"></script>
+{% block wxshare %}
+{% end %}
 	<!-- shello @ baidu -->
 	<script>
 	var _hmt = _hmt || [];
@@ -38,16 +40,17 @@
     </script>
 </head>
 <body>
-<h1 id="header"><a href="/geek">手艺人</a></h1>
 <div id="wrap">
+	{% block header %}
+	<div id="header"><a href="/">佛山黄灰红</a></div>
+	{% end %}
 	<div id="main">
 	{% block body %}
-	<h1> this is a template page, you should extend it and create your own page. </h1>
 	{% end %}
 	</div>
 	<div id="footer">
-		<div class="text-right">
-			<a href="/">Home</a> |
+		<div class="text-center">
+			&copy; <a href="/">Nossiac</a> |
 			<a href="http://nossiac.lofter.com" target="_blank">Lofter</a> |
 			<a href="https://weibo.com/nossiac" target="_blank">Weibo</a> |
 			<a href="https://github.com/nossiac" target="_blank">Github</a>
